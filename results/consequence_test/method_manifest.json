@@ -1,0 +1,34 @@
+{
+  "task": "F - SHAP Consequence Test",
+  "contexts": [
+    "novpn",
+    "vpn"
+  ],
+  "models": [
+    "RandomForest",
+    "XGBoost"
+  ],
+  "n_features_full": 23,
+  "top_k": 10,
+  "inner_split": {
+    "type": "stratified_train_validation_split",
+    "validation_fraction": 0.2,
+    "random_state": 20261008
+  },
+  "selection_rule": "Top-10 features ranked by mean absolute TreeSHAP on the inner-validation set",
+  "shap": {
+    "explainer": "TreeExplainer",
+    "feature_perturbation": "tree_path_dependent",
+    "check_additivity": false,
+    "aggregation": "mean absolute SHAP across classes and samples"
+  },
+  "final_training": "Each selected feature set is retrained on the full original training partition of the target context.",
+  "final_evaluation": "Original held-out test sets are used only for final evaluation.",
+  "feature_conditions": [
+    "full",
+    "context_specific_top10",
+    "transferred_top10"
+  ],
+  "primary_metric": "macro_f1",
+  "secondary_metric": "per_class_recall"
+}

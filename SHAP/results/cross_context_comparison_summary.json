@@ -1,0 +1,18 @@
+{
+  "RandomForest": {
+    "spearman_rho": 0.8300395256916996,
+    "spearman_p": 9.613414655475045e-07,
+    "kendall_tau": 0.6442687747035574,
+    "kendall_p": 3.905185853124103e-06,
+    "top5_overlap": "3/5",
+    "top10_overlap": "9/10"
+  },
+  "XGBoost": {
+    "spearman_rho": 0.8073122529644269,
+    "spearman_p": 3.2272496291614438e-06,
+    "kendall_tau": 0.6047430830039525,
+    "kendall_p": 1.899599836442314e-05,
+    "top5_overlap": "3/5",
+    "top10_overlap": "8/10"
+  }
+}

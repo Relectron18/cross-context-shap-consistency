@@ -1,0 +1,41 @@
+{
+ "C1": [
+  "max_fiat",
+  "max_biat",
+  "max_flowiat",
+  "std_flowiat",
+  "min_active",
+  "mean_active",
+  "max_active",
+  "min_idle",
+  "mean_idle",
+  "max_idle"
+ ],
+ "C2": [
+  "duration",
+  "total_fiat",
+  "total_biat"
+ ],
+ "C3": [
+  "flowPktsPerSecond",
+  "flowBytesPerSecond",
+  "mean_flowiat"
+ ],
+ "C4": [
+  "mean_fiat",
+  "mean_biat"
+ ],
+ "C5": [
+  "std_active",
+  "std_idle"
+ ],
+ "C6": [
+  "min_fiat"
+ ],
+ "C7": [
+  "min_biat"
+ ],
+ "C8": [
+  "min_flowiat"
+ ]
+}

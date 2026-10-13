@@ -1,0 +1,13 @@
+target_context,model,feature_set,macro_f1_point,macro_f1_ci_95_low,macro_f1_ci_95_high,bootstrap_replicates,interval_scope
+novpn,RandomForest,full,0.9170740828569689,0.8990363234088404,0.9347941819205179,3000,test-record uncertainty conditional on fitted model and selected features
+novpn,RandomForest,context_specific_top10,0.9142932652026747,0.8960812163141043,0.9318163982358976,3000,test-record uncertainty conditional on fitted model and selected features
+novpn,RandomForest,transferred_top10,0.9170728644947947,0.8993813814709685,0.9335945507908708,3000,test-record uncertainty conditional on fitted model and selected features
+novpn,XGBoost,full,0.9347334493317636,0.9179410045364934,0.9499568173924681,3000,test-record uncertainty conditional on fitted model and selected features
+novpn,XGBoost,context_specific_top10,0.938210160075178,0.9229341478220102,0.9534276244562301,3000,test-record uncertainty conditional on fitted model and selected features
+novpn,XGBoost,transferred_top10,0.9330613469170158,0.9163136359653549,0.9482131606638304,3000,test-record uncertainty conditional on fitted model and selected features
+vpn,RandomForest,full,0.8533498842303909,0.8334926184707105,0.8723337128232993,3000,test-record uncertainty conditional on fitted model and selected features
+vpn,RandomForest,context_specific_top10,0.8663183614449314,0.8470567055940841,0.8852728782674898,3000,test-record uncertainty conditional on fitted model and selected features
+vpn,RandomForest,transferred_top10,0.8571441751131702,0.8375602624045222,0.876330350266074,3000,test-record uncertainty conditional on fitted model and selected features
+vpn,XGBoost,full,0.8779250955873094,0.8602734793669758,0.8951433845372241,3000,test-record uncertainty conditional on fitted model and selected features
+vpn,XGBoost,context_specific_top10,0.8757149477189298,0.8576027449305267,0.8931935090494771,3000,test-record uncertainty conditional on fitted model and selected features
+vpn,XGBoost,transferred_top10,0.8738359530877763,0.8548386650051523,0.8917993623958469,3000,test-record uncertainty conditional on fitted model and selected features

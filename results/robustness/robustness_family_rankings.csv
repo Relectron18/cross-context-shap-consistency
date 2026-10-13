@@ -1,0 +1,73 @@
+context,model,method,family,rank,mean_abs_shap,normalized_contribution
+novpn,RF,tree_path_dependent,Directional IAT,1.0,0.11572103504029566,0.42777516286501005
+novpn,RF,tree_path_dependent,Flow IAT,2.0,0.06254809158243786,0.23121569949885024
+novpn,RF,tree_path_dependent,Flow throughput,3.0,0.03226330815801145,0.11926476372296102
+novpn,RF,tree_path_dependent,Idle,4.0,0.024578565936656135,0.09085729351522229
+novpn,RF,tree_path_dependent,Active,5.0,0.018758358735382105,0.06934227610662289
+novpn,RF,tree_path_dependent,Duration,6.0,0.016648999456270415,0.06154480429133349
+novpn,RF,interventional,Directional IAT,1.0,0.10906635086595884,0.40109352787151553
+novpn,RF,interventional,Flow IAT,2.0,0.06671793084611566,0.24535642792564133
+novpn,RF,interventional,Flow throughput,3.0,0.03611610337562409,0.13281763991264775
+novpn,RF,interventional,Idle,4.0,0.025620696542132695,0.09422058665223867
+novpn,RF,interventional,Active,5.0,0.0201482543214533,0.07409557890293836
+novpn,RF,interventional,Duration,6.0,0.014253154159043607,0.052416238735018265
+novpn,XGB,tree_path_dependent,Directional IAT,1.0,2.1987667083740234,0.3778642047594827
+novpn,XGB,tree_path_dependent,Flow IAT,2.0,1.615335464477539,0.27759991470671563
+novpn,XGB,tree_path_dependent,Flow throughput,3.0,1.141298532485962,0.1961353429304394
+novpn,XGB,tree_path_dependent,Active,4.0,0.36555787920951843,0.06282214333835126
+novpn,XGB,tree_path_dependent,Duration,5.0,0.3353118598461151,0.05762428036800281
+novpn,XGB,tree_path_dependent,Idle,6.0,0.16266313195228577,0.027954113897008196
+novpn,XGB,interventional,Directional IAT,1.0,1.8720103578222842,0.36792641552171584
+novpn,XGB,interventional,Flow IAT,2.0,1.3910224762758205,0.27339267193033867
+novpn,XGB,interventional,Flow throughput,3.0,1.0089850449300581,0.19830672909736966
+novpn,XGB,interventional,Active,4.0,0.38353893959182284,0.07538105046661056
+novpn,XGB,interventional,Duration,5.0,0.2614071882615352,0.05137717821207031
+novpn,XGB,interventional,Idle,6.0,0.1710380469198969,0.03361595477189492
+novpn,ExtraTrees,tree_path_dependent,Directional IAT,1.0,0.11272059483582061,0.41414822335042945
+novpn,ExtraTrees,tree_path_dependent,Flow IAT,2.0,0.055792008360419656,0.20498615335799644
+novpn,ExtraTrees,tree_path_dependent,Idle,3.0,0.031804228350747726,0.11685233462153277
+novpn,ExtraTrees,tree_path_dependent,Active,4.0,0.02883071511972632,0.10592731046307996
+novpn,ExtraTrees,tree_path_dependent,Flow throughput,5.0,0.02314997456723722,0.08505562671660225
+novpn,ExtraTrees,tree_path_dependent,Duration,6.0,0.019877001027472377,0.07303035149035918
+novpn,ExtraTrees,interventional,Directional IAT,1.0,0.11516735764995539,0.40218983612626213
+novpn,ExtraTrees,interventional,Flow IAT,2.0,0.06236428468837228,0.21778984905761378
+novpn,ExtraTrees,interventional,Idle,3.0,0.03293688080072469,0.11502285857783438
+novpn,ExtraTrees,interventional,Active,4.0,0.029257955658029033,0.1021752398562276
+novpn,ExtraTrees,interventional,Flow throughput,5.0,0.026843763135410266,0.09374434663385743
+novpn,ExtraTrees,interventional,Duration,6.0,0.019780499198122425,0.06907786974820464
+vpn,RF,tree_path_dependent,Directional IAT,1.0,0.11868856823925682,0.45752865644263996
+vpn,RF,tree_path_dependent,Flow IAT,2.0,0.056997512495678124,0.21971783550502694
+vpn,RF,tree_path_dependent,Flow throughput,3.0,0.040939227788034674,0.1578152821584326
+vpn,RF,tree_path_dependent,Idle,4.0,0.017457652041913616,0.06729692843946519
+vpn,RF,tree_path_dependent,Duration,5.0,0.015786867917503996,0.06085627769283341
+vpn,RF,tree_path_dependent,Active,6.0,0.00954248715720531,0.03678501976160185
+vpn,RF,interventional,Directional IAT,1.0,0.11498890717738532,0.43749857333711195
+vpn,RF,interventional,Flow IAT,2.0,0.06188538529371135,0.2354554751498756
+vpn,RF,interventional,Flow throughput,3.0,0.04283762069047481,0.16298439908058296
+vpn,RF,interventional,Idle,4.0,0.018467359040972253,0.070262805622337
+vpn,RF,interventional,Duration,5.0,0.014718292603359098,0.055998723476816954
+vpn,RF,interventional,Active,6.0,0.009935080110589982,0.03780002333327566
+vpn,XGB,tree_path_dependent,Directional IAT,1.0,2.1882991790771484,0.4116473255421969
+vpn,XGB,tree_path_dependent,Flow IAT,2.0,1.334453821182251,0.2510279909627806
+vpn,XGB,tree_path_dependent,Flow throughput,3.0,0.9239217042922974,0.1738015999908686
+vpn,XGB,tree_path_dependent,Duration,4.0,0.36809688806533813,0.06924377661029128
+vpn,XGB,tree_path_dependent,Idle,5.0,0.30812233686447144,0.057961789284937566
+vpn,XGB,tree_path_dependent,Active,6.0,0.19306233525276184,0.03631751760892498
+vpn,XGB,interventional,Directional IAT,1.0,1.887935615767278,0.3909404240975968
+vpn,XGB,interventional,Flow IAT,2.0,1.2324751993244254,0.25521229277611895
+vpn,XGB,interventional,Flow throughput,3.0,0.9146427367849281,0.18939778265222545
+vpn,XGB,interventional,Duration,4.0,0.304006091871431,0.06295144256610094
+vpn,XGB,interventional,Idle,5.0,0.295175355837738,0.06112283587990162
+vpn,XGB,interventional,Active,6.0,0.19498065424477504,0.0403752220280564
+vpn,ExtraTrees,tree_path_dependent,Directional IAT,1.0,0.12693409700293043,0.4897110772796436
+vpn,ExtraTrees,tree_path_dependent,Flow IAT,2.0,0.04774612398519297,0.18420429470716984
+vpn,ExtraTrees,tree_path_dependent,Flow throughput,3.0,0.025490785126138005,0.09834331467719638
+vpn,ExtraTrees,tree_path_dependent,Idle,4.0,0.02317217850219417,0.08939814254135144
+vpn,ExtraTrees,tree_path_dependent,Active,5.0,0.018947370744240653,0.07309885647640194
+vpn,ExtraTrees,tree_path_dependent,Duration,6.0,0.01691145760591313,0.06524431431823671
+vpn,ExtraTrees,interventional,Directional IAT,1.0,0.12687235059175697,0.47219606445612
+vpn,ExtraTrees,interventional,Flow IAT,2.0,0.0528395884883274,0.196659442465553
+vpn,ExtraTrees,interventional,Flow throughput,3.0,0.028597076014317976,0.10643317228640348
+vpn,ExtraTrees,interventional,Idle,4.0,0.025639080976361178,0.09542404690101254
+vpn,ExtraTrees,interventional,Duration,5.0,0.01768552697164936,0.06582234974676954
+vpn,ExtraTrees,interventional,Active,6.0,0.01705212032118289,0.06346492414414155

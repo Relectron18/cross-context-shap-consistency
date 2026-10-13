@@ -1,0 +1,13 @@
+target_context,model,feature_set,saved_macro_f1,reproduced_macro_f1,absolute_difference,matches_within_1e-4
+novpn,RandomForest,full,0.9170740828569688,0.9170740828569689,1.1102230246251565e-16,True
+novpn,RandomForest,context_specific_top10,0.9142932652026748,0.9142932652026747,1.1102230246251565e-16,True
+novpn,RandomForest,transferred_top10,0.9170728644947947,0.9170728644947947,0.0,True
+novpn,XGBoost,full,0.9347334493317636,0.9347334493317636,0.0,True
+novpn,XGBoost,context_specific_top10,0.938210160075178,0.938210160075178,0.0,True
+novpn,XGBoost,transferred_top10,0.9330613469170158,0.9330613469170158,0.0,True
+vpn,RandomForest,full,0.8533498842303909,0.8533498842303909,0.0,True
+vpn,RandomForest,context_specific_top10,0.8663183614449314,0.8663183614449314,0.0,True
+vpn,RandomForest,transferred_top10,0.8571441751131702,0.8571441751131702,0.0,True
+vpn,XGBoost,full,0.8779250955873094,0.8779250955873094,0.0,True
+vpn,XGBoost,context_specific_top10,0.8757149477189298,0.8757149477189298,0.0,True
+vpn,XGBoost,transferred_top10,0.8738359530877763,0.8738359530877763,0.0,True

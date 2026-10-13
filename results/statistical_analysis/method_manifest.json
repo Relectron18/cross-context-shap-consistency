@@ -1,0 +1,29 @@
+{
+  "task": "I - Statistical analysis",
+  "bootstrap_replicates": 3000,
+  "consequence_permutation_replicates": 20000,
+  "random_seed": 20261009,
+  "primary_stability_p_value_method": "approximate one-sided null-centred nonparametric run bootstrap with empirical-centred bootstrap errors; not a permutation test",
+  "consequence_p_value_method": "one-sided paired per-record prediction-swap permutation test for exploratory Top-10 contrasts",
+  "stability_unit": "Task D run-level rankings; independently resample the context-specific run lists; pairwise comparisons are recomputed from run-level matrix entries",
+  "stability_primary_metric": "Spearman rank correlation stability gap (within-context mean minus cross-context mean)",
+  "rank_displacement_gap": "cross-context mean minus within-context mean, so positive means lower within-context displacement",
+  "multiple_testing": {
+    "H1_feature_primary_spearman": "Benjamini-Hochberg across RandomForest and XGBoost",
+    "H2_family_primary_spearman": "Benjamini-Hochberg across RandomForest and XGBoost",
+    "H3_top10_exploratory": "Benjamini-Hochberg across 4 context/model contrasts"
+  },
+  "family_method": "sum of member-feature mean absolute SHAP importances per Task D run; ranks six aggregate families",
+  "consequence_method": "re-fit 12 Task F final models with saved Top-10 selections; class-stratified paired bootstrap of untouched test rows",
+  "consequence_scope": "conditional on fitted models and selected features; no training/selection uncertainty",
+  "important_caveat": "Task F tested Top-10, not the manuscript's planned Top-15; H3 Top-10 inference is exploratory.",
+  "outputs": [
+    "stability_gap_bootstrap.csv",
+    "family_run_rankings.csv",
+    "consequence_reproduction_check.csv",
+    "consequence_test_predictions.csv",
+    "consequence_bootstrap_summary.csv",
+    "consequence_difference_tests.csv",
+    "task_i_report.md"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "Flow duration": [
+    "duration"
+  ],
+  "Directional IAT statistics": [
+    "total_fiat",
+    "total_biat",
+    "min_fiat",
+    "min_biat",
+    "max_fiat",
+    "max_biat",
+    "mean_fiat",
+    "mean_biat"
+  ],
+  "Flow throughput": [
+    "flowPktsPerSecond",
+    "flowBytesPerSecond"
+  ],
+  "Flow IAT statistics": [
+    "min_flowiat",
+    "max_flowiat",
+    "mean_flowiat",
+    "std_flowiat"
+  ],
+  "Active-period statistics": [
+    "min_active",
+    "mean_active",
+    "max_active",
+    "std_active"
+  ],
+  "Idle-period statistics": [
+    "min_idle",
+    "mean_idle",
+    "max_idle",
+    "std_idle"
+  ]
+}

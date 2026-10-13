@@ -1,0 +1,13 @@
+target_context,model,contrast,macro_f1_difference,ci_95_low,ci_95_high,p_one_sided_raw_for_H3,is_H3_top10_exploratory_test,bootstrap_replicates,permutation_replicates,p_value_method,p_bh_H3_top10
+novpn,RandomForest,context_specific_minus_full,-0.0027808176542941654,-0.0125157279458946,0.006650204798135027,,False,3000,,not_tested,
+novpn,RandomForest,transferred_minus_full,-1.218362174149057e-06,-0.010461741763070895,0.010469979387865907,,False,3000,,not_tested,
+novpn,RandomForest,context_specific_minus_transferred,-0.0027795992921200163,-0.012220577421549273,0.006003775456122795,0.7271136443177841,True,3000,20000.0,paired_per_record_prediction_swap_permutation,0.7271136443177841
+novpn,XGBoost,context_specific_minus_full,0.0034767107434143796,-0.006874844103452804,0.014253737269244582,,False,3000,,not_tested,
+novpn,XGBoost,transferred_minus_full,-0.0016721024147478003,-0.011357443060378355,0.008027399969423374,,False,3000,,not_tested,
+novpn,XGBoost,context_specific_minus_transferred,0.00514881315816218,-0.0041634941972422896,0.014816000619661701,0.14449277536123195,True,3000,20000.0,paired_per_record_prediction_swap_permutation,0.2889855507224639
+vpn,RandomForest,context_specific_minus_full,0.01296847721454042,0.0019680647822796133,0.02417704008472046,,False,3000,,not_tested,
+vpn,RandomForest,transferred_minus_full,0.003794290882779272,-0.006990811721529866,0.014370632891196871,,False,3000,,not_tested,
+vpn,RandomForest,context_specific_minus_transferred,0.009174186331761147,0.0010379644065692448,0.017574575351419826,0.014199290035498226,True,3000,20000.0,paired_per_record_prediction_swap_permutation,0.0567971601419929
+vpn,XGBoost,context_specific_minus_full,-0.002210147868379586,-0.011876568956864366,0.007920138621104014,,False,3000,,not_tested,
+vpn,XGBoost,transferred_minus_full,-0.004089142499533072,-0.015912904539199763,0.008600719440183563,,False,3000,,not_tested,
+vpn,XGBoost,context_specific_minus_transferred,0.0018789946311534855,-0.008743510872841476,0.012051618144396982,0.36268186590670465,True,3000,20000.0,paired_per_record_prediction_swap_permutation,0.48357582120893955

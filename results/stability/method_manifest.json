@@ -1,0 +1,68 @@
+{
+  "n_runs_per_context_model": 30,
+  "contexts": [
+    "novpn",
+    "vpn"
+  ],
+  "models": [
+    "RandomForest",
+    "XGBoost"
+  ],
+  "n_features": 23,
+  "features": [
+    "duration",
+    "total_fiat",
+    "total_biat",
+    "min_fiat",
+    "min_biat",
+    "max_fiat",
+    "max_biat",
+    "mean_fiat",
+    "mean_biat",
+    "flowPktsPerSecond",
+    "flowBytesPerSecond",
+    "min_flowiat",
+    "max_flowiat",
+    "mean_flowiat",
+    "std_flowiat",
+    "min_active",
+    "mean_active",
+    "max_active",
+    "std_active",
+    "min_idle",
+    "mean_idle",
+    "max_idle",
+    "std_idle"
+  ],
+  "software_versions": {
+    "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scikit_learn": "1.9.0",
+    "xgboost": "3.4.1",
+    "shap": "0.52.0"
+  },
+  "bootstrap": {
+    "type": "class_stratified_with_replacement",
+    "same_size_as_original_training_set": true,
+    "seed_base": 1001
+  },
+  "test_set": {
+    "fixed_and_untouched": true,
+    "novpn_n": 1739,
+    "vpn_n": 1876
+  },
+  "shap": {
+    "explainer": "TreeExplainer",
+    "feature_perturbation": "tree_path_dependent",
+    "check_additivity": false,
+    "importance": "mean(abs(SHAP)) across classes and test samples"
+  },
+  "top_k_values": [
+    5,
+    10,
+    12,
+    15,
+    18
+  ]
+}

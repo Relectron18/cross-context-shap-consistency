@@ -1,0 +1,71 @@
+{
+  "task": "H",
+  "scope": "Provided-split robustness of cross-context SHAP comparison",
+  "seed": 42,
+  "shap_test_rows": 500,
+  "interventional_background_rows": 200,
+  "bootstrap_replicates": 2000,
+  "bootstrap_seed": 20261008,
+  "contexts": [
+    "novpn",
+    "vpn"
+  ],
+  "configurations": [
+    {
+      "model": "RF",
+      "method": "tree_path_dependent"
+    },
+    {
+      "model": "XGB",
+      "method": "tree_path_dependent"
+    },
+    {
+      "model": "RF",
+      "method": "interventional"
+    },
+    {
+      "model": "XGB",
+      "method": "interventional"
+    },
+    {
+      "model": "ExtraTrees",
+      "method": "tree_path_dependent"
+    },
+    {
+      "model": "ExtraTrees",
+      "method": "interventional"
+    }
+  ],
+  "models": {
+    "RF": {
+      "n_estimators": 200,
+      "max_features": "sqrt",
+      "min_samples_leaf": 1,
+      "bootstrap": true
+    },
+    "XGB": {
+      "n_estimators": 200,
+      "max_depth": 6,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "min_child_weight": 1
+    },
+    "ExtraTrees": {
+      "n_estimators": 500,
+      "max_features": "sqrt",
+      "min_samples_leaf": 1
+    }
+  },
+  "shap": {
+    "primary_method": "tree_path_dependent",
+    "robustness_method": "interventional",
+    "interventional_background": "200 stratified training rows",
+    "ranking": "23 original features",
+    "rank_ties": "average rank"
+  },
+  "bootstrap": {
+    "resampling": "independent within each context; no VPN/Non-VPN row pairing assumed",
+    "interpretation": "uncertainty from resampling explained test records with fitted models and background fixed"
+  }
+}

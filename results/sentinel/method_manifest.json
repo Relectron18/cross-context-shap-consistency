@@ -1,0 +1,57 @@
+{
+  "task": "G",
+  "title": "Sentinel robustness analysis",
+  "random_state": 42,
+  "conditions": {
+    "S1": "Retain -1 and add sentinel indicators",
+    "S2": "Convert -1 to NaN and retain the same sentinel indicators"
+  },
+  "original_feature_count": 23,
+  "sentinel_feature_count": 10,
+  "total_feature_count": 33,
+  "sentinel_features": [
+    "min_fiat",
+    "min_biat",
+    "max_fiat",
+    "max_biat",
+    "min_flowiat",
+    "max_flowiat",
+    "min_active",
+    "max_active",
+    "min_idle",
+    "max_idle"
+  ],
+  "models": {
+    "RF": {
+      "n_estimators": 200,
+      "random_state": 42,
+      "n_jobs": -1
+    },
+    "XGB": {
+      "n_estimators": 200,
+      "max_depth": 6,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "objective": "multi:softprob",
+      "num_class": 7,
+      "eval_metric": "mlogloss",
+      "random_state": 42,
+      "n_jobs": -1
+    }
+  },
+  "shap": {
+    "explainer": "TreeExplainer",
+    "feature_perturbation": "tree_path_dependent",
+    "importance": "mean absolute SHAP"
+  },
+  "comparison": {
+    "main_rankings": "original 23 features only",
+    "top_k": [
+      5,
+      10
+    ],
+    "group_analysis": "original 23 features only",
+    "indicator_analysis": "10 sentinel indicators reported separately"
+  }
+}

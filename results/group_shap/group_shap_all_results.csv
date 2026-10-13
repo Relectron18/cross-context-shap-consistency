@@ -1,0 +1,25 @@
+context,model,group,n_features,group_mean_abs_shap,normalized_contribution,rank
+novpn,RandomForest,Directional IAT statistics,8,0.11685729374939963,0.43065904022695334,1
+novpn,RandomForest,Flow IAT statistics,4,0.06241321765175849,0.23001402436226062,2
+novpn,RandomForest,Flow throughput,2,0.03279014103649427,0.12084286923472938,3
+novpn,RandomForest,Idle-period statistics,4,0.023879952460793268,0.08800578104679356,4
+novpn,RandomForest,Active-period statistics,4,0.018335035308770238,0.06757086746793552,5
+novpn,RandomForest,Flow duration,1,0.017069630259687354,0.06290741766132749,6
+novpn,XGBoost,Directional IAT statistics,8,2.2016017884016037,0.3790922166321278,1
+novpn,XGBoost,Flow IAT statistics,4,1.6146588772535324,0.27802694206892953,2
+novpn,XGBoost,Flow throughput,2,1.143150269985199,0.1968382166454043,3
+novpn,XGBoost,Active-period statistics,4,0.3525102138519287,0.06069847828912479,4
+novpn,XGBoost,Flow duration,1,0.33742740750312805,0.05810138079314611,5
+novpn,XGBoost,Idle-period statistics,4,0.15821406710892916,0.027242765571267504,6
+vpn,RandomForest,Directional IAT statistics,8,0.11816331921150669,0.45735216721252286,1
+vpn,RandomForest,Flow IAT statistics,4,0.057302695200102706,0.22179058621377598,2
+vpn,RandomForest,Flow throughput,2,0.04050831428384357,0.15678778703465657,3
+vpn,RandomForest,Idle-period statistics,4,0.01776368828619212,0.06875451188736187,4
+vpn,RandomForest,Flow duration,1,0.015028801067987494,0.058169106833795045,5
+vpn,RandomForest,Active-period statistics,4,0.009597146707964015,0.03714584081788764,6
+vpn,XGBoost,Directional IAT statistics,8,2.199703946709633,0.4126655864792415,1
+vpn,XGBoost,Flow IAT statistics,4,1.349174588918686,0.25310584355309734,2
+vpn,XGBoost,Flow throughput,2,0.9194450080394745,0.17248835419219513,3
+vpn,XGBoost,Flow duration,1,0.3602970242500305,0.06759190619322501,4
+vpn,XGBoost,Idle-period statistics,4,0.3074994198977947,0.05768704858849827,5
+vpn,XGBoost,Active-period statistics,4,0.19435587152838707,0.03646126099374277,6

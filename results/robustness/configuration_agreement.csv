@@ -1,0 +1,9 @@
+context,reference_model,reference_method,alternative_model,alternative_method,spearman,kendall,rank_displacement,top5_overlap,top10_overlap
+novpn,RF,tree_path_dependent,RF,interventional,0.9752964426877472,0.8814229249011858,1.1304347826086956,4,9
+vpn,RF,tree_path_dependent,RF,interventional,0.9693675889328063,0.8814229249011858,1.1304347826086956,4,10
+novpn,XGB,tree_path_dependent,XGB,interventional,0.9812252964426879,0.9209486166007905,0.8695652173913043,4,9
+vpn,XGB,tree_path_dependent,XGB,interventional,0.9881422924901186,0.9288537549407115,0.6956521739130435,4,10
+novpn,RF,tree_path_dependent,ExtraTrees,tree_path_dependent,0.7302371541501976,0.5889328063241107,3.8260869565217392,3,7
+vpn,RF,tree_path_dependent,ExtraTrees,tree_path_dependent,0.8013833992094862,0.5968379446640317,3.4782608695652173,2,8
+novpn,RF,tree_path_dependent,ExtraTrees,interventional,0.7094861660079053,0.557312252964427,3.9130434782608696,3,7
+vpn,RF,tree_path_dependent,ExtraTrees,interventional,0.775691699604743,0.5968379446640317,3.391304347826087,2,8

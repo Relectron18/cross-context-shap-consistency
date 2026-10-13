@@ -1,0 +1,721 @@
+context,model,run,family,aggregated_family_importance,rank
+novpn,RandomForest,1,Directional IAT statistics,0.1140280526379779,1
+novpn,RandomForest,1,Flow IAT statistics,0.0658824920817435,2
+novpn,RandomForest,1,Flow throughput,0.0333243326160679,3
+novpn,RandomForest,1,Idle-period statistics,0.0233514212507926,4
+novpn,RandomForest,1,Active-period statistics,0.0179992162173204,5
+novpn,RandomForest,1,Flow duration,0.0170581410818613,6
+novpn,RandomForest,2,Directional IAT statistics,0.11886396493721771,1
+novpn,RandomForest,2,Flow IAT statistics,0.0571080495428939,2
+novpn,RandomForest,2,Flow throughput,0.0325639090909653,3
+novpn,RandomForest,2,Active-period statistics,0.0253914412552224,4
+novpn,RandomForest,2,Idle-period statistics,0.0193484680753514,5
+novpn,RandomForest,2,Flow duration,0.0176473695037671,6
+novpn,RandomForest,3,Directional IAT statistics,0.11675641897973821,1
+novpn,RandomForest,3,Flow IAT statistics,0.0609799491412666,2
+novpn,RandomForest,3,Flow throughput,0.031501559189028,3
+novpn,RandomForest,3,Idle-period statistics,0.0228725724368101,4
+novpn,RandomForest,3,Active-period statistics,0.0212417210599406,5
+novpn,RandomForest,3,Flow duration,0.0184923784503657,6
+novpn,RandomForest,4,Directional IAT statistics,0.1189614077220216,1
+novpn,RandomForest,4,Flow IAT statistics,0.0609753284035333,2
+novpn,RandomForest,4,Flow throughput,0.0319904997502291,3
+novpn,RandomForest,4,Idle-period statistics,0.0223474136638343,4
+novpn,RandomForest,4,Active-period statistics,0.018780779146478,5
+novpn,RandomForest,4,Flow duration,0.0176523038790837,6
+novpn,RandomForest,5,Directional IAT statistics,0.1188165039095503,1
+novpn,RandomForest,5,Flow IAT statistics,0.0621107850030757,2
+novpn,RandomForest,5,Flow throughput,0.0318747285297375,3
+novpn,RandomForest,5,Idle-period statistics,0.025183497226072903,4
+novpn,RandomForest,5,Flow duration,0.0179471631508435,5
+novpn,RandomForest,5,Active-period statistics,0.0174514535436629,6
+novpn,RandomForest,6,Directional IAT statistics,0.11517490902987021,1
+novpn,RandomForest,6,Flow IAT statistics,0.06328229354559,2
+novpn,RandomForest,6,Flow throughput,0.033154799427471196,3
+novpn,RandomForest,6,Idle-period statistics,0.0257769123508372,4
+novpn,RandomForest,6,Flow duration,0.0180533203732165,5
+novpn,RandomForest,6,Active-period statistics,0.0179724218188744,6
+novpn,RandomForest,7,Directional IAT statistics,0.1202873129134338,1
+novpn,RandomForest,7,Flow IAT statistics,0.060212746228307204,2
+novpn,RandomForest,7,Flow throughput,0.0319867712745166,3
+novpn,RandomForest,7,Idle-period statistics,0.0227056365799565,4
+novpn,RandomForest,7,Active-period statistics,0.0200671606742799,5
+novpn,RandomForest,7,Flow duration,0.0176420497366162,6
+novpn,RandomForest,8,Directional IAT statistics,0.1175035068804046,1
+novpn,RandomForest,8,Flow IAT statistics,0.0602267991087403,2
+novpn,RandomForest,8,Flow throughput,0.0317482198964443,3
+novpn,RandomForest,8,Idle-period statistics,0.025197423242618,4
+novpn,RandomForest,8,Active-period statistics,0.0180782633749463,5
+novpn,RandomForest,8,Flow duration,0.0177616789347953,6
+novpn,RandomForest,9,Directional IAT statistics,0.1193128441290627,1
+novpn,RandomForest,9,Flow IAT statistics,0.0592754665472712,2
+novpn,RandomForest,9,Flow throughput,0.0309843665350489,3
+novpn,RandomForest,9,Active-period statistics,0.0233160522135922,4
+novpn,RandomForest,9,Idle-period statistics,0.0201709323473823,5
+novpn,RandomForest,9,Flow duration,0.0185695795431081,6
+novpn,RandomForest,10,Directional IAT statistics,0.1163893786395987,1
+novpn,RandomForest,10,Flow IAT statistics,0.0629550123701898,2
+novpn,RandomForest,10,Flow throughput,0.0310548742002274,3
+novpn,RandomForest,10,Active-period statistics,0.022545905216209798,4
+novpn,RandomForest,10,Idle-period statistics,0.0205650065325751,5
+novpn,RandomForest,10,Flow duration,0.0175420698706087,6
+novpn,RandomForest,11,Directional IAT statistics,0.11977204437001471,1
+novpn,RandomForest,11,Flow IAT statistics,0.0611927889118727,2
+novpn,RandomForest,11,Flow throughput,0.0290820001112879,3
+novpn,RandomForest,11,Active-period statistics,0.022241411372349102,4
+novpn,RandomForest,11,Idle-period statistics,0.018687121642472198,5
+novpn,RandomForest,11,Flow duration,0.0184115114317732,6
+novpn,RandomForest,12,Directional IAT statistics,0.1179964811207312,1
+novpn,RandomForest,12,Flow IAT statistics,0.0609001442640358,2
+novpn,RandomForest,12,Flow throughput,0.031127583159970898,3
+novpn,RandomForest,12,Idle-period statistics,0.0224011912773828,4
+novpn,RandomForest,12,Active-period statistics,0.0192626923635476,5
+novpn,RandomForest,12,Flow duration,0.0181257039897726,6
+novpn,RandomForest,13,Directional IAT statistics,0.1177899002700216,1
+novpn,RandomForest,13,Flow IAT statistics,0.0631234220984221,2
+novpn,RandomForest,13,Flow throughput,0.031372003030061,3
+novpn,RandomForest,13,Active-period statistics,0.020462605053062702,4
+novpn,RandomForest,13,Idle-period statistics,0.0199573330687817,5
+novpn,RandomForest,13,Flow duration,0.0180736748326646,6
+novpn,RandomForest,14,Directional IAT statistics,0.1187132561119137,1
+novpn,RandomForest,14,Flow IAT statistics,0.0598993030446334,2
+novpn,RandomForest,14,Flow throughput,0.0321185941901732,3
+novpn,RandomForest,14,Idle-period statistics,0.0241691754228507,4
+novpn,RandomForest,14,Active-period statistics,0.0196619621182459,5
+novpn,RandomForest,14,Flow duration,0.0171497684965511,6
+novpn,RandomForest,15,Directional IAT statistics,0.1192598059375198,1
+novpn,RandomForest,15,Flow IAT statistics,0.0615094506646143,2
+novpn,RandomForest,15,Flow throughput,0.0308475652448506,3
+novpn,RandomForest,15,Idle-period statistics,0.023768358634871402,4
+novpn,RandomForest,15,Active-period statistics,0.0203383035411443,5
+novpn,RandomForest,15,Flow duration,0.0186480607427146,6
+novpn,RandomForest,16,Directional IAT statistics,0.1172991442521356,1
+novpn,RandomForest,16,Flow IAT statistics,0.0627869887357035,2
+novpn,RandomForest,16,Flow throughput,0.0312112384432531,3
+novpn,RandomForest,16,Idle-period statistics,0.0229398930493783,4
+novpn,RandomForest,16,Active-period statistics,0.0190535819881782,5
+novpn,RandomForest,16,Flow duration,0.0189110338108486,6
+novpn,RandomForest,17,Directional IAT statistics,0.1143411806860561,1
+novpn,RandomForest,17,Flow IAT statistics,0.0623758062471595,2
+novpn,RandomForest,17,Flow throughput,0.033625753710832595,3
+novpn,RandomForest,17,Idle-period statistics,0.0241053785142922,4
+novpn,RandomForest,17,Active-period statistics,0.0192983736636883,5
+novpn,RandomForest,17,Flow duration,0.0177703267789777,6
+novpn,RandomForest,18,Directional IAT statistics,0.1180220204631276,1
+novpn,RandomForest,18,Flow IAT statistics,0.06187357058099,2
+novpn,RandomForest,18,Flow throughput,0.0325428717725647,3
+novpn,RandomForest,18,Idle-period statistics,0.0235160728662969,4
+novpn,RandomForest,18,Flow duration,0.0173417856800545,5
+novpn,RandomForest,18,Active-period statistics,0.0156787116274293,6
+novpn,RandomForest,19,Directional IAT statistics,0.115772263227631,1
+novpn,RandomForest,19,Flow IAT statistics,0.0597359669109968,2
+novpn,RandomForest,19,Flow throughput,0.032146258747915504,3
+novpn,RandomForest,19,Active-period statistics,0.025137759198659602,4
+novpn,RandomForest,19,Idle-period statistics,0.0213617094664581,5
+novpn,RandomForest,19,Flow duration,0.0186748177086391,6
+novpn,RandomForest,20,Directional IAT statistics,0.121688567876913,1
+novpn,RandomForest,20,Flow IAT statistics,0.0606942543979554,2
+novpn,RandomForest,20,Flow throughput,0.031493267310060705,3
+novpn,RandomForest,20,Idle-period statistics,0.0222451927451143,4
+novpn,RandomForest,20,Flow duration,0.0183164508929029,5
+novpn,RandomForest,20,Active-period statistics,0.0176436283809589,6
+novpn,RandomForest,21,Directional IAT statistics,0.11833376258816271,1
+novpn,RandomForest,21,Flow IAT statistics,0.0614052900750491,2
+novpn,RandomForest,21,Flow throughput,0.031413295598308,3
+novpn,RandomForest,21,Idle-period statistics,0.0251902928959148,4
+novpn,RandomForest,21,Flow duration,0.018513670876301,5
+novpn,RandomForest,21,Active-period statistics,0.0170944145845613,6
+novpn,RandomForest,22,Directional IAT statistics,0.1176800374715731,1
+novpn,RandomForest,22,Flow IAT statistics,0.0644319910055856,2
+novpn,RandomForest,22,Flow throughput,0.0324271016504574,3
+novpn,RandomForest,22,Idle-period statistics,0.0218817452344189,4
+novpn,RandomForest,22,Active-period statistics,0.0207875594821971,5
+novpn,RandomForest,22,Flow duration,0.0164958170193083,6
+novpn,RandomForest,23,Directional IAT statistics,0.1169390517373725,1
+novpn,RandomForest,23,Flow IAT statistics,0.0631551708318953,2
+novpn,RandomForest,23,Flow throughput,0.0299653326825729,3
+novpn,RandomForest,23,Idle-period statistics,0.0262119842383862,4
+novpn,RandomForest,23,Flow duration,0.0174643141272398,5
+novpn,RandomForest,23,Active-period statistics,0.0169869483753322,6
+novpn,RandomForest,24,Directional IAT statistics,0.11975392238839849,1
+novpn,RandomForest,24,Flow IAT statistics,0.060853545213436104,2
+novpn,RandomForest,24,Flow throughput,0.0322823524733616,3
+novpn,RandomForest,24,Idle-period statistics,0.0249429634243366,4
+novpn,RandomForest,24,Flow duration,0.0175271507825304,5
+novpn,RandomForest,24,Active-period statistics,0.0164396039369995,6
+novpn,RandomForest,25,Directional IAT statistics,0.1185701870544854,1
+novpn,RandomForest,25,Flow IAT statistics,0.0606535797721266,2
+novpn,RandomForest,25,Flow throughput,0.0309136444365258,3
+novpn,RandomForest,25,Active-period statistics,0.0220767201629045,4
+novpn,RandomForest,25,Idle-period statistics,0.0219965968274044,5
+novpn,RandomForest,25,Flow duration,0.0180901141031415,6
+novpn,RandomForest,26,Directional IAT statistics,0.119965684031893,1
+novpn,RandomForest,26,Flow IAT statistics,0.0617249106093849,2
+novpn,RandomForest,26,Flow throughput,0.0313603995590342,3
+novpn,RandomForest,26,Idle-period statistics,0.0265329018938385,4
+novpn,RandomForest,26,Flow duration,0.0177909753777366,5
+novpn,RandomForest,26,Active-period statistics,0.0161532444568273,6
+novpn,RandomForest,27,Directional IAT statistics,0.1149042339509696,1
+novpn,RandomForest,27,Flow IAT statistics,0.062115691812288897,2
+novpn,RandomForest,27,Flow throughput,0.0327959686625023,3
+novpn,RandomForest,27,Idle-period statistics,0.0240506228516244,4
+novpn,RandomForest,27,Active-period statistics,0.0191115159320018,5
+novpn,RandomForest,27,Flow duration,0.0173962015842361,6
+novpn,RandomForest,28,Directional IAT statistics,0.1180974418365138,1
+novpn,RandomForest,28,Flow IAT statistics,0.0613829866450041,2
+novpn,RandomForest,28,Flow throughput,0.032041982255992904,3
+novpn,RandomForest,28,Active-period statistics,0.0218798451280677,4
+novpn,RandomForest,28,Idle-period statistics,0.0207319965224064,5
+novpn,RandomForest,28,Flow duration,0.0188259408504532,6
+novpn,RandomForest,29,Directional IAT statistics,0.1191472358195394,1
+novpn,RandomForest,29,Flow IAT statistics,0.061506400970345695,2
+novpn,RandomForest,29,Flow throughput,0.032107088621514304,3
+novpn,RandomForest,29,Idle-period statistics,0.0238043940280492,4
+novpn,RandomForest,29,Flow duration,0.0171260479375579,5
+novpn,RandomForest,29,Active-period statistics,0.0168044795426411,6
+novpn,RandomForest,30,Directional IAT statistics,0.1159112895866677,1
+novpn,RandomForest,30,Flow IAT statistics,0.0604963478395944,2
+novpn,RandomForest,30,Flow throughput,0.0337178049475048,3
+novpn,RandomForest,30,Idle-period statistics,0.0218140808704531,4
+novpn,RandomForest,30,Active-period statistics,0.021272922649764,5
+novpn,RandomForest,30,Flow duration,0.018683426172195,6
+novpn,XGBoost,1,Directional IAT statistics,2.1297716870903964,1
+novpn,XGBoost,1,Flow IAT statistics,1.7451634109020233,2
+novpn,XGBoost,1,Flow throughput,1.071595937013626,3
+novpn,XGBoost,1,Active-period statistics,0.3771326392889021,4
+novpn,XGBoost,1,Flow duration,0.3093250095844269,5
+novpn,XGBoost,1,Idle-period statistics,0.18083758000284408,6
+novpn,XGBoost,2,Directional IAT statistics,2.2621672376990314,1
+novpn,XGBoost,2,Flow IAT statistics,1.6117653846740723,2
+novpn,XGBoost,2,Flow throughput,1.0895272195339203,3
+novpn,XGBoost,2,Flow duration,0.3832149803638458,4
+novpn,XGBoost,2,Active-period statistics,0.34537625685334183,5
+novpn,XGBoost,2,Idle-period statistics,0.1409910349175332,6
+novpn,XGBoost,3,Directional IAT statistics,2.220446780323982,1
+novpn,XGBoost,3,Flow IAT statistics,1.7564470916986465,2
+novpn,XGBoost,3,Flow throughput,1.1437518000602722,3
+novpn,XGBoost,3,Flow duration,0.3318626880645752,4
+novpn,XGBoost,3,Active-period statistics,0.2743546180427073,5
+novpn,XGBoost,3,Idle-period statistics,0.1877441685646771,6
+novpn,XGBoost,4,Directional IAT statistics,2.12101836502552,1
+novpn,XGBoost,4,Flow IAT statistics,1.6766574084758759,2
+novpn,XGBoost,4,Flow throughput,1.1623723208904266,3
+novpn,XGBoost,4,Active-period statistics,0.3527163192629813,4
+novpn,XGBoost,4,Flow duration,0.3440586626529693,5
+novpn,XGBoost,4,Idle-period statistics,0.1765780355781315,6
+novpn,XGBoost,5,Directional IAT statistics,2.217612743377685,1
+novpn,XGBoost,5,Flow IAT statistics,1.7172854244709015,2
+novpn,XGBoost,5,Flow throughput,1.1021489799022675,3
+novpn,XGBoost,5,Flow duration,0.317005306482315,4
+novpn,XGBoost,5,Active-period statistics,0.2934472411870955,5
+novpn,XGBoost,5,Idle-period statistics,0.1795391961932181,6
+novpn,XGBoost,6,Directional IAT statistics,2.2710788697004314,1
+novpn,XGBoost,6,Flow IAT statistics,1.6532117575407028,2
+novpn,XGBoost,6,Flow throughput,1.1805018484592438,3
+novpn,XGBoost,6,Active-period statistics,0.3506330996751784,4
+novpn,XGBoost,6,Flow duration,0.317600667476654,5
+novpn,XGBoost,6,Idle-period statistics,0.1363205369561909,6
+novpn,XGBoost,7,Directional IAT statistics,2.063654541969299,1
+novpn,XGBoost,7,Flow IAT statistics,1.6160299628973007,2
+novpn,XGBoost,7,Flow throughput,1.1904099583625793,3
+novpn,XGBoost,7,Active-period statistics,0.3839167840778826,4
+novpn,XGBoost,7,Flow duration,0.3476194143295288,5
+novpn,XGBoost,7,Idle-period statistics,0.1752805234864352,6
+novpn,XGBoost,8,Directional IAT statistics,2.3015642017126083,1
+novpn,XGBoost,8,Flow IAT statistics,1.760265827178955,2
+novpn,XGBoost,8,Flow throughput,1.110929012298584,3
+novpn,XGBoost,8,Flow duration,0.2694064378738403,4
+novpn,XGBoost,8,Active-period statistics,0.23912557959556552,5
+novpn,XGBoost,8,Idle-period statistics,0.1640110127627847,6
+novpn,XGBoost,9,Directional IAT statistics,2.195875264704227,1
+novpn,XGBoost,9,Flow IAT statistics,1.632760837674141,2
+novpn,XGBoost,9,Flow throughput,1.1489869356155396,3
+novpn,XGBoost,9,Active-period statistics,0.3532392270863054,4
+novpn,XGBoost,9,Flow duration,0.3469613194465637,5
+novpn,XGBoost,9,Idle-period statistics,0.1666248831897972,6
+novpn,XGBoost,10,Directional IAT statistics,2.121926173567772,1
+novpn,XGBoost,10,Flow IAT statistics,1.7223847955465317,2
+novpn,XGBoost,10,Flow throughput,1.1688986718654633,3
+novpn,XGBoost,10,Active-period statistics,0.3166788592934607,4
+novpn,XGBoost,10,Flow duration,0.2948731184005737,5
+novpn,XGBoost,10,Idle-period statistics,0.1512693120166658,6
+novpn,XGBoost,11,Directional IAT statistics,2.2131792381405826,1
+novpn,XGBoost,11,Flow IAT statistics,1.5305034667253494,2
+novpn,XGBoost,11,Flow throughput,1.1314493417739868,3
+novpn,XGBoost,11,Flow duration,0.3800061643123626,4
+novpn,XGBoost,11,Active-period statistics,0.3224900439381599,5
+novpn,XGBoost,11,Idle-period statistics,0.1530494280159471,6
+novpn,XGBoost,12,Directional IAT statistics,2.1466600373387337,1
+novpn,XGBoost,12,Flow IAT statistics,1.6570101082324982,2
+novpn,XGBoost,12,Flow throughput,1.1320585310459137,3
+novpn,XGBoost,12,Flow duration,0.333771288394928,4
+novpn,XGBoost,12,Active-period statistics,0.3337361272424459,5
+novpn,XGBoost,12,Idle-period statistics,0.145366422832012,6
+novpn,XGBoost,13,Directional IAT statistics,2.184261873364448,1
+novpn,XGBoost,13,Flow IAT statistics,1.665587395429611,2
+novpn,XGBoost,13,Flow throughput,1.1285803318023682,3
+novpn,XGBoost,13,Active-period statistics,0.37053068354725827,4
+novpn,XGBoost,13,Flow duration,0.3317852914333343,5
+novpn,XGBoost,13,Idle-period statistics,0.1495573334395884,6
+novpn,XGBoost,14,Directional IAT statistics,2.1856119334697723,1
+novpn,XGBoost,14,Flow IAT statistics,1.59641832113266,2
+novpn,XGBoost,14,Flow throughput,1.2022235095500946,3
+novpn,XGBoost,14,Flow duration,0.3335950672626495,4
+novpn,XGBoost,14,Active-period statistics,0.3256242349743841,5
+novpn,XGBoost,14,Idle-period statistics,0.1702815927565096,6
+novpn,XGBoost,15,Directional IAT statistics,2.3356696665287013,1
+novpn,XGBoost,15,Flow IAT statistics,1.6810727566480637,2
+novpn,XGBoost,15,Flow throughput,1.0573042631149292,3
+novpn,XGBoost,15,Flow duration,0.3646061718463897,4
+novpn,XGBoost,15,Active-period statistics,0.2918348163366317,5
+novpn,XGBoost,15,Idle-period statistics,0.1573580056428907,6
+novpn,XGBoost,16,Directional IAT statistics,2.2607854604721065,1
+novpn,XGBoost,16,Flow IAT statistics,1.6295060813426971,2
+novpn,XGBoost,16,Flow throughput,1.1406199634075165,3
+novpn,XGBoost,16,Flow duration,0.3498376607894897,4
+novpn,XGBoost,16,Active-period statistics,0.3186519667506216,5
+novpn,XGBoost,16,Idle-period statistics,0.1610103547573089,6
+novpn,XGBoost,17,Directional IAT statistics,2.2215780913829803,1
+novpn,XGBoost,17,Flow IAT statistics,1.5896528661251068,2
+novpn,XGBoost,17,Flow throughput,1.169905573129654,3
+novpn,XGBoost,17,Flow duration,0.3264976739883423,4
+novpn,XGBoost,17,Active-period statistics,0.27615491487085797,5
+novpn,XGBoost,17,Idle-period statistics,0.1640473902225493,6
+novpn,XGBoost,18,Directional IAT statistics,2.190021254122257,1
+novpn,XGBoost,18,Flow IAT statistics,1.6513004899024963,2
+novpn,XGBoost,18,Flow throughput,1.1534273624420166,3
+novpn,XGBoost,18,Active-period statistics,0.3669940754771231,4
+novpn,XGBoost,18,Flow duration,0.2918446362018585,5
+novpn,XGBoost,18,Idle-period statistics,0.1601638244464991,6
+novpn,XGBoost,19,Directional IAT statistics,2.1130712702870365,1
+novpn,XGBoost,19,Flow IAT statistics,1.6629346460103989,2
+novpn,XGBoost,19,Flow throughput,1.151521384716034,3
+novpn,XGBoost,19,Flow duration,0.3702732920646667,4
+novpn,XGBoost,19,Active-period statistics,0.3684713318943976,5
+novpn,XGBoost,19,Idle-period statistics,0.14274141937494259,6
+novpn,XGBoost,20,Directional IAT statistics,2.3081151694059368,1
+novpn,XGBoost,20,Flow IAT statistics,1.567227691411972,2
+novpn,XGBoost,20,Flow throughput,1.1609925031661987,3
+novpn,XGBoost,20,Active-period statistics,0.34414364397525776,4
+novpn,XGBoost,20,Flow duration,0.3405856192111969,5
+novpn,XGBoost,20,Idle-period statistics,0.1147903036326169,6
+novpn,XGBoost,21,Directional IAT statistics,2.294794350862503,1
+novpn,XGBoost,21,Flow IAT statistics,1.7665432542562485,2
+novpn,XGBoost,21,Flow throughput,1.0760026574134827,3
+novpn,XGBoost,21,Flow duration,0.3294210433959961,4
+novpn,XGBoost,21,Active-period statistics,0.2421960830688476,5
+novpn,XGBoost,21,Idle-period statistics,0.1637614248320459,6
+novpn,XGBoost,22,Directional IAT statistics,2.2129906937479973,1
+novpn,XGBoost,22,Flow IAT statistics,1.6206595003604887,2
+novpn,XGBoost,22,Flow throughput,1.2061655223369598,3
+novpn,XGBoost,22,Active-period statistics,0.369128882884979,4
+novpn,XGBoost,22,Flow duration,0.3058067858219147,5
+novpn,XGBoost,22,Idle-period statistics,0.1788548585027454,6
+novpn,XGBoost,23,Directional IAT statistics,2.2241928651928897,1
+novpn,XGBoost,23,Flow IAT statistics,1.6498021483421323,2
+novpn,XGBoost,23,Flow throughput,1.1418382227420807,3
+novpn,XGBoost,23,Active-period statistics,0.3913357034325598,4
+novpn,XGBoost,23,Flow duration,0.3137761950492859,5
+novpn,XGBoost,23,Idle-period statistics,0.1549652218818663,6
+novpn,XGBoost,24,Directional IAT statistics,2.2007133215665817,1
+novpn,XGBoost,24,Flow IAT statistics,1.6291399002075193,2
+novpn,XGBoost,24,Flow throughput,1.1618817150592804,3
+novpn,XGBoost,24,Flow duration,0.3685497045516968,4
+novpn,XGBoost,24,Active-period statistics,0.3190977647900579,5
+novpn,XGBoost,24,Idle-period statistics,0.1963421627879141,6
+novpn,XGBoost,25,Directional IAT statistics,2.2308732196688648,1
+novpn,XGBoost,25,Flow IAT statistics,1.7441903203725815,2
+novpn,XGBoost,25,Flow throughput,1.1100005805492401,3
+novpn,XGBoost,25,Active-period statistics,0.35515050590038283,4
+novpn,XGBoost,25,Flow duration,0.329995721578598,5
+novpn,XGBoost,25,Idle-period statistics,0.1512028658762573,6
+novpn,XGBoost,26,Directional IAT statistics,2.170889377593994,1
+novpn,XGBoost,26,Flow IAT statistics,1.6309694945812225,2
+novpn,XGBoost,26,Flow throughput,1.1881794929504395,3
+novpn,XGBoost,26,Flow duration,0.3490326404571533,4
+novpn,XGBoost,26,Active-period statistics,0.3034528382122515,5
+novpn,XGBoost,26,Idle-period statistics,0.19438563566654898,6
+novpn,XGBoost,27,Directional IAT statistics,2.1571803465485573,1
+novpn,XGBoost,27,Flow IAT statistics,1.6584516614675522,2
+novpn,XGBoost,27,Flow throughput,1.1503864526748657,3
+novpn,XGBoost,27,Active-period statistics,0.3475713767111299,4
+novpn,XGBoost,27,Flow duration,0.3196638226509094,5
+novpn,XGBoost,27,Idle-period statistics,0.1659793229773638,6
+novpn,XGBoost,28,Directional IAT statistics,2.1613620221614833,1
+novpn,XGBoost,28,Flow IAT statistics,1.700936809182167,2
+novpn,XGBoost,28,Flow throughput,1.1030842959880829,3
+novpn,XGBoost,28,Active-period statistics,0.3202844336628913,4
+novpn,XGBoost,28,Flow duration,0.3160444498062134,5
+novpn,XGBoost,28,Idle-period statistics,0.1741344928741454,6
+novpn,XGBoost,29,Directional IAT statistics,2.3570518344640727,1
+novpn,XGBoost,29,Flow IAT statistics,1.5823557525873184,2
+novpn,XGBoost,29,Flow throughput,1.110413283109665,3
+novpn,XGBoost,29,Flow duration,0.3031016290187835,4
+novpn,XGBoost,29,Active-period statistics,0.2993580736219881,5
+novpn,XGBoost,29,Idle-period statistics,0.1802295623347161,6
+novpn,XGBoost,30,Directional IAT statistics,2.2627360671758647,1
+novpn,XGBoost,30,Flow IAT statistics,1.5977652370929718,2
+novpn,XGBoost,30,Flow throughput,1.1263201534748077,3
+novpn,XGBoost,30,Flow duration,0.3735962808132171,4
+novpn,XGBoost,30,Active-period statistics,0.3429516740143297,5
+novpn,XGBoost,30,Idle-period statistics,0.1905206125229596,6
+vpn,RandomForest,1,Directional IAT statistics,0.1169861337189465,1
+vpn,RandomForest,1,Flow IAT statistics,0.0580173111178355,2
+vpn,RandomForest,1,Flow throughput,0.039178647463729496,3
+vpn,RandomForest,1,Idle-period statistics,0.0162302773055813,4
+vpn,RandomForest,1,Flow duration,0.0160785172355587,5
+vpn,RandomForest,1,Active-period statistics,0.009592106440651199,6
+vpn,RandomForest,2,Directional IAT statistics,0.1174398822460664,1
+vpn,RandomForest,2,Flow IAT statistics,0.0602213230294046,2
+vpn,RandomForest,2,Flow throughput,0.037631802521911104,3
+vpn,RandomForest,2,Idle-period statistics,0.0170808802380073,4
+vpn,RandomForest,2,Flow duration,0.0151724096079996,5
+vpn,RandomForest,2,Active-period statistics,0.011045798729459,6
+vpn,RandomForest,3,Directional IAT statistics,0.1187207913507239,1
+vpn,RandomForest,3,Flow IAT statistics,0.0555851758036744,2
+vpn,RandomForest,3,Flow throughput,0.0381594041993683,3
+vpn,RandomForest,3,Idle-period statistics,0.0193112401445076,4
+vpn,RandomForest,3,Flow duration,0.0148576697480768,5
+vpn,RandomForest,3,Active-period statistics,0.0102022685838868,6
+vpn,RandomForest,4,Directional IAT statistics,0.1200812131282872,1
+vpn,RandomForest,4,Flow IAT statistics,0.0581730071809053,2
+vpn,RandomForest,4,Flow throughput,0.0381120835413017,3
+vpn,RandomForest,4,Idle-period statistics,0.0178596430998265,4
+vpn,RandomForest,4,Flow duration,0.0144324964016886,5
+vpn,RandomForest,4,Active-period statistics,0.011015297892568901,6
+vpn,RandomForest,5,Directional IAT statistics,0.1190846244828306,1
+vpn,RandomForest,5,Flow IAT statistics,0.0580257622404968,2
+vpn,RandomForest,5,Flow throughput,0.0387684295432706,3
+vpn,RandomForest,5,Idle-period statistics,0.0171649953636606,4
+vpn,RandomForest,5,Flow duration,0.0149936528648305,5
+vpn,RandomForest,5,Active-period statistics,0.01048134435703,6
+vpn,RandomForest,6,Directional IAT statistics,0.1161626998987987,1
+vpn,RandomForest,6,Flow IAT statistics,0.0589616214549031,2
+vpn,RandomForest,6,Flow throughput,0.0395424653746796,3
+vpn,RandomForest,6,Idle-period statistics,0.0174565852522976,4
+vpn,RandomForest,6,Flow duration,0.0144152869608714,5
+vpn,RandomForest,6,Active-period statistics,0.0105172133897155,6
+vpn,RandomForest,7,Directional IAT statistics,0.1172252372976191,1
+vpn,RandomForest,7,Flow IAT statistics,0.0569950957545038,2
+vpn,RandomForest,7,Flow throughput,0.0389969705419014,3
+vpn,RandomForest,7,Idle-period statistics,0.0172548681290706,4
+vpn,RandomForest,7,Flow duration,0.015170793270384,5
+vpn,RandomForest,7,Active-period statistics,0.0115508759486546,6
+vpn,RandomForest,8,Directional IAT statistics,0.1175125656655734,1
+vpn,RandomForest,8,Flow IAT statistics,0.0589966980293614,2
+vpn,RandomForest,8,Flow throughput,0.039799450710961,3
+vpn,RandomForest,8,Idle-period statistics,0.018859426181393302,4
+vpn,RandomForest,8,Flow duration,0.0147540407122603,5
+vpn,RandomForest,8,Active-period statistics,0.0097900259576694,6
+vpn,RandomForest,9,Directional IAT statistics,0.1195782933074918,1
+vpn,RandomForest,9,Flow IAT statistics,0.057136662888950696,2
+vpn,RandomForest,9,Flow throughput,0.0393799679116219,3
+vpn,RandomForest,9,Idle-period statistics,0.016384554007460198,4
+vpn,RandomForest,9,Flow duration,0.0150772962750509,5
+vpn,RandomForest,9,Active-period statistics,0.0097625271546208,6
+vpn,RandomForest,10,Directional IAT statistics,0.1200915006414101,1
+vpn,RandomForest,10,Flow IAT statistics,0.0575171035826976,2
+vpn,RandomForest,10,Flow throughput,0.0395567158232936,3
+vpn,RandomForest,10,Idle-period statistics,0.0164839180940921,4
+vpn,RandomForest,10,Flow duration,0.0130650603204534,5
+vpn,RandomForest,10,Active-period statistics,0.0107822155550131,6
+vpn,RandomForest,11,Directional IAT statistics,0.1180281755156689,1
+vpn,RandomForest,11,Flow IAT statistics,0.057530863515278204,2
+vpn,RandomForest,11,Flow throughput,0.0385414282392684,3
+vpn,RandomForest,11,Idle-period statistics,0.0175547265017382,4
+vpn,RandomForest,11,Flow duration,0.0164309014187259,5
+vpn,RandomForest,11,Active-period statistics,0.010275445903328899,6
+vpn,RandomForest,12,Directional IAT statistics,0.119890424617358,1
+vpn,RandomForest,12,Flow IAT statistics,0.0583610131396524,2
+vpn,RandomForest,12,Flow throughput,0.0380492701347969,3
+vpn,RandomForest,12,Idle-period statistics,0.0173482753103805,4
+vpn,RandomForest,12,Flow duration,0.0149071705380684,5
+vpn,RandomForest,12,Active-period statistics,0.0104687789561769,6
+vpn,RandomForest,13,Directional IAT statistics,0.1199632658032845,1
+vpn,RandomForest,13,Flow IAT statistics,0.056160188580009,2
+vpn,RandomForest,13,Flow throughput,0.0402108177752419,3
+vpn,RandomForest,13,Idle-period statistics,0.0164792852987006,4
+vpn,RandomForest,13,Flow duration,0.015525477538615,5
+vpn,RandomForest,13,Active-period statistics,0.0095279968784517,6
+vpn,RandomForest,14,Directional IAT statistics,0.1199707615813633,1
+vpn,RandomForest,14,Flow IAT statistics,0.058526378299364995,2
+vpn,RandomForest,14,Flow throughput,0.0383954070003623,3
+vpn,RandomForest,14,Idle-period statistics,0.017814460325711,4
+vpn,RandomForest,14,Flow duration,0.0137749429675802,5
+vpn,RandomForest,14,Active-period statistics,0.010068285204973,6
+vpn,RandomForest,15,Directional IAT statistics,0.1179548209570942,1
+vpn,RandomForest,15,Flow IAT statistics,0.0584460608192192,2
+vpn,RandomForest,15,Flow throughput,0.0379248577942593,3
+vpn,RandomForest,15,Idle-period statistics,0.0173586494364074,4
+vpn,RandomForest,15,Flow duration,0.0136935734588505,5
+vpn,RandomForest,15,Active-period statistics,0.0112305464446142,6
+vpn,RandomForest,16,Directional IAT statistics,0.11603370596569329,1
+vpn,RandomForest,16,Flow IAT statistics,0.0610182452930242,2
+vpn,RandomForest,16,Flow throughput,0.039718823537251896,3
+vpn,RandomForest,16,Idle-period statistics,0.0174845612297483,4
+vpn,RandomForest,16,Flow duration,0.0147823134146501,5
+vpn,RandomForest,16,Active-period statistics,0.0088051970009467,6
+vpn,RandomForest,17,Directional IAT statistics,0.115381313076009,1
+vpn,RandomForest,17,Flow IAT statistics,0.0614502882853079,2
+vpn,RandomForest,17,Flow throughput,0.0371420430075481,3
+vpn,RandomForest,17,Idle-period statistics,0.0189296046724203,4
+vpn,RandomForest,17,Flow duration,0.0159851670939843,5
+vpn,RandomForest,17,Active-period statistics,0.009565047462061299,6
+vpn,RandomForest,18,Directional IAT statistics,0.1182016054808363,1
+vpn,RandomForest,18,Flow IAT statistics,0.0578628263797423,2
+vpn,RandomForest,18,Flow throughput,0.0413787850021419,3
+vpn,RandomForest,18,Idle-period statistics,0.0172344234357011,4
+vpn,RandomForest,18,Flow duration,0.013790316212453,5
+vpn,RandomForest,18,Active-period statistics,0.0108385611963722,6
+vpn,RandomForest,19,Directional IAT statistics,0.1188680245193459,1
+vpn,RandomForest,19,Flow IAT statistics,0.0570384695156878,2
+vpn,RandomForest,19,Flow throughput,0.0403123990578321,3
+vpn,RandomForest,19,Idle-period statistics,0.0181073066484319,4
+vpn,RandomForest,19,Flow duration,0.0143723161585354,5
+vpn,RandomForest,19,Active-period statistics,0.009767486235969,6
+vpn,RandomForest,20,Directional IAT statistics,0.117525229387377,1
+vpn,RandomForest,20,Flow IAT statistics,0.0590951066261112,2
+vpn,RandomForest,20,Flow throughput,0.0384771436887659,3
+vpn,RandomForest,20,Idle-period statistics,0.016283715104636,4
+vpn,RandomForest,20,Flow duration,0.0155626039272114,5
+vpn,RandomForest,20,Active-period statistics,0.0096203825422151,6
+vpn,RandomForest,21,Directional IAT statistics,0.1182768184405815,1
+vpn,RandomForest,21,Flow IAT statistics,0.0589654197405585,2
+vpn,RandomForest,21,Flow throughput,0.036942227954013196,3
+vpn,RandomForest,21,Idle-period statistics,0.0162740216953816,4
+vpn,RandomForest,21,Flow duration,0.0149139600786897,5
+vpn,RandomForest,21,Active-period statistics,0.012177380928097,6
+vpn,RandomForest,22,Directional IAT statistics,0.1202861290555844,1
+vpn,RandomForest,22,Flow IAT statistics,0.0544116277235169,2
+vpn,RandomForest,22,Flow throughput,0.0391618521028901,3
+vpn,RandomForest,22,Idle-period statistics,0.0182377188063268,4
+vpn,RandomForest,22,Flow duration,0.0150739916471556,5
+vpn,RandomForest,22,Active-period statistics,0.0105953759189119,6
+vpn,RandomForest,23,Directional IAT statistics,0.1202426366321683,1
+vpn,RandomForest,23,Flow IAT statistics,0.056842705050962,2
+vpn,RandomForest,23,Flow throughput,0.038982257098701,3
+vpn,RandomForest,23,Idle-period statistics,0.0161042437055704,4
+vpn,RandomForest,23,Flow duration,0.0152001270959332,5
+vpn,RandomForest,23,Active-period statistics,0.0106335867784885,6
+vpn,RandomForest,24,Directional IAT statistics,0.1160256808778637,1
+vpn,RandomForest,24,Flow IAT statistics,0.0587632432601144,2
+vpn,RandomForest,24,Flow throughput,0.0395881375244786,3
+vpn,RandomForest,24,Idle-period statistics,0.0182382193730676,4
+vpn,RandomForest,24,Flow duration,0.0155230737896349,5
+vpn,RandomForest,24,Active-period statistics,0.009958136430219101,6
+vpn,RandomForest,25,Directional IAT statistics,0.1180410614102462,1
+vpn,RandomForest,25,Flow IAT statistics,0.0583189618738933,2
+vpn,RandomForest,25,Flow throughput,0.0386594632325787,3
+vpn,RandomForest,25,Idle-period statistics,0.0176242252804545,4
+vpn,RandomForest,25,Flow duration,0.013247224880562,5
+vpn,RandomForest,25,Active-period statistics,0.011912461917922201,6
+vpn,RandomForest,26,Directional IAT statistics,0.1176652205235748,1
+vpn,RandomForest,26,Flow IAT statistics,0.0580043840102088,2
+vpn,RandomForest,26,Flow throughput,0.036064989623164796,3
+vpn,RandomForest,26,Idle-period statistics,0.0190553832904503,4
+vpn,RandomForest,26,Flow duration,0.0152305078554072,5
+vpn,RandomForest,26,Active-period statistics,0.0108847719731661,6
+vpn,RandomForest,27,Directional IAT statistics,0.118751348206578,1
+vpn,RandomForest,27,Flow IAT statistics,0.056770288524144105,2
+vpn,RandomForest,27,Flow throughput,0.0390483148891314,3
+vpn,RandomForest,27,Idle-period statistics,0.017831545964568898,4
+vpn,RandomForest,27,Flow duration,0.0154875576639218,5
+vpn,RandomForest,27,Active-period statistics,0.0106074811668458,6
+vpn,RandomForest,28,Directional IAT statistics,0.1192997831981052,1
+vpn,RandomForest,28,Flow IAT statistics,0.0584681135088934,2
+vpn,RandomForest,28,Flow throughput,0.038685852966308,3
+vpn,RandomForest,28,Idle-period statistics,0.0164141051074222,4
+vpn,RandomForest,28,Flow duration,0.0144735564814676,5
+vpn,RandomForest,28,Active-period statistics,0.0104090544580115,6
+vpn,RandomForest,29,Directional IAT statistics,0.119473016690883,1
+vpn,RandomForest,29,Flow IAT statistics,0.0564792557427565,2
+vpn,RandomForest,29,Flow throughput,0.0393362802447954,3
+vpn,RandomForest,29,Idle-period statistics,0.0169369981797714,4
+vpn,RandomForest,29,Flow duration,0.0148450091841787,5
+vpn,RandomForest,29,Active-period statistics,0.0102629769990334,6
+vpn,RandomForest,30,Directional IAT statistics,0.11914363090230659,1
+vpn,RandomForest,30,Flow IAT statistics,0.0575945865060819,2
+vpn,RandomForest,30,Flow throughput,0.0387699575316998,3
+vpn,RandomForest,30,Idle-period statistics,0.0174842002161605,4
+vpn,RandomForest,30,Flow duration,0.0150052104426429,5
+vpn,RandomForest,30,Active-period statistics,0.0097802537973053,6
+vpn,XGBoost,1,Directional IAT statistics,2.329202741384506,1
+vpn,XGBoost,1,Flow IAT statistics,1.3575199246406553,2
+vpn,XGBoost,1,Flow throughput,0.9291029423475266,3
+vpn,XGBoost,1,Flow duration,0.3525684773921966,4
+vpn,XGBoost,1,Idle-period statistics,0.22402070090174658,5
+vpn,XGBoost,1,Active-period statistics,0.212904021143913,6
+vpn,XGBoost,2,Directional IAT statistics,2.283806130290031,1
+vpn,XGBoost,2,Flow IAT statistics,1.38709257543087,2
+vpn,XGBoost,2,Flow throughput,0.8274295479059219,3
+vpn,XGBoost,2,Flow duration,0.3561937212944031,4
+vpn,XGBoost,2,Idle-period statistics,0.2921767383813856,5
+vpn,XGBoost,2,Active-period statistics,0.18895310163497908,6
+vpn,XGBoost,3,Directional IAT statistics,2.2241018936038013,1
+vpn,XGBoost,3,Flow IAT statistics,1.3635829687118528,2
+vpn,XGBoost,3,Flow throughput,0.9076423794031143,3
+vpn,XGBoost,3,Flow duration,0.3427531123161316,4
+vpn,XGBoost,3,Idle-period statistics,0.2555279061198232,5
+vpn,XGBoost,3,Active-period statistics,0.2411603778600692,6
+vpn,XGBoost,4,Directional IAT statistics,2.357232794165611,1
+vpn,XGBoost,4,Flow IAT statistics,1.3538550138473509,2
+vpn,XGBoost,4,Flow throughput,0.8086627423763274,3
+vpn,XGBoost,4,Flow duration,0.3557142913341522,4
+vpn,XGBoost,4,Idle-period statistics,0.3235649690032004,5
+vpn,XGBoost,4,Active-period statistics,0.2038906551897525,6
+vpn,XGBoost,5,Directional IAT statistics,2.3196634352207184,1
+vpn,XGBoost,5,Flow IAT statistics,1.3915607631206512,2
+vpn,XGBoost,5,Flow throughput,0.9172903597354889,3
+vpn,XGBoost,5,Flow duration,0.3748693168163299,4
+vpn,XGBoost,5,Idle-period statistics,0.2578950338065622,5
+vpn,XGBoost,5,Active-period statistics,0.2085028178989885,6
+vpn,XGBoost,6,Directional IAT statistics,2.29578760266304,1
+vpn,XGBoost,6,Flow IAT statistics,1.3966204226016996,2
+vpn,XGBoost,6,Flow throughput,0.9029563218355179,3
+vpn,XGBoost,6,Flow duration,0.320139080286026,4
+vpn,XGBoost,6,Idle-period statistics,0.2763401493430135,5
+vpn,XGBoost,6,Active-period statistics,0.2511192820966243,6
+vpn,XGBoost,7,Directional IAT statistics,2.31822369992733,1
+vpn,XGBoost,7,Flow IAT statistics,1.349404290318489,2
+vpn,XGBoost,7,Flow throughput,0.8903981149196625,3
+vpn,XGBoost,7,Flow duration,0.3790221810340881,4
+vpn,XGBoost,7,Idle-period statistics,0.2726296260952947,5
+vpn,XGBoost,7,Active-period statistics,0.20048686116933812,6
+vpn,XGBoost,8,Directional IAT statistics,2.318992748856544,1
+vpn,XGBoost,8,Flow IAT statistics,1.2767940312623978,2
+vpn,XGBoost,8,Flow throughput,0.9030737280845642,3
+vpn,XGBoost,8,Flow duration,0.356279581785202,4
+vpn,XGBoost,8,Idle-period statistics,0.2815273478627203,5
+vpn,XGBoost,8,Active-period statistics,0.1972816102206705,6
+vpn,XGBoost,9,Directional IAT statistics,2.2976480722427364,1
+vpn,XGBoost,9,Flow IAT statistics,1.3856579065322874,2
+vpn,XGBoost,9,Flow throughput,0.8728274255990982,3
+vpn,XGBoost,9,Flow duration,0.37101811170578,4
+vpn,XGBoost,9,Idle-period statistics,0.2347179166972636,5
+vpn,XGBoost,9,Active-period statistics,0.1997965760529039,6
+vpn,XGBoost,10,Directional IAT statistics,2.302921816706657,1
+vpn,XGBoost,10,Flow IAT statistics,1.324864774942398,2
+vpn,XGBoost,10,Flow throughput,0.912785068154335,3
+vpn,XGBoost,10,Flow duration,0.3838736414909363,4
+vpn,XGBoost,10,Idle-period statistics,0.2556664906442163,5
+vpn,XGBoost,10,Active-period statistics,0.2269460670650004,6
+vpn,XGBoost,11,Directional IAT statistics,2.2342506796121597,1
+vpn,XGBoost,11,Flow IAT statistics,1.3537704944610596,2
+vpn,XGBoost,11,Flow throughput,0.9158172905445099,3
+vpn,XGBoost,11,Flow duration,0.4038540422916412,4
+vpn,XGBoost,11,Idle-period statistics,0.26938983425497987,5
+vpn,XGBoost,11,Active-period statistics,0.21423889696598042,6
+vpn,XGBoost,12,Directional IAT statistics,2.24121481180191,1
+vpn,XGBoost,12,Flow IAT statistics,1.4052527844905853,2
+vpn,XGBoost,12,Flow throughput,0.8149589151144028,3
+vpn,XGBoost,12,Flow duration,0.3605011999607086,4
+vpn,XGBoost,12,Idle-period statistics,0.2756908126175402,5
+vpn,XGBoost,12,Active-period statistics,0.2247928660362957,6
+vpn,XGBoost,13,Directional IAT statistics,2.2901959866285324,1
+vpn,XGBoost,13,Flow IAT statistics,1.3468289077281952,2
+vpn,XGBoost,13,Flow throughput,0.9478449523448944,3
+vpn,XGBoost,13,Flow duration,0.3673191964626312,4
+vpn,XGBoost,13,Idle-period statistics,0.2727234587073324,5
+vpn,XGBoost,13,Active-period statistics,0.2415109649300574,6
+vpn,XGBoost,14,Directional IAT statistics,2.295935556292534,1
+vpn,XGBoost,14,Flow IAT statistics,1.4197323024272919,2
+vpn,XGBoost,14,Flow throughput,0.8528492748737335,3
+vpn,XGBoost,14,Flow duration,0.3831095099449157,4
+vpn,XGBoost,14,Idle-period statistics,0.28718084841966607,5
+vpn,XGBoost,14,Active-period statistics,0.2617705650627611,6
+vpn,XGBoost,15,Directional IAT statistics,2.172454193234443,1
+vpn,XGBoost,15,Flow IAT statistics,1.4388436973094938,2
+vpn,XGBoost,15,Flow throughput,0.9175572246313095,3
+vpn,XGBoost,15,Flow duration,0.3653386235237121,4
+vpn,XGBoost,15,Idle-period statistics,0.3073637299239633,5
+vpn,XGBoost,15,Active-period statistics,0.2121261805295942,6
+vpn,XGBoost,16,Directional IAT statistics,2.3631874471902847,1
+vpn,XGBoost,16,Flow IAT statistics,1.3583624958992002,2
+vpn,XGBoost,16,Flow throughput,0.9067101925611496,3
+vpn,XGBoost,16,Flow duration,0.3638242185115814,4
+vpn,XGBoost,16,Idle-period statistics,0.2606123648583887,5
+vpn,XGBoost,16,Active-period statistics,0.2006108276545999,6
+vpn,XGBoost,17,Directional IAT statistics,2.317796930670738,1
+vpn,XGBoost,17,Flow IAT statistics,1.3466068208217619,2
+vpn,XGBoost,17,Flow throughput,0.8587525337934494,3
+vpn,XGBoost,17,Flow duration,0.4068124294281006,4
+vpn,XGBoost,17,Active-period statistics,0.25692280381917937,5
+vpn,XGBoost,17,Idle-period statistics,0.2464749552309511,6
+vpn,XGBoost,18,Directional IAT statistics,2.263989835977554,1
+vpn,XGBoost,18,Flow IAT statistics,1.380932480096817,2
+vpn,XGBoost,18,Flow throughput,0.8568135350942612,3
+vpn,XGBoost,18,Flow duration,0.4098099172115326,4
+vpn,XGBoost,18,Idle-period statistics,0.2840453982353208,5
+vpn,XGBoost,18,Active-period statistics,0.2045640908181666,6
+vpn,XGBoost,19,Directional IAT statistics,2.354170799255371,1
+vpn,XGBoost,19,Flow IAT statistics,1.3498633801937103,2
+vpn,XGBoost,19,Flow throughput,0.8678707033395767,3
+vpn,XGBoost,19,Flow duration,0.3208549618721008,4
+vpn,XGBoost,19,Idle-period statistics,0.2755708787590264,5
+vpn,XGBoost,19,Active-period statistics,0.2257912009954451,6
+vpn,XGBoost,20,Directional IAT statistics,2.2979539334774013,1
+vpn,XGBoost,20,Flow IAT statistics,1.3600307404994965,2
+vpn,XGBoost,20,Flow throughput,0.8980028480291367,3
+vpn,XGBoost,20,Flow duration,0.3640507459640503,4
+vpn,XGBoost,20,Idle-period statistics,0.2681335359811781,5
+vpn,XGBoost,20,Active-period statistics,0.2191347554326056,6
+vpn,XGBoost,21,Directional IAT statistics,2.2973604202270503,1
+vpn,XGBoost,21,Flow IAT statistics,1.3686505109071732,2
+vpn,XGBoost,21,Flow throughput,0.8833252787590026,3
+vpn,XGBoost,21,Flow duration,0.4004889726638794,4
+vpn,XGBoost,21,Idle-period statistics,0.2980831973254679,5
+vpn,XGBoost,21,Active-period statistics,0.1986112948507069,6
+vpn,XGBoost,22,Directional IAT statistics,2.319830760359764,1
+vpn,XGBoost,22,Flow IAT statistics,1.2709380388259888,2
+vpn,XGBoost,22,Flow throughput,0.8833847939968109,3
+vpn,XGBoost,22,Flow duration,0.3727401494979858,4
+vpn,XGBoost,22,Idle-period statistics,0.2963063530623911,5
+vpn,XGBoost,22,Active-period statistics,0.21019526198506341,6
+vpn,XGBoost,23,Directional IAT statistics,2.3465989083051677,1
+vpn,XGBoost,23,Flow IAT statistics,1.290168136358261,2
+vpn,XGBoost,23,Flow throughput,0.9028965681791306,3
+vpn,XGBoost,23,Flow duration,0.3846971094608307,4
+vpn,XGBoost,23,Idle-period statistics,0.2530516125261782,5
+vpn,XGBoost,23,Active-period statistics,0.24185400828719128,6
+vpn,XGBoost,24,Directional IAT statistics,2.357834979891777,1
+vpn,XGBoost,24,Flow IAT statistics,1.331923499703407,2
+vpn,XGBoost,24,Flow throughput,0.9126565903425216,3
+vpn,XGBoost,24,Flow duration,0.345867782831192,4
+vpn,XGBoost,24,Idle-period statistics,0.2665106914937494,5
+vpn,XGBoost,24,Active-period statistics,0.1979270689189433,6
+vpn,XGBoost,25,Directional IAT statistics,2.2857786417007446,1
+vpn,XGBoost,25,Flow IAT statistics,1.3694856613874433,2
+vpn,XGBoost,25,Flow throughput,0.8707221001386641,3
+vpn,XGBoost,25,Flow duration,0.3449372053146362,4
+vpn,XGBoost,25,Idle-period statistics,0.2924994416534899,5
+vpn,XGBoost,25,Active-period statistics,0.2557449899613855,6
+vpn,XGBoost,26,Directional IAT statistics,2.315300278365612,1
+vpn,XGBoost,26,Flow IAT statistics,1.3768151104450224,2
+vpn,XGBoost,26,Flow throughput,0.9053622186183929,3
+vpn,XGBoost,26,Flow duration,0.3449183404445648,4
+vpn,XGBoost,26,Idle-period statistics,0.2805119976401328,5
+vpn,XGBoost,26,Active-period statistics,0.2007398903369902,6
+vpn,XGBoost,27,Directional IAT statistics,2.248892582952976,1
+vpn,XGBoost,27,Flow IAT statistics,1.3477957844734192,2
+vpn,XGBoost,27,Flow throughput,0.9201831519603729,3
+vpn,XGBoost,27,Flow duration,0.352088063955307,4
+vpn,XGBoost,27,Idle-period statistics,0.2635709345340727,5
+vpn,XGBoost,27,Active-period statistics,0.2481005713343618,6
+vpn,XGBoost,28,Directional IAT statistics,2.321835726499557,1
+vpn,XGBoost,28,Flow IAT statistics,1.3826532065868378,2
+vpn,XGBoost,28,Flow throughput,0.8975192457437515,3
+vpn,XGBoost,28,Flow duration,0.3663241863250732,4
+vpn,XGBoost,28,Idle-period statistics,0.2385816201567648,5
+vpn,XGBoost,28,Active-period statistics,0.2272391542792318,6
+vpn,XGBoost,29,Directional IAT statistics,2.3227551877498622,1
+vpn,XGBoost,29,Flow IAT statistics,1.3079690039157867,2
+vpn,XGBoost,29,Flow throughput,0.898100882768631,3
+vpn,XGBoost,29,Flow duration,0.3888680636882782,4
+vpn,XGBoost,29,Idle-period statistics,0.3037856742739676,5
+vpn,XGBoost,29,Active-period statistics,0.22204045578837378,6
+vpn,XGBoost,30,Directional IAT statistics,2.4663997143507004,1
+vpn,XGBoost,30,Flow IAT statistics,1.3234443068504333,2
+vpn,XGBoost,30,Flow throughput,0.8623828142881393,3
+vpn,XGBoost,30,Flow duration,0.3471028208732605,4
+vpn,XGBoost,30,Active-period statistics,0.2527233585715293,5
+vpn,XGBoost,30,Idle-period statistics,0.240055978298187,6

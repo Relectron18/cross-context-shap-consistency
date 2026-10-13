@@ -1,0 +1,504 @@
+{
+ "reweight_RF": {
+  "cross_reweighted": {
+   "rho": 0.8211462450592886,
+   "tau": 0.6442687747035574,
+   "top5": 3,
+   "top10": 8,
+   "rbo": 0.7318441060531887,
+   "l1": 0.2702574033620931
+  },
+  "cross_unweighted": {
+   "rho": 0.8300395256916996,
+   "tau": 0.6442687747035574,
+   "top5": 3,
+   "top10": 9,
+   "rbo": 0.5799874644471005,
+   "l1": 0.333255877160072
+  },
+  "within_unw_vs_rw": {
+   "novpn": 0.9762845849802372,
+   "vpn": 0.9930830039525691
+  },
+  "top5_rw": {
+   "novpn": [
+    "flowBytesPerSecond",
+    "min_flowiat",
+    "total_biat",
+    "total_fiat",
+    "duration"
+   ],
+   "vpn": [
+    "flowBytesPerSecond",
+    "min_fiat",
+    "min_biat",
+    "min_flowiat",
+    "total_biat"
+   ]
+  }
+ },
+ "reweight_XGB": {
+  "cross_reweighted": {
+   "rho": 0.7915019762845852,
+   "tau": 0.5968379446640317,
+   "top5": 3,
+   "top10": 7,
+   "rbo": 0.7932179877701063,
+   "l1": 0.37315815687179565
+  },
+  "cross_unweighted": {
+   "rho": 0.8073122529644269,
+   "tau": 0.6047430830039525,
+   "top5": 3,
+   "top10": 8,
+   "rbo": 0.7130708472122091,
+   "l1": 0.3670754134654999
+  },
+  "within_unw_vs_rw": {
+   "novpn": 0.991106719367589,
+   "vpn": 0.9980237154150198
+  },
+  "top5_rw": {
+   "novpn": [
+    "flowBytesPerSecond",
+    "min_flowiat",
+    "min_fiat",
+    "total_biat",
+    "flowPktsPerSecond"
+   ],
+   "vpn": [
+    "flowBytesPerSecond",
+    "min_flowiat",
+    "min_biat",
+    "min_fiat",
+    "duration"
+   ]
+  }
+ },
+ "sentinel_percls_novpn": {
+  "0": {
+   "min_fiat": 0.0004,
+   "min_biat": 0.0044,
+   "max_fiat": 0.0004,
+   "max_biat": 0.0044,
+   "min_flowiat": 0.0012,
+   "min_active": 0.2988,
+   "min_idle": 0.2988
+  },
+  "1": {
+   "min_fiat": 0.2852,
+   "min_biat": 0.3078,
+   "max_fiat": 0.2852,
+   "max_biat": 0.3078,
+   "min_flowiat": 0.0011,
+   "min_active": 0.3743,
+   "min_idle": 0.3743
+  },
+  "2": {
+   "min_fiat": 0.0327,
+   "min_biat": 0.2054,
+   "max_fiat": 0.0327,
+   "max_biat": 0.2054,
+   "min_flowiat": 0.0093,
+   "min_active": 0.6943,
+   "min_idle": 0.6943
+  },
+  "3": {
+   "min_fiat": 0.0042,
+   "min_biat": 0.4244,
+   "max_fiat": 0.0042,
+   "max_biat": 0.4244,
+   "min_flowiat": 0.0042,
+   "min_active": 0.6765,
+   "min_idle": 0.6765
+  },
+  "4": {
+   "min_fiat": 0.7917,
+   "min_biat": 0.7928,
+   "max_fiat": 0.7917,
+   "max_biat": 0.7928,
+   "min_flowiat": 0.0011,
+   "min_active": 0.8045,
+   "min_idle": 0.8045
+  },
+  "5": {
+   "min_fiat": 0.1489,
+   "min_biat": 0.1822,
+   "max_fiat": 0.1489,
+   "max_biat": 0.1822,
+   "min_flowiat": 0.02,
+   "min_active": 0.5733,
+   "min_idle": 0.5733
+  },
+  "6": {
+   "min_fiat": 0.0011,
+   "min_biat": 0.0039,
+   "max_fiat": 0.0011,
+   "max_biat": 0.0039,
+   "min_flowiat": 0.0014,
+   "min_active": 0.9943,
+   "min_idle": 0.9943
+  }
+ },
+ "sentinel_shap_share": {
+  "novpn_RF_min_fiat": {
+   "frac_records": 0.12650948821161587,
+   "frac_abs_shap": 0.21842322078800663,
+   "mean_abs_sentinel": 0.020373069432635466,
+   "mean_abs_other": 0.010558305243587017
+  },
+  "novpn_RF_min_biat": {
+   "frac_records": 0.16158711903392756,
+   "frac_abs_shap": 0.08136857480918838,
+   "mean_abs_sentinel": 0.006043073288195617,
+   "mean_abs_other": 0.013148955205607738
+  },
+  "novpn_RF_min_flowiat": {
+   "frac_records": 0.004600345025876941,
+   "frac_abs_shap": 0.004006031171122956,
+   "mean_abs_sentinel": 0.01953572201704589,
+   "mean_abs_other": 0.022447334089846765
+  },
+  "novpn_XGB_min_fiat": {
+   "frac_records": 0.12650948821161587,
+   "frac_abs_shap": 0.19300960004329681,
+   "mean_abs_sentinel": 0.6595230102539062,
+   "mean_abs_other": 0.3993781805038452
+  },
+  "novpn_XGB_min_biat": {
+   "frac_records": 0.16158711903392756,
+   "frac_abs_shap": 0.1233980655670166,
+   "mean_abs_sentinel": 0.18990276753902435,
+   "mean_abs_other": 0.26000046730041504
+  },
+  "novpn_XGB_min_flowiat": {
+   "frac_records": 0.004600345025876941,
+   "frac_abs_shap": 0.004311509896069765,
+   "mean_abs_sentinel": 0.7602298259735107,
+   "mean_abs_other": 0.8113941550254822
+  },
+  "vpn_RF_min_fiat": {
+   "frac_records": 0.10127931769722814,
+   "frac_abs_shap": 0.07946515951773898,
+   "mean_abs_sentinel": 0.016792476846152767,
+   "mean_abs_other": 0.02192170149180827
+  },
+  "vpn_RF_min_biat": {
+   "frac_records": 0.1657782515991471,
+   "frac_abs_shap": 0.10478976565922747,
+   "mean_abs_sentinel": 0.013307042767151058,
+   "mean_abs_other": 0.02259091227864962
+  },
+  "vpn_RF_min_flowiat": {
+   "frac_records": 0.0042643923240938165,
+   "frac_abs_shap": 0.0023633478297878873,
+   "mean_abs_sentinel": 0.009882165435170077,
+   "mean_abs_other": 0.0178652865754727
+  },
+  "vpn_XGB_min_fiat": {
+   "frac_records": 0.10127931769722814,
+   "frac_abs_shap": 0.12226471304893494,
+   "mean_abs_sentinel": 0.5130128860473633,
+   "mean_abs_other": 0.41503697633743286
+  },
+  "vpn_XGB_min_biat": {
+   "frac_records": 0.1657782515991471,
+   "frac_abs_shap": 0.08752709627151489,
+   "mean_abs_sentinel": 0.23641158640384674,
+   "mean_abs_other": 0.4897701144218445
+  },
+  "vpn_XGB_min_flowiat": {
+   "frac_records": 0.0042643923240938165,
+   "frac_abs_shap": 0.0030168979428708553,
+   "mean_abs_sentinel": 0.3172283172607422,
+   "mean_abs_other": 0.44896480441093445
+  }
+ },
+ "sentinel_percls_vpn": {
+  "0": {
+   "min_fiat": 0.0456,
+   "min_biat": 0.0792,
+   "max_fiat": 0.0456,
+   "max_biat": 0.0792,
+   "min_flowiat": 0.0,
+   "min_active": 0.4256,
+   "min_idle": 0.4256
+  },
+  "1": {
+   "min_fiat": 0.0984,
+   "min_biat": 0.1451,
+   "max_fiat": 0.0984,
+   "max_biat": 0.1451,
+   "min_flowiat": 0.0009,
+   "min_active": 0.2591,
+   "min_idle": 0.2591
+  },
+  "2": {
+   "min_fiat": 0.2634,
+   "min_biat": 0.3425,
+   "max_fiat": 0.2634,
+   "max_biat": 0.3425,
+   "min_flowiat": 0.0032,
+   "min_active": 0.5507,
+   "min_idle": 0.5507
+  },
+  "3": {
+   "min_fiat": 0.0185,
+   "min_biat": 0.3866,
+   "max_fiat": 0.0185,
+   "max_biat": 0.3866,
+   "min_flowiat": 0.0046,
+   "min_active": 0.7778,
+   "min_idle": 0.7778
+  },
+  "4": {
+   "min_fiat": 0.2823,
+   "min_biat": 0.485,
+   "max_fiat": 0.2823,
+   "max_biat": 0.485,
+   "min_flowiat": 0.009,
+   "min_active": 0.8754,
+   "min_idle": 0.8754
+  },
+  "5": {
+   "min_fiat": 0.0084,
+   "min_biat": 0.0737,
+   "max_fiat": 0.0084,
+   "max_biat": 0.0737,
+   "min_flowiat": 0.0105,
+   "min_active": 0.4989,
+   "min_idle": 0.4989
+  },
+  "6": {
+   "min_fiat": 0.0057,
+   "min_biat": 0.0075,
+   "max_fiat": 0.0057,
+   "max_biat": 0.0075,
+   "min_flowiat": 0.0062,
+   "min_active": 0.6439,
+   "min_idle": 0.6439
+  }
+ },
+ "sentinel_prevalence": {
+  "novpn": {
+   "min_fiat": 0.1263,
+   "min_biat": 0.161,
+   "max_fiat": 0.1263,
+   "max_biat": 0.161,
+   "min_flowiat": 0.0031,
+   "max_flowiat": 0.0007,
+   "min_active": 0.6504,
+   "max_active": 0.6504,
+   "min_idle": 0.6504,
+   "max_idle": 0.6504
+  },
+  "vpn": {
+   "min_fiat": 0.0999,
+   "min_biat": 0.1656,
+   "max_fiat": 0.0999,
+   "max_biat": 0.1656,
+   "min_flowiat": 0.0036,
+   "max_flowiat": 0.0006,
+   "min_active": 0.5348,
+   "max_active": 0.5348,
+   "min_idle": 0.5348,
+   "max_idle": 0.5348
+  }
+ },
+ "primary_metrics_RF": {
+  "rho": 0.8300395256916996,
+  "tau": 0.6442687747035574,
+  "top5": 3,
+  "top10": 9,
+  "rbo": 0.5799874644471005,
+  "l1": 0.333255877160072
+ },
+ "primary_metrics_XGB": {
+  "rho": 0.8073122529644269,
+  "tau": 0.6047430830039525,
+  "top5": 3,
+  "top10": 8,
+  "rbo": 0.7130708472122091,
+  "l1": 0.3670754134654999
+ },
+ "boot_metrics_RF": {
+  "rho": {
+   "cross": 0.7888,
+   "within_novpn": 0.965,
+   "within_vpn": 0.986
+  },
+  "tau": {
+   "cross": 0.593,
+   "within_novpn": 0.8764,
+   "within_vpn": 0.9252
+  },
+  "top5": {
+   "cross": 3.0,
+   "within_novpn": 5.0,
+   "within_vpn": 4.8092
+  },
+  "top10": {
+   "cross": 8.3689,
+   "within_novpn": 8.9885,
+   "within_vpn": 9.8713
+  },
+  "rbo": {
+   "cross": 0.5734,
+   "within_novpn": 0.9538,
+   "within_vpn": 0.943
+  },
+  "l1": {
+   "cross": 0.3418,
+   "within_novpn": 0.0757,
+   "within_vpn": 0.0603
+  }
+ },
+ "boot_metrics_XGB": {
+  "rho": {
+   "cross": 0.8177,
+   "within_novpn": 0.9681,
+   "within_vpn": 0.9797
+  },
+  "tau": {
+   "cross": 0.6286,
+   "within_novpn": 0.8762,
+   "within_vpn": 0.9028
+  },
+  "top5": {
+   "cross": 3.0778,
+   "within_novpn": 4.2575,
+   "within_vpn": 4.3931
+  },
+  "top10": {
+   "cross": 7.5,
+   "within_novpn": 9.4575,
+   "within_vpn": 9.2299
+  },
+  "rbo": {
+   "cross": 0.6871,
+   "within_novpn": 0.9101,
+   "within_vpn": 0.9125
+  },
+  "l1": {
+   "cross": 0.3614,
+   "within_novpn": 0.0988,
+   "within_vpn": 0.0886
+  }
+ },
+ "minflowiat_identity_novpn": {
+  "equal": 0.4263120057512581,
+  "le": 1.0
+ },
+ "corr_selected_novpn": {
+  "min_flowiat~min_fiat": 0.114,
+  "min_flowiat~min_biat": 0.193,
+  "min_fiat~min_biat": 0.597,
+  "total_fiat~total_biat": 0.843,
+  "total_fiat~duration": 0.941,
+  "total_biat~duration": 0.89,
+  "flowBytesPerSecond~flowPktsPerSecond": 0.942,
+  "mean_flowiat~mean_fiat": 0.723,
+  "max_flowiat~max_fiat": 0.831,
+  "max_flowiat~max_biat": 0.81,
+  "mean_biat~mean_flowiat": 0.681
+ },
+ "minflowiat_identity_vpn": {
+  "equal": 0.3095682302771855,
+  "le": 1.0
+ },
+ "corr_selected_vpn": {
+  "min_flowiat~min_fiat": 0.412,
+  "min_flowiat~min_biat": 0.237,
+  "min_fiat~min_biat": 0.603,
+  "total_fiat~total_biat": 0.904,
+  "total_fiat~duration": 0.947,
+  "total_biat~duration": 0.949,
+  "flowBytesPerSecond~flowPktsPerSecond": 0.946,
+  "mean_flowiat~mean_fiat": 0.793,
+  "max_flowiat~max_fiat": 0.909,
+  "max_flowiat~max_biat": 0.878,
+  "mean_biat~mean_flowiat": 0.722
+ },
+ "clusters": {
+  "0.2": {
+   "C1": [
+    "max_fiat",
+    "max_biat",
+    "max_flowiat",
+    "std_flowiat",
+    "min_active",
+    "mean_active",
+    "max_active",
+    "min_idle",
+    "mean_idle",
+    "max_idle"
+   ],
+   "C2": [
+    "duration",
+    "total_fiat",
+    "total_biat"
+   ],
+   "C3": [
+    "flowPktsPerSecond",
+    "flowBytesPerSecond",
+    "mean_flowiat"
+   ],
+   "C4": [
+    "mean_fiat",
+    "mean_biat"
+   ],
+   "C5": [
+    "std_active",
+    "std_idle"
+   ],
+   "C6": [
+    "min_fiat"
+   ],
+   "C7": [
+    "min_biat"
+   ],
+   "C8": [
+    "min_flowiat"
+   ]
+  },
+  "0.3": {
+   "C1": [
+    "max_fiat",
+    "max_biat",
+    "max_flowiat",
+    "std_flowiat",
+    "min_active",
+    "mean_active",
+    "max_active",
+    "min_idle",
+    "mean_idle",
+    "max_idle"
+   ],
+   "C2": [
+    "mean_fiat",
+    "mean_biat",
+    "flowPktsPerSecond",
+    "flowBytesPerSecond",
+    "mean_flowiat"
+   ],
+   "C3": [
+    "duration",
+    "total_fiat",
+    "total_biat"
+   ],
+   "C4": [
+    "std_active",
+    "std_idle"
+   ],
+   "C5": [
+    "min_fiat"
+   ],
+   "C6": [
+    "min_biat"
+   ],
+   "C7": [
+    "min_flowiat"
+   ]
+  }
+ }
+}
