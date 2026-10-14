@@ -1,0 +1,9 @@
+file,BROWSING,CHAT,FT,MAIL,P2P,STREAMING,VOIP,total,exact_duplicate_surplus_rows
+TimeBasedFeatures-Dataset-15s-NO-VPN.arff,2500,890,1018,249,1000,482,2826,8965,271
+TimeBasedFeatures-Dataset-15s-VPN.arff,2500,1196,1932,491,928,475,2271,9793,413
+TimeBasedFeatures-Dataset-30s-NO-VPN.arff,2500,595,961,81,1000,342,1438,6917,223
+TimeBasedFeatures-Dataset-30s-VPN.arff,2500,780,1158,848,851,298,1299,7734,790
+TimeBasedFeatures-Dataset-60s-NO-VPN.arff,2500,778,1372,849,1000,252,1829,8580,374
+TimeBasedFeatures-Dataset-60s-VPN.arff,2500,514,898,383,823,197,1620,6935,412
+TimeBasedFeatures-Dataset-120s-NO-VPN.arff,2500,242,624,185,1000,208,392,5151,210
+TimeBasedFeatures-Dataset-120s-VPN.arff,2500,349,716,722,813,145,386,5631,983

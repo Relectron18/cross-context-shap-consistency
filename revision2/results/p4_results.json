@@ -1,0 +1,727 @@
+{
+ "classmix_summary": "                             f1         rho_same         rho_other         rbo_other         top5_other     \n                           mean     std     mean     std      mean     std      mean     std       mean  std\nmodel ctx   mix                                                                                             \nRF    novpn nat_vs_swap     NaN     NaN   0.9242  0.0086       NaN     NaN       NaN     NaN        NaN  NaN\n            natural      0.8955  0.0066   0.9825  0.0090    0.7994  0.0171    0.5758  0.0194        3.0  0.0\n            swapped      0.8976  0.0026   0.9358  0.0094    0.7648  0.0086    0.5532  0.0231        3.0  0.0\n      vpn   nat_vs_swap     NaN     NaN   0.9720  0.0217       NaN     NaN       NaN     NaN        NaN  NaN\n            natural      0.8406  0.0057   0.9792  0.0091    0.8366  0.0218    0.5815  0.0016        3.0  0.0\n            swapped      0.8084  0.0063   0.9661  0.0082    0.8300  0.0168    0.6101  0.0401        3.0  0.0\nXGB   novpn nat_vs_swap     NaN     NaN   0.9769  0.0040       NaN     NaN       NaN     NaN        NaN  NaN\n            natural      0.9222  0.0078   0.9767  0.0114    0.8225  0.0115    0.6805  0.0122        3.0  0.0\n            swapped      0.9254  0.0050   0.9711  0.0152    0.8306  0.0170    0.7004  0.0320        3.0  0.0\n      vpn   nat_vs_swap     NaN     NaN   0.9719  0.0113       NaN     NaN       NaN     NaN        NaN  NaN\n            natural      0.8594  0.0033   0.9860  0.0071    0.7806  0.0237    0.7748  0.0375        3.0  0.0\n            swapped      0.8409  0.0061   0.9802  0.0085    0.7972  0.0149    0.7866  0.0312        3.0  0.0",
+ "matched1330": {
+  "mean": {
+   "cross_mat": 0.8573,
+   "cross_nat": 0.8532,
+   "within_mat_novpn": 0.9713,
+   "within_mat_vpn": 0.9572,
+   "within_nat_novpn": 0.9458,
+   "within_nat_vpn": 0.9448
+  },
+  "std": {
+   "cross_mat": 0.0182,
+   "cross_nat": 0.038,
+   "within_mat_novpn": 0.0136,
+   "within_mat_vpn": 0.0109,
+   "within_nat_novpn": 0.0184,
+   "within_nat_vpn": 0.017
+  }
+ },
+ "drop_XGB_novpn_min_fiat": {
+  "df1": -0.007178743641353624,
+  "f1": 0.9267807420983701,
+  "base_f1": 0.9339594857397238,
+  "rank_others": {
+   "min_biat": 9,
+   "min_flowiat": 1
+  },
+  "base_rank": {
+   "min_fiat": 4,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {
+   "min_biat": 5.294113636016846,
+   "min_flowiat": 15.226812362670898
+  },
+  "base_share": {
+   "min_fiat": 7.9716949462890625,
+   "min_biat": 4.300985813140869,
+   "min_flowiat": 14.039596557617188
+  },
+  "top_gainers": {
+   "mean_fiat": 0.9664937853813171,
+   "total_fiat": 0.9149506688117981,
+   "min_biat": 0.6205659359693527,
+   "duration": 0.4381854087114334
+  },
+  "rho_rest": 0.979672501411632
+ },
+ "drop_XGB_novpn_min_biat": {
+  "df1": -0.000253972733665786,
+  "f1": 0.933705513006058,
+  "base_f1": 0.9339594857397238,
+  "rank_others": {
+   "min_fiat": 3,
+   "min_flowiat": 2
+  },
+  "base_rank": {
+   "min_fiat": 4,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {
+   "min_fiat": 8.302720069885254,
+   "min_flowiat": 14.142719268798828
+  },
+  "base_share": {
+   "min_fiat": 7.9716949462890625,
+   "min_biat": 4.300985813140869,
+   "min_flowiat": 14.039596557617188
+  },
+  "top_gainers": {
+   "mean_fiat": 0.6952505558729172,
+   "total_fiat": 0.55420882999897,
+   "duration": 0.3964260220527649,
+   "mean_biat": 0.26763565838336945
+  },
+  "rho_rest": 0.989836250705816
+ },
+ "drop_XGB_novpn_min_flowiat": {
+  "df1": -0.004211672448673931,
+  "f1": 0.9297478132910498,
+  "base_f1": 0.9339594857397238,
+  "rank_others": {
+   "min_fiat": 2,
+   "min_biat": 5
+  },
+  "base_rank": {
+   "min_fiat": 4,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {
+   "min_fiat": 10.78193187713623,
+   "min_biat": 6.923409461975098
+  },
+  "base_share": {
+   "min_fiat": 7.9716949462890625,
+   "min_biat": 4.300985813140869,
+   "min_flowiat": 14.039596557617188
+  },
+  "top_gainers": {
+   "min_biat": 1.9199587404727936,
+   "min_fiat": 1.5082478523254395,
+   "duration": 1.2219108641147614,
+   "min_active": 0.353209488093853
+  },
+  "rho_rest": 0.9706380575945794
+ },
+ "drop_XGB_novpn_all3": {
+  "df1": -0.026445714990010694,
+  "f1": 0.9075137707497131,
+  "base_f1": 0.9339594857397238,
+  "rank_others": {},
+  "base_rank": {
+   "min_fiat": 4,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {},
+  "base_share": {
+   "min_fiat": 7.9716949462890625,
+   "min_biat": 4.300985813140869,
+   "min_flowiat": 14.039596557617188
+  },
+  "top_gainers": {
+   "mean_fiat": 2.789653092622757,
+   "duration": 2.670971304178238,
+   "mean_biat": 1.6599584370851517,
+   "total_fiat": 0.8715316653251648
+  },
+  "rho_rest": 0.9353383458646616
+ },
+ "drop_XGB_vpn_min_fiat": {
+  "df1": -0.016037700115475118,
+  "f1": 0.8675531405203605,
+  "base_f1": 0.8835908406358356,
+  "rank_others": {
+   "min_biat": 3,
+   "min_flowiat": 2
+  },
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 4,
+   "min_flowiat": 3
+  },
+  "share_others": {
+   "min_biat": 8.835075378417969,
+   "min_flowiat": 9.919700622558594
+  },
+  "base_share": {
+   "min_fiat": 8.450392723083496,
+   "min_biat": 8.09621524810791,
+   "min_flowiat": 8.161297798156738
+  },
+  "top_gainers": {
+   "min_flowiat": 1.005084067583084,
+   "mean_fiat": 0.8890312165021896,
+   "total_fiat": 0.3120299428701401,
+   "flowPktsPerSecond": 0.1791100949048996
+  },
+  "rho_rest": 0.9932241671372107
+ },
+ "drop_XGB_vpn_min_biat": {
+  "df1": -0.012110635900235756,
+  "f1": 0.8714802047355998,
+  "base_f1": 0.8835908406358356,
+  "rank_others": {
+   "min_fiat": 2,
+   "min_flowiat": 3
+  },
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 4,
+   "min_flowiat": 3
+  },
+  "share_others": {
+   "min_fiat": 9.336457252502441,
+   "min_flowiat": 9.325325012207031
+  },
+  "base_share": {
+   "min_fiat": 8.450392723083496,
+   "min_biat": 8.09621524810791,
+   "min_flowiat": 8.161297798156738
+  },
+  "top_gainers": {
+   "mean_fiat": 0.5923263728618622,
+   "mean_biat": 0.4561483860015869,
+   "min_flowiat": 0.44506341218948364,
+   "total_biat": 0.2562008798122406
+  },
+  "rho_rest": 0.9887069452286844
+ },
+ "drop_XGB_vpn_min_flowiat": {
+  "df1": -0.007099976615182801,
+  "f1": 0.8764908640206528,
+  "base_f1": 0.8835908406358356,
+  "rank_others": {
+   "min_fiat": 2,
+   "min_biat": 3
+  },
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 4,
+   "min_flowiat": 3
+  },
+  "share_others": {
+   "min_fiat": 9.545818328857422,
+   "min_biat": 9.325763702392578
+  },
+  "base_share": {
+   "min_fiat": 8.450392723083496,
+   "min_biat": 8.09621524810791,
+   "min_flowiat": 8.161297798156738
+  },
+  "top_gainers": {
+   "std_flowiat": 0.5694188177585602,
+   "min_biat": 0.5100749433040619,
+   "min_fiat": 0.3444783389568329,
+   "flowPktsPerSecond": 0.30981414020061493
+  },
+  "rho_rest": 0.9932241671372107
+ },
+ "drop_XGB_vpn_all3": {
+  "df1": -0.023805160043614992,
+  "f1": 0.8597856805922206,
+  "base_f1": 0.8835908406358356,
+  "rank_others": {},
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 4,
+   "min_flowiat": 3
+  },
+  "share_others": {},
+  "base_share": {
+   "min_fiat": 8.450392723083496,
+   "min_biat": 8.09621524810791,
+   "min_flowiat": 8.161297798156738
+  },
+  "top_gainers": {
+   "mean_fiat": 2.774202451109886,
+   "mean_biat": 1.3625934720039368,
+   "std_flowiat": 0.6857007741928101,
+   "std_idle": 0.6394015625119209
+  },
+  "rho_rest": 0.9624060150375938
+ },
+ "drop_all3_cross_XGB": {
+  "rho": 0.8330827067669173,
+  "top5": 3,
+  "rbo": 0.7501649186325905
+ },
+ "drop_RF_novpn_min_fiat": {
+  "df1": -0.007134122950135602,
+  "f1": 0.9099399599068333,
+  "base_f1": 0.9170740828569689,
+  "rank_others": {
+   "min_biat": 8,
+   "min_flowiat": 3
+  },
+  "base_rank": {
+   "min_fiat": 11,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {
+   "min_biat": 5.12761835120608,
+   "min_flowiat": 8.010345192991709
+  },
+  "base_share": {
+   "min_fiat": 4.361774921417236,
+   "min_biat": 4.404785633087158,
+   "min_flowiat": 8.21412467956543
+  },
+  "top_gainers": {
+   "mean_fiat": 1.1994920382506518,
+   "total_fiat": 1.0298312809458519,
+   "mean_active": 0.9708268501868165,
+   "max_idle": 0.5597913184400067
+  },
+  "rho_rest": 0.9446640316205535
+ },
+ "drop_RF_novpn_min_biat": {
+  "df1": -0.008508470779683197,
+  "f1": 0.9085656120772857,
+  "base_f1": 0.9170740828569689,
+  "rank_others": {
+   "min_fiat": 10,
+   "min_flowiat": 3
+  },
+  "base_rank": {
+   "min_fiat": 11,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {
+   "min_fiat": 4.545954307613764,
+   "min_flowiat": 8.799397140949631
+  },
+  "base_share": {
+   "min_fiat": 4.361774921417236,
+   "min_biat": 4.404785633087158,
+   "min_flowiat": 8.21412467956543
+  },
+  "top_gainers": {
+   "mean_fiat": 1.228791942078114,
+   "total_fiat": 1.0194876776008277,
+   "mean_active": 0.8210217018035377,
+   "max_active": 0.503092744608248
+  },
+  "rho_rest": 0.9570863918690007
+ },
+ "drop_RF_novpn_min_flowiat": {
+  "df1": -0.0038780995755381964,
+  "f1": 0.9131959832814307,
+  "base_f1": 0.9170740828569689,
+  "rank_others": {
+   "min_fiat": 9,
+   "min_biat": 5
+  },
+  "base_rank": {
+   "min_fiat": 11,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {
+   "min_fiat": 5.209032118938336,
+   "min_biat": 6.294798117843109
+  },
+  "base_share": {
+   "min_fiat": 4.361774921417236,
+   "min_biat": 4.404785633087158,
+   "min_flowiat": 8.21412467956543
+  },
+  "top_gainers": {
+   "min_biat": 1.4958188056616362,
+   "mean_active": 1.0719542557594983,
+   "total_fiat": 0.6878604138753506,
+   "min_fiat": 0.4569124883631558
+  },
+  "rho_rest": 0.9435347261434219
+ },
+ "drop_RF_novpn_all3": {
+  "df1": -0.02829554329633044,
+  "f1": 0.8887785395606385,
+  "base_f1": 0.9170740828569689,
+  "rank_others": {},
+  "base_rank": {
+   "min_fiat": 11,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "share_others": {},
+  "base_share": {
+   "min_fiat": 4.361774921417236,
+   "min_biat": 4.404785633087158,
+   "min_flowiat": 8.21412467956543
+  },
+  "top_gainers": {
+   "mean_biat": 1.4868939963854535,
+   "mean_active": 1.3184084784059338,
+   "mean_fiat": 1.040725801383581,
+   "max_active": 0.545116605619772
+  },
+  "rho_rest": 0.9503759398496241
+ },
+ "drop_RF_vpn_min_fiat": {
+  "df1": 0.0006491628443715536,
+  "f1": 0.8539990470747625,
+  "base_f1": 0.8533498842303909,
+  "rank_others": {
+   "min_biat": 2,
+   "min_flowiat": 3
+  },
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 3,
+   "min_flowiat": 5
+  },
+  "share_others": {
+   "min_biat": 9.520341781145392,
+   "min_flowiat": 9.08348126886203
+  },
+  "base_share": {
+   "min_fiat": 8.153631210327148,
+   "min_biat": 7.973690509796143,
+   "min_flowiat": 6.841819763183594
+  },
+  "top_gainers": {
+   "min_flowiat": 1.634281264522812,
+   "min_biat": 0.8387896690428831,
+   "mean_fiat": 0.7419720664245331,
+   "total_fiat": 0.4953614685823657
+  },
+  "rho_rest": 0.9683794466403164
+ },
+ "drop_RF_vpn_min_biat": {
+  "df1": -0.008905152125840421,
+  "f1": 0.8444447321045505,
+  "base_f1": 0.8533498842303909,
+  "rank_others": {
+   "min_fiat": 2,
+   "min_flowiat": 3
+  },
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 3,
+   "min_flowiat": 5
+  },
+  "share_others": {
+   "min_fiat": 9.63611233723055,
+   "min_flowiat": 8.803049768828185
+  },
+  "base_share": {
+   "min_fiat": 8.153631210327148,
+   "min_biat": 7.973690509796143,
+   "min_flowiat": 6.841819763183594
+  },
+  "top_gainers": {
+   "min_flowiat": 1.3684156495559527,
+   "min_fiat": 0.7760048259485828,
+   "mean_fiat": 0.47264801884513985,
+   "total_fiat": 0.41583221858638025
+  },
+  "rho_rest": 0.9841897233201583
+ },
+ "drop_RF_vpn_min_flowiat": {
+  "df1": -0.002391359414934069,
+  "f1": 0.8509585248154569,
+  "base_f1": 0.8533498842303909,
+  "rank_others": {
+   "min_fiat": 3,
+   "min_biat": 2
+  },
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 3,
+   "min_flowiat": 5
+  },
+  "share_others": {
+   "min_fiat": 9.041897702503823,
+   "min_biat": 9.107054920073095
+  },
+  "base_share": {
+   "min_fiat": 8.153631210327148,
+   "min_biat": 7.973690509796143,
+   "min_flowiat": 6.841819763183594
+  },
+  "top_gainers": {
+   "std_flowiat": 0.9554854781090514,
+   "mean_fiat": 0.9186157594430824,
+   "total_fiat": 0.6883792315295262,
+   "min_biat": 0.5477526794629719
+  },
+  "rho_rest": 0.9570863918690007
+ },
+ "drop_RF_vpn_all3": {
+  "df1": -0.012201070757733024,
+  "f1": 0.8411488134726579,
+  "base_f1": 0.8533498842303909,
+  "rank_others": {},
+  "base_rank": {
+   "min_fiat": 2,
+   "min_biat": 3,
+   "min_flowiat": 5
+  },
+  "share_others": {},
+  "base_share": {
+   "min_fiat": 8.153631210327148,
+   "min_biat": 7.973690509796143,
+   "min_flowiat": 6.841819763183594
+  },
+  "top_gainers": {
+   "mean_fiat": 2.5909612816572016,
+   "mean_biat": 0.5158108824935546,
+   "flowBytesPerSecond": 0.4959055574483229,
+   "mean_active": 0.4556885156341251
+  },
+  "rho_rest": 0.9067669172932331
+ },
+ "drop_all3_cross_RF": {
+  "rho": 0.8902255639097743,
+  "top5": 3,
+  "rbo": 0.8235937718988052
+ },
+ "pi_XGB_novpn": {
+  "rank_min": {
+   "min_fiat": 3,
+   "min_biat": 5,
+   "min_flowiat": 2
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_flowiat",
+   "min_fiat",
+   "flowPktsPerSecond",
+   "min_biat"
+  ],
+  "values": {
+   "flowBytesPerSecond": 0.32529495588295604,
+   "min_flowiat": 0.14074586459419966,
+   "min_fiat": 0.04460392929686211,
+   "flowPktsPerSecond": 0.024071439447956346,
+   "min_biat": 0.019657728187946255,
+   "mean_flowiat": 0.018232782391756307,
+   "total_biat": 0.014223224174767424,
+   "total_fiat": 0.010367036910006445,
+   "mean_biat": 0.00813267705636379,
+   "std_flowiat": 0.007682104969170223,
+   "mean_fiat": 0.007586016529916017,
+   "duration": 0.003817830687311696,
+   "std_idle": 0.0015819625233894907,
+   "min_idle": 0.0009102600019925578,
+   "std_active": 0.0006597368102884471,
+   "mean_idle": 0.0002623511943769086,
+   "max_biat": 0.00025282001186025525,
+   "max_idle": -0.000140259115880792,
+   "min_active": -0.0002041824795095737,
+   "mean_active": -0.0003354937614149289,
+   "max_flowiat": -0.0010036227226290274,
+   "max_active": -0.0012270651659664123,
+   "max_fiat": -0.002512943216162966
+  },
+  "rho_vs_shap": 0.8181818181818183,
+  "grouped": {
+   "min-IAT trio": 0.3257580869447195,
+   "duration+totals": 0.20823959355565433,
+   "throughput pair": 0.32161160536508876
+  }
+ },
+ "pi_XGB_vpn": {
+  "rank_min": {
+   "min_fiat": 2,
+   "min_biat": 4,
+   "min_flowiat": 6
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_fiat",
+   "duration",
+   "min_biat",
+   "std_flowiat"
+  ],
+  "values": {
+   "flowBytesPerSecond": 0.20815359876928552,
+   "min_fiat": 0.07261493303723768,
+   "duration": 0.052054505916797354,
+   "min_biat": 0.04357942476208225,
+   "std_flowiat": 0.04207891657376113,
+   "min_flowiat": 0.036028122662160086,
+   "mean_biat": 0.03374719646210698,
+   "mean_flowiat": 0.02402797754670146,
+   "total_biat": 0.01834713123592353,
+   "total_fiat": 0.01828257624425388,
+   "max_flowiat": 0.016850714349390783,
+   "mean_fiat": 0.0115416275933512,
+   "max_fiat": 0.010122929237468058,
+   "max_biat": 0.00942895390804912,
+   "flowPktsPerSecond": 0.0050346692145075925,
+   "min_active": 0.0031530094393652395,
+   "mean_idle": 0.002889570808589215,
+   "max_active": 0.002100275630304482,
+   "std_active": 0.0015253768917410926,
+   "max_idle": 0.0014965270853648295,
+   "min_idle": 0.0011842482778989583,
+   "mean_active": 0.0007684722992121861,
+   "std_idle": 0.00010141175156070936
+  },
+  "rho_vs_shap": 0.9229249011857708,
+  "grouped": {
+   "min-IAT trio": 0.2671605047334049,
+   "duration+totals": 0.13857053741281655,
+   "throughput pair": 0.23244061268969202
+  }
+ },
+ "pi_cross_XGB": {
+  "rho": 0.7193675889328064,
+  "tau": 0.5019762845849802,
+  "top5": 3,
+  "top10": 9,
+  "rbo": 0.7523658291683479,
+  "l1": 0.75505718332281
+ },
+ "pi_RF_novpn": {
+  "rank_min": {
+   "min_fiat": 4,
+   "min_biat": 3,
+   "min_flowiat": 2
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_flowiat",
+   "min_biat",
+   "min_fiat",
+   "std_flowiat"
+  ],
+  "values": {
+   "flowBytesPerSecond": 0.09884700889044998,
+   "min_flowiat": 0.058184370462683,
+   "min_biat": 0.017369306669423035,
+   "min_fiat": 0.009962236930543022,
+   "std_flowiat": 0.004602687489216462,
+   "max_fiat": 0.0033574021617597148,
+   "std_idle": 0.0025675746594450823,
+   "max_biat": 0.002379245751191339,
+   "max_active": 0.0021547935754789747,
+   "total_biat": 0.0018169480774529623,
+   "std_active": 0.0010375218873274305,
+   "mean_flowiat": 0.0010281964569552327,
+   "min_idle": 0.0001899716325835632,
+   "total_fiat": -5.831521628130165e-06,
+   "min_active": -0.0003614364475129639,
+   "mean_fiat": -0.0005201702065318337,
+   "flowPktsPerSecond": -0.0006934111027091849,
+   "mean_active": -0.0007755447632815105,
+   "mean_biat": -0.0008964276824307449,
+   "mean_idle": -0.0014889052601563812,
+   "max_idle": -0.001575867593746294,
+   "max_flowiat": -0.0032385091219586217,
+   "duration": -0.0035606928068030673
+  },
+  "rho_vs_shap": 0.3073122529644269,
+  "grouped": {
+   "min-IAT trio": 0.16781532179170416,
+   "duration+totals": 0.19675105512672247,
+   "throughput pair": 0.12981969995776313
+  }
+ },
+ "pi_RF_vpn": {
+  "rank_min": {
+   "min_fiat": 3,
+   "min_biat": 2,
+   "min_flowiat": 4
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_biat",
+   "min_fiat",
+   "min_flowiat",
+   "total_biat"
+  ],
+  "values": {
+   "flowBytesPerSecond": 0.09014375060676708,
+   "min_biat": 0.02448572974748602,
+   "min_fiat": 0.021290855174546753,
+   "min_flowiat": 0.008594805278260698,
+   "total_biat": 0.00504714209706183,
+   "mean_biat": 0.003981202831908781,
+   "total_fiat": 0.0035481556405916326,
+   "std_flowiat": 0.0032991534609774996,
+   "min_active": 0.002135452992913611,
+   "max_biat": 0.0018556133245206884,
+   "std_idle": 0.001268248528403071,
+   "duration": 0.00032064097218194033,
+   "mean_active": 0.0002348696839342912,
+   "max_active": -0.00018606166984186379,
+   "min_idle": -0.001345278188031407,
+   "max_fiat": -0.0014896772700270012,
+   "mean_idle": -0.0017026132799310423,
+   "std_active": -0.0019813779723679924,
+   "max_flowiat": -0.0026886054039353736,
+   "max_idle": -0.0034100027417855116,
+   "flowPktsPerSecond": -0.00446296738314741,
+   "mean_fiat": -0.006036062596451242,
+   "mean_flowiat": -0.0060596437457276055
+  },
+  "rho_vs_shap": 0.7391304347826088,
+  "grouped": {
+   "min-IAT trio": 0.1551201701873693,
+   "duration+totals": 0.1655125653634842,
+   "throughput pair": 0.11319338250832607
+  }
+ },
+ "pi_cross_RF": {
+  "rho": 0.6106719367588932,
+  "tau": 0.46245059288537554,
+  "top5": 4,
+  "top10": 7,
+  "rbo": 0.7649907157767728,
+  "l1": 0.5613283019197244
+ },
+ "below_XGB_novpn": {
+  "n_test_below": 17,
+  "attr_share_minflowiat": 0.009776988066732883,
+  "rho_vs_primary": 0.9970355731225298,
+  "ranks_min": {
+   "min_fiat": 4,
+   "min_biat": 10,
+   "min_flowiat": 2
+  },
+  "f1": 0.9359385963809352
+ },
+ "below_XGB_vpn": {
+  "n_test_below": 12,
+  "attr_share_minflowiat": 0.005781725514680147,
+  "rho_vs_primary": 0.9960474308300397,
+  "ranks_min": {
+   "min_fiat": 2,
+   "min_biat": 3,
+   "min_flowiat": 4
+  },
+  "f1": 0.8806757691401825
+ },
+ "below_RF_novpn": {
+  "n_test_below": 17,
+  "attr_share_minflowiat": 0.006117023061960936,
+  "rho_vs_primary": 0.9861660079051384,
+  "ranks_min": {
+   "min_fiat": 12,
+   "min_biat": 9,
+   "min_flowiat": 2
+  },
+  "f1": 0.9137451776715816
+ },
+ "below_RF_vpn": {
+  "n_test_below": 12,
+  "attr_share_minflowiat": 0.004915866069495678,
+  "rho_vs_primary": 0.9901185770750988,
+  "ranks_min": {
+   "min_fiat": 3,
+   "min_biat": 2,
+   "min_flowiat": 5
+  },
+  "f1": 0.8535950927497779
+ }
+}

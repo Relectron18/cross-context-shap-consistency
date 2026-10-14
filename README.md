@@ -37,6 +37,8 @@ context.
 | `results/` | Outputs of the scripts above |
 | `models/` | Saved XGBoost and Logistic Regression models (Random Forests are not stored; they refit exactly with `random_state=42`) |
 | `revision/` | **Analyses added in response to reviewer concerns** — disjoint half-split reference, class-matched training and class weighting, RBO/L1 measures, correlation clusters, random/bottom-10 controls, log/rank near-duplicate audit, cluster-grouped CV, seed and hyperparameter checks, revised figures. See `revision/README.md`. |
+| `revision2/` | **Second revision (Concerns 2)** — every result recomputed in one environment; cluster-grouped half-splits, permutation null, partition redraws, direct model transfer, Top-5/10/15 transfer over five seeds, class-mix swap, drop-one and permutation importance, ARFF class counts; scripts that build the revised paper. See `revision2/README.md`. |
+| `paper/` | Manuscript v6, reviewer concerns (Concerns2), revised manuscript v7 and the response to the reviewer |
 
 ## Running
 

@@ -1,0 +1,588 @@
+{
+ "env": {
+  "python": "3.13.16",
+  "sklearn": "1.9.1",
+  "xgboost": "3.4.1",
+  "shap": "0.53.0",
+  "numpy": "2.5.3",
+  "pandas": "3.0.5",
+  "os": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39"
+ },
+ "audit_novpn": {
+  "n_train": 6955,
+  "n_test": 1739,
+  "counts_train": [
+   2000,
+   709,
+   686,
+   190,
+   753,
+   360,
+   2257
+  ],
+  "counts_test": [
+   500,
+   178,
+   171,
+   48,
+   188,
+   90,
+   564
+  ],
+  "dup_vectors_train": 2,
+  "dup_rows_train": 6,
+  "dup_label_conflict": 2,
+  "unique_train": 6951,
+  "unique_test": 1737,
+  "below_m1_entries": 55,
+  "below_m1_rows": 55,
+  "below_m1_by_feature": {
+   "min_flowiat": 55
+  },
+  "below_m1_by_class": [
+   4,
+   0,
+   43,
+   0,
+   0,
+   0,
+   8
+  ],
+  "below_m1_min": -1247.0,
+  "collisions": 1,
+  "sentinel_rate": {
+   "min_fiat": 0.12629399585921325,
+   "min_biat": 0.1610305958132045,
+   "max_fiat": 0.12629399585921325,
+   "max_biat": 0.1610305958132045,
+   "min_flowiat": 0.003105590062111801,
+   "max_flowiat": 0.0006901311249137336,
+   "min_active": 0.650448585231194,
+   "max_active": 0.650448585231194,
+   "min_idle": 0.650448585231194,
+   "max_idle": 0.650448585231194
+  }
+ },
+ "audit_vpn": {
+  "n_train": 7504,
+  "n_test": 1876,
+  "counts_train": [
+   2000,
+   926,
+   1506,
+   346,
+   533,
+   380,
+   1813
+  ],
+  "counts_test": [
+   500,
+   232,
+   377,
+   86,
+   133,
+   95,
+   453
+  ],
+  "dup_vectors_train": 11,
+  "dup_rows_train": 26,
+  "dup_label_conflict": 11,
+  "unique_train": 7489,
+  "unique_test": 1875,
+  "below_m1_entries": 43,
+  "below_m1_rows": 43,
+  "below_m1_by_feature": {
+   "min_flowiat": 43
+  },
+  "below_m1_by_class": [
+   1,
+   0,
+   8,
+   0,
+   22,
+   0,
+   12
+  ],
+  "below_m1_min": -195.0,
+  "collisions": 13,
+  "sentinel_rate": {
+   "min_fiat": 0.09989339019189765,
+   "min_biat": 0.16556503198294242,
+   "max_fiat": 0.09989339019189765,
+   "max_biat": 0.16556503198294242,
+   "min_flowiat": 0.0036247334754797443,
+   "max_flowiat": 0.0006396588486140725,
+   "min_active": 0.5347547974413646,
+   "max_active": 0.5347547974413646,
+   "min_idle": 0.5347547974413646,
+   "max_idle": 0.5347547974413646
+  }
+ },
+ "classmix": {
+  "tvd": 0.142308956910017,
+  "chi2": 447.36814972341085,
+  "dof": 6,
+  "p": 1.8086885456441674e-93,
+  "cramer_v": 0.17589901269896377,
+  "imb_ratio": [
+   11.878947368421052,
+   5.780346820809249
+  ]
+ },
+ "nn_novpn": {
+  "std": {
+   "test_to_train": 0.003196149461307893,
+   "train_to_train": 0.0032045606778712166
+  },
+  "log": {
+   "test_to_train": 0.10848765515785101,
+   "train_to_train": 0.10050803700093365
+  },
+  "rank": {
+   "test_to_train": 0.08818920885585092,
+   "train_to_train": 0.09179930356720468
+  }
+ },
+ "nn_vpn": {
+  "std": {
+   "test_to_train": 0.008624309914188933,
+   "train_to_train": 0.009777056982515254
+  },
+  "log": {
+   "test_to_train": 0.10871183704826076,
+   "train_to_train": 0.10824807107104296
+  },
+  "rank": {
+   "test_to_train": 0.07539620916203035,
+   "train_to_train": 0.07424282701653376
+  }
+ },
+ "cv_XGB_novpn_strat": 0.9235396135915723,
+ "cv_XGB_novpn_grouped": 0.6419505083978922,
+ "cv_RF_novpn_strat": 0.901314334297403,
+ "cv_RF_novpn_grouped": 0.4748136537765294,
+ "cv_XGB_vpn_strat": 0.88019323709826,
+ "cv_XGB_vpn_grouped": 0.5514700198350645,
+ "cv_RF_vpn_strat": 0.8623039316300352,
+ "cv_RF_vpn_grouped": 0.4929138076646245,
+ "base_RF_novpn": {
+  "acc": 0.9453709028177113,
+  "prec": 0.9256984011493442,
+  "rec": 0.9098686911717097,
+  "f1": 0.9170740828569689,
+  "recall_per_class": [
+   0.98,
+   0.8089887640449438,
+   0.8713450292397661,
+   0.9166666666666666,
+   0.9787234042553191,
+   0.8222222222222222,
+   0.9911347517730497
+  ]
+ },
+ "prim_RF_novpn": {
+  "share": {
+   "total_biat": 0.098337,
+   "min_flowiat": 0.082677,
+   "total_fiat": 0.080854,
+   "flowBytesPerSecond": 0.078581,
+   "duration": 0.062907,
+   "std_flowiat": 0.05916,
+   "mean_fiat": 0.048915,
+   "mean_biat": 0.047927,
+   "max_flowiat": 0.047118,
+   "min_biat": 0.044227,
+   "min_fiat": 0.043487,
+   "flowPktsPerSecond": 0.042261,
+   "mean_flowiat": 0.041059,
+   "max_fiat": 0.039967,
+   "mean_idle": 0.030176,
+   "max_biat": 0.026946,
+   "min_idle": 0.026785,
+   "max_idle": 0.024744,
+   "max_active": 0.021269,
+   "mean_active": 0.021087,
+   "min_active": 0.020269,
+   "std_idle": 0.006301,
+   "std_active": 0.004945
+  },
+  "top5_share": 0.4033559733160211,
+  "top10_share": 0.650703248500452,
+  "entropy": 2.9755965561222024,
+  "family_share": {
+   "Flow duration": 6.291,
+   "Directional IAT": 43.066,
+   "Flow throughput": 12.084,
+   "Flow IAT": 23.001,
+   "Active period": 6.757,
+   "Idle period": 8.801
+  },
+  "minfiat_sentinel_attr_share": 0.21842322078800663
+ },
+ "base_RF_vpn": {
+  "acc": 0.8811300639658849,
+  "prec": 0.85259068929114,
+  "rec": 0.854600076229292,
+  "f1": 0.8533498842303909,
+  "recall_per_class": [
+   0.934,
+   0.7672413793103449,
+   0.7824933687002652,
+   0.7441860465116279,
+   0.8345864661654135,
+   0.9263157894736842,
+   0.9933774834437086
+  ]
+ },
+ "prim_RF_vpn": {
+  "share": {
+   "flowBytesPerSecond": 0.109407,
+   "min_fiat": 0.082837,
+   "min_biat": 0.081481,
+   "min_flowiat": 0.069016,
+   "total_biat": 0.067783,
+   "duration": 0.058169,
+   "mean_biat": 0.057768,
+   "total_fiat": 0.055914,
+   "max_flowiat": 0.053789,
+   "std_flowiat": 0.052569,
+   "flowPktsPerSecond": 0.04738,
+   "mean_flowiat": 0.046417,
+   "max_fiat": 0.039684,
+   "mean_fiat": 0.035984,
+   "max_biat": 0.035901,
+   "std_idle": 0.020331,
+   "max_idle": 0.020209,
+   "mean_idle": 0.017075,
+   "std_active": 0.014169,
+   "min_idle": 0.01114,
+   "min_active": 0.008496,
+   "max_active": 0.00731,
+   "mean_active": 0.007172
+  },
+  "top5_share": 0.4105249983331669,
+  "top10_share": 0.6887330104448589,
+  "entropy": 2.9271012892315245,
+  "family_share": {
+   "Flow duration": 5.817,
+   "Directional IAT": 45.735,
+   "Flow throughput": 15.679,
+   "Flow IAT": 22.179,
+   "Active period": 3.715,
+   "Idle period": 6.875
+  },
+  "minfiat_sentinel_attr_share": 0.07946515951773898
+ },
+ "cross_RF": {
+  "rho": 0.8300395256916996,
+  "tau": 0.6442687747035574,
+  "top5": 3,
+  "top10": 9,
+  "rbo": 0.5799874644471005,
+  "l1": 0.333255877160072,
+  "kappa5": 0.4888888888888889,
+  "kappa10": 0.823076923076923,
+  "fam_rho": 0.942857142857143,
+  "disp": 3.0434782608695654
+ },
+ "cross_RF_weighted": {
+  "rho": 0.8211462450592886,
+  "tau": 0.6442687747035574,
+  "top5": 3,
+  "top10": 8,
+  "rbo": 0.7318441060531887,
+  "l1": 0.2702574033620931,
+  "kappa5": 0.4888888888888889,
+  "kappa10": 0.6461538461538462,
+  "fam_rho": 0.942857142857143
+ },
+ "w_vs_unw_RF": [
+  0.9762845849802372,
+  0.9930830039525691
+ ],
+ "ranks_RF": {
+  "novpn": {
+   "duration": 5,
+   "total_fiat": 3,
+   "total_biat": 1,
+   "min_fiat": 11,
+   "min_biat": 10,
+   "max_fiat": 14,
+   "max_biat": 16,
+   "mean_fiat": 7,
+   "mean_biat": 8,
+   "flowPktsPerSecond": 12,
+   "flowBytesPerSecond": 4,
+   "min_flowiat": 2,
+   "max_flowiat": 9,
+   "mean_flowiat": 13,
+   "std_flowiat": 6,
+   "min_active": 21,
+   "mean_active": 20,
+   "max_active": 19,
+   "std_active": 23,
+   "min_idle": 17,
+   "mean_idle": 15,
+   "max_idle": 18,
+   "std_idle": 22
+  },
+  "vpn": {
+   "duration": 6,
+   "total_fiat": 8,
+   "total_biat": 5,
+   "min_fiat": 2,
+   "min_biat": 3,
+   "max_fiat": 13,
+   "max_biat": 15,
+   "mean_fiat": 14,
+   "mean_biat": 7,
+   "flowPktsPerSecond": 11,
+   "flowBytesPerSecond": 1,
+   "min_flowiat": 4,
+   "max_flowiat": 9,
+   "mean_flowiat": 12,
+   "std_flowiat": 10,
+   "min_active": 21,
+   "mean_active": 23,
+   "max_active": 22,
+   "std_active": 19,
+   "min_idle": 20,
+   "mean_idle": 18,
+   "max_idle": 17,
+   "std_idle": 16
+  }
+ },
+ "base_XGB_novpn": {
+  "acc": 0.9585968947671075,
+  "prec": 0.9405437717458857,
+  "rec": 0.9282295375062086,
+  "f1": 0.9339594857397238,
+  "recall_per_class": [
+   0.988,
+   0.8651685393258427,
+   0.9005847953216374,
+   0.9166666666666666,
+   0.9787234042553191,
+   0.8555555555555555,
+   0.9929078014184397
+  ]
+ },
+ "prim_XGB_novpn": {
+  "share": {
+   "flowBytesPerSecond": 0.1404629945755005,
+   "min_flowiat": 0.14039599895477295,
+   "total_biat": 0.08300799876451492,
+   "min_fiat": 0.0797170028090477,
+   "flowPktsPerSecond": 0.05762999877333641,
+   "mean_flowiat": 0.05562499910593033,
+   "duration": 0.05434099957346916,
+   "total_fiat": 0.050898998975753784,
+   "std_flowiat": 0.04847100004553795,
+   "min_biat": 0.04301000013947487,
+   "mean_fiat": 0.041273001581430435,
+   "mean_biat": 0.039333000779151917,
+   "max_flowiat": 0.03776700049638748,
+   "mean_active": 0.02318499982357025,
+   "max_fiat": 0.021890999749302864,
+   "max_active": 0.020329000428318977,
+   "max_biat": 0.015990000218153,
+   "min_active": 0.013427999801933765,
+   "min_idle": 0.011075000278651714,
+   "std_active": 0.00823500007390976,
+   "mean_idle": 0.006353999953716993,
+   "std_idle": 0.005917000118643045,
+   "max_idle": 0.001661999966017902
+  },
+  "top5_share": 0.5012147426605225,
+  "top10_share": 0.7535606026649475,
+  "entropy": 2.795836925506592,
+  "family_share": {
+   "Flow duration": 5.434000015258789,
+   "Directional IAT": 37.512001037597656,
+   "Flow throughput": 19.80900001525879,
+   "Flow IAT": 28.22599983215332,
+   "Active period": 6.51800012588501,
+   "Idle period": 2.500999927520752
+  },
+  "minfiat_sentinel_attr_share": 0.2157921940088272
+ },
+ "base_XGB_vpn": {
+  "acc": 0.9051172707889126,
+  "prec": 0.8823549314346852,
+  "rec": 0.8857722098178015,
+  "f1": 0.8835908406358356,
+  "recall_per_class": [
+   0.95,
+   0.7672413793103449,
+   0.8408488063660478,
+   0.8255813953488372,
+   0.9097744360902256,
+   0.9157894736842105,
+   0.9911699779249448
+  ]
+ },
+ "prim_XGB_vpn": {
+  "share": {
+   "flowBytesPerSecond": 0.13482600450515747,
+   "min_fiat": 0.08450400084257126,
+   "min_flowiat": 0.08161299675703049,
+   "min_biat": 0.08096200227737427,
+   "mean_biat": 0.07150900363922119,
+   "duration": 0.06576000154018402,
+   "max_flowiat": 0.0644339993596077,
+   "std_flowiat": 0.06060900166630745,
+   "total_fiat": 0.04987499862909317,
+   "mean_flowiat": 0.04629899933934212,
+   "max_fiat": 0.040105000138282776,
+   "total_biat": 0.03943900018930435,
+   "mean_fiat": 0.033073000609874725,
+   "flowPktsPerSecond": 0.031766001135110855,
+   "max_biat": 0.026830999180674553,
+   "min_idle": 0.021150000393390656,
+   "min_active": 0.011959999799728394,
+   "std_idle": 0.011505000293254852,
+   "mean_idle": 0.011210000142455101,
+   "mean_active": 0.010483999736607075,
+   "std_active": 0.008996999822556973,
+   "max_active": 0.006659000180661678,
+   "max_idle": 0.006430999841541052
+  },
+  "top5_share": 0.4534133970737457,
+  "top10_share": 0.7403901815414429,
+  "entropy": 2.861091136932373,
+  "family_share": {
+   "Flow duration": 6.576000213623047,
+   "Directional IAT": 42.630001068115234,
+   "Flow throughput": 16.659000396728516,
+   "Flow IAT": 25.29599952697754,
+   "Active period": 3.809999942779541,
+   "Idle period": 5.03000020980835
+  },
+  "minfiat_sentinel_attr_share": 0.11493932455778122
+ },
+ "cross_XGB": {
+  "rho": 0.7855731225296443,
+  "tau": 0.5810276679841897,
+  "top5": 3,
+  "top10": 8,
+  "rbo": 0.7548490191276467,
+  "l1": 0.3604850471019745,
+  "kappa5": 0.4888888888888889,
+  "kappa10": 0.6461538461538462,
+  "fam_rho": 0.8285714285714287,
+  "disp": 3.391304347826087
+ },
+ "cross_XGB_weighted": {
+  "rho": 0.7924901185770751,
+  "tau": 0.5968379446640317,
+  "top5": 3,
+  "top10": 7,
+  "rbo": 0.7779748142376467,
+  "l1": 0.37606382369995117,
+  "kappa5": 0.4888888888888889,
+  "kappa10": 0.46923076923076923,
+  "fam_rho": 0.8285714285714287
+ },
+ "w_vs_unw_XGB": [
+  0.9980237154150198,
+  0.9980237154150198
+ ],
+ "ranks_XGB": {
+  "novpn": {
+   "duration": 7,
+   "total_fiat": 8,
+   "total_biat": 3,
+   "min_fiat": 4,
+   "min_biat": 10,
+   "max_fiat": 15,
+   "max_biat": 17,
+   "mean_fiat": 11,
+   "mean_biat": 12,
+   "flowPktsPerSecond": 5,
+   "flowBytesPerSecond": 1,
+   "min_flowiat": 2,
+   "max_flowiat": 13,
+   "mean_flowiat": 6,
+   "std_flowiat": 9,
+   "min_active": 18,
+   "mean_active": 14,
+   "max_active": 16,
+   "std_active": 20,
+   "min_idle": 19,
+   "mean_idle": 21,
+   "max_idle": 23,
+   "std_idle": 22
+  },
+  "vpn": {
+   "duration": 6,
+   "total_fiat": 9,
+   "total_biat": 12,
+   "min_fiat": 2,
+   "min_biat": 4,
+   "max_fiat": 11,
+   "max_biat": 15,
+   "mean_fiat": 13,
+   "mean_biat": 5,
+   "flowPktsPerSecond": 14,
+   "flowBytesPerSecond": 1,
+   "min_flowiat": 3,
+   "max_flowiat": 7,
+   "mean_flowiat": 10,
+   "std_flowiat": 8,
+   "min_active": 17,
+   "mean_active": 20,
+   "max_active": 22,
+   "std_active": 21,
+   "min_idle": 16,
+   "mean_idle": 19,
+   "max_idle": 23,
+   "std_idle": 18
+  }
+ },
+ "cross_model": {
+  "novpn": 0.8142292490118577,
+  "vpn": 0.9169960474308301
+ },
+ "rf800_vs_full_novpn": [
+  0.9980237154150198,
+  1.0,
+  1.0,
+  0.9970355731225298,
+  0.9970355731225298
+ ],
+ "rf800_vs_full_vpn": [
+  1.0,
+  0.9980237154150198,
+  0.9970355731225298,
+  0.9990118577075099,
+  0.9990118577075099
+ ],
+ "LRlog_novpn": {
+  "f1": 0.7537038328578954,
+  "acc": 0.8694652098907418
+ },
+ "LRlog_vpn": {
+  "f1": 0.7243316339324439,
+  "acc": 0.7691897654584222
+ },
+ "corr_novpn": {
+  "min_fiat|min_biat": 0.5972438373802486,
+  "min_fiat|min_flowiat": 0.11430374984121941,
+  "min_biat|min_flowiat": 0.19310501430775107,
+  "duration|total_fiat": 0.940703291800401,
+  "duration|total_biat": 0.8899559759649579,
+  "total_fiat|total_biat": 0.8432426743172875,
+  "flowBytesPerSecond|flowPktsPerSecond": 0.9424560854249278
+ },
+ "minflow_eq_novpn": 0.4263120057512581,
+ "corr_vpn": {
+  "min_fiat|min_biat": 0.6031906171263894,
+  "min_fiat|min_flowiat": 0.4121784783794806,
+  "min_biat|min_flowiat": 0.23656311357656176,
+  "duration|total_fiat": 0.9471764503370582,
+  "duration|total_biat": 0.9491782118305362,
+  "total_fiat|total_biat": 0.9038181288114743,
+  "flowBytesPerSecond|flowPktsPerSecond": 0.9458053833651262
+ },
+ "minflow_eq_vpn": 0.3095682302771855
+}
