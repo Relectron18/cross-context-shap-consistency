@@ -1,0 +1,13 @@
+novpn {'n_train': 6955, 'n_test': 1739, 'counts_train': [2000, 709, 686, 190, 753, 360, 2257], 'counts_test': [500, 178, 171, 48, 188, 90, 564], 'dup_vectors_train': 2, 'dup_rows_train': 6, 'dup_label_conflict': 2, 'unique_train': 6951, 'unique_test': 1737, 'below_m1_entries': 55, 'below_m1_rows': 55, 'below_m1_by_feature': {'min_flowiat': 55}, 'below_m1_by_class': [4, 0, 43, 0, 0, 0, 8], 'below_m1_min': -1247.0, 'collisions': 1}
+vpn {'n_train': 7504, 'n_test': 1876, 'counts_train': [2000, 926, 1506, 346, 533, 380, 1813], 'counts_test': [500, 232, 377, 86, 133, 95, 453], 'dup_vectors_train': 11, 'dup_rows_train': 26, 'dup_label_conflict': 11, 'unique_train': 7489, 'unique_test': 1875, 'below_m1_entries': 43, 'below_m1_rows': 43, 'below_m1_by_feature': {'min_flowiat': 43}, 'below_m1_by_class': [1, 0, 8, 0, 22, 0, 12], 'below_m1_min': -195.0, 'collisions': 13}
+novpn {'std': {'test_to_train': 0.003196149461307893, 'train_to_train': 0.0032045606778712166}, 'log': {'test_to_train': 0.10848765515785101, 'train_to_train': 0.10050803700093365}, 'rank': {'test_to_train': 0.08818920885585092, 'train_to_train': 0.09179930356720468}}
+vpn {'std': {'test_to_train': 0.008624309914188933, 'train_to_train': 0.009777056982515254}, 'log': {'test_to_train': 0.10871183704826076, 'train_to_train': 0.10824807107104296}, 'rank': {'test_to_train': 0.07539620916203035, 'train_to_train': 0.07424282701653376}}
+novpn {'cv_XGB_novpn_strat': 0.9235396135915723, 'cv_XGB_novpn_grouped': 0.6419505083978922, 'cv_RF_novpn_strat': 0.901314334297403, 'cv_RF_novpn_grouped': 0.4748136537765294}
+vpn {'cv_XGB_novpn_strat': 0.9235396135915723, 'cv_XGB_novpn_grouped': 0.6419505083978922, 'cv_RF_novpn_strat': 0.901314334297403, 'cv_RF_novpn_grouped': 0.4748136537765294, 'cv_XGB_vpn_strat': 0.88019323709826, 'cv_XGB_vpn_grouped': 0.5514700198350645, 'cv_RF_vpn_strat': 0.8623039316300352, 'cv_RF_vpn_grouped': 0.4929138076646245}
+RF novpn 0.9170740828569689 130s
+RF vpn 0.8533498842303909 239s
+RF {'rho': np.float64(0.8300395256916996), 'tau': np.float64(0.6442687747035574), 'top5': 3, 'top10': 9, 'rbo': 0.5799874644471005, 'l1': 0.333255877160072, 'kappa5': 0.4888888888888889, 'kappa10': 0.823076923076923, 'fam_rho': np.float64(0.942857142857143), 'disp': 3.0434782608695654}
+XGB novpn 0.9339594857397238 6s
+XGB vpn 0.8835908406358356 5s
+XGB {'rho': np.float64(0.7855731225296443), 'tau': np.float64(0.5810276679841897), 'top5': 3, 'top10': 8, 'rbo': 0.7548490191276467, 'l1': 0.3604850471019745, 'kappa5': 0.4888888888888889, 'kappa10': 0.6461538461538462, 'fam_rho': np.float64(0.8285714285714287), 'disp': 3.391304347826087}
+done
