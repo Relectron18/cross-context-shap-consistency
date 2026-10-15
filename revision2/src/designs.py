@@ -33,14 +33,25 @@ def contexts_for_repeat(r):
     return {c: (pd.concat(out[c][0], ignore_index=True), np.concatenate(out[c][1])) for c in CTX}
 
 CL_SIZE = int(DESIGN[7:]) if DESIGN.startswith("grouped") and len(DESIGN) > 7 else 140
+# Calibrated design: number of clusters per class = number of capture files of that class in the
+# released PCAPs (prefix list of the Deep Packet code, Lotfollahi et al.), at least 4. BROWSING has no
+# dedicated captures, so it uses the context's median flows per capture file (see revision2/README.md).
+CAPTURE_FILES = {"novpn": {1: 20, 2: 32, 3: 4, 4: 1, 5: 19, 6: 34}, "vpn": {1: 10, 2: 6, 3: 2, 4: 1, 5: 5, 6: 7}}
+ARFF_COUNTS = {"novpn": {1: 890, 2: 1018, 3: 249, 4: 1000, 5: 482, 6: 2826, 0: 2500},
+               "vpn": {1: 1196, 2: 1932, 3: 491, 4: 928, 5: 475, 6: 2271, 0: 2500}}
+def calibrated_k(ctx, k):
+    if k == 0:
+        per_file = np.median([ARFF_COUNTS[ctx][c] / CAPTURE_FILES[ctx][c] for c in (1, 2, 3, 5, 6)])
+        return max(4, int(round(ARFF_COUNTS[ctx][0] / per_file)))
+    return max(4, CAPTURE_FILES[ctx][k])
 
-def grouped_halves(Xtr, ytr, seed):
+def grouped_halves(Xtr, ytr, seed, ctx=None):
     Z = StandardScaler().fit_transform(logx2(Xtr))
     rng = np.random.default_rng(seed)
     A, B = [], []
     for k in range(7):
         ids = np.flatnonzero(ytr == k)
-        kc = max(4, int(round(len(ids) / CL_SIZE)))
+        kc = calibrated_k(ctx, k) if DESIGN == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
         lab = KMeans(n_clusters=kc, n_init=3, random_state=int(seed) + k).fit_predict(Z[ids])
         groups = [ids[lab == g] for g in range(kc)]
         order = rng.permutation(len(groups))
@@ -62,8 +73,8 @@ for r in range(R):
         Xtr, ytr = X.iloc[itr].reset_index(drop=True), y[itr]
         Xte, yte = X.iloc[ite].reset_index(drop=True), y[ite]
         parts[c] = (Xtr, ytr, Xte, yte)
-        if DESIGN.startswith("grouped"):
-            halves[c] = grouped_halves(Xtr, ytr, 41000 + 100 * r + ci)
+        if DESIGN.startswith("grouped") or DESIGN == "calibrated":
+            halves[c] = grouped_halves(Xtr, ytr, 41000 + 100 * r + ci, ctx=c)
         else:
             rng = np.random.default_rng(5000 + 100 * r + ci)
             a, b = [], []
@@ -71,7 +82,7 @@ for r in range(R):
                 ids = rng.permutation(np.flatnonzero(ytr == k)); h = len(ids) // 2
                 a += list(ids[:h]); b += list(ids[h:2 * h])
             halves[c] = (np.array(a), np.array(b))
-    n_common = N_H if not DESIGN.startswith("grouped") else min(min(len(h) for h in halves[c]) for c in CTX)
+    n_common = N_H if not (DESIGN.startswith("grouped") or DESIGN == "calibrated") else min(min(len(h) for h in halves[c]) for c in CTX)
     for ci, c in enumerate(CTX):
         Xtr, ytr, Xte, yte = parts[c]
         if MODEL == "RF":

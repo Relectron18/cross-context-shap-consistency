@@ -6,7 +6,7 @@ import content_a, content_m, content_r, content_c
 from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 SRC = str(REPO / "paper" / "SHAP_VPN_final_v6_merged.docx")  # v6 with merged runs (template for styles, equations, Figs 1 and 6)
-OUT = sys.argv[1] if len(sys.argv) > 1 else str(REPO / "paper" / "SHAP_VPN_revised_v7.docx")
+OUT = sys.argv[1] if len(sys.argv) > 1 else str(REPO / "paper" / "SHAP_VPN_revised_v8.docx")
 z = zipfile.ZipFile(SRC)
 doc = etree.fromstring(z.read("word/document.xml"))
 body = doc.find(f"{{{W}}}body")
@@ -47,6 +47,9 @@ for el in D.els:
     for t in el.iter(T):
         if t.text and CIT.search(t.text):
             t.text = CIT.sub(lambda m: "[" + compress([mapping[n] for n in expand(m.group(1))]) + "]", t.text)
+# ---- typeset maths as equation objects and normalise look-alike characters
+import mathfix
+print('inline equations', mathfix.fix(D.els))
 # ---- references (original paragraphs 270..326 are [1]..[57])
 D.h1("REFERENCES")
 refs = {i - 269: O[i] for i in range(270, 327)}
@@ -79,6 +82,16 @@ for item in z.infolist():
     if item.filename in drop_media: continue
     if item.filename == "word/document.xml": zo.writestr(item, xml)
     elif item.filename == "word/_rels/document.xml.rels": zo.writestr(item, etree.tostring(rels, xml_declaration=True, encoding="UTF-8", standalone=True))
+    elif item.filename == "word/styles.xml":
+        # one declared language (English, US) for every script slot, so text checkers see a single language
+        s = z.read(item.filename).decode("utf8")
+        s = re.sub(r'<w:lang [^>]*/>', '<w:lang w:val="en-US" w:eastAsia="en-US" w:bidi="en-US"/>', s)
+        zo.writestr(item, s.encode("utf8"))
+    elif item.filename == "docProps/core.xml":
+        s = z.read(item.filename).decode("utf8")
+        s = re.sub(r'<dc:language>[^<]*</dc:language>', '<dc:language>en-US</dc:language>', s)
+        s = re.sub(r'<dc:subject>[^<]*</dc:subject>', '<dc:subject>Cross-context consistency of TreeSHAP rankings on ISCX VPN-nonVPN</dc:subject>', s)
+        zo.writestr(item, s.encode("utf8"))
     else: zo.writestr(item, z.read(item.filename))
 for rid, path, name in D.images: zo.write(path, f"word/media/{name}")
 zo.close()

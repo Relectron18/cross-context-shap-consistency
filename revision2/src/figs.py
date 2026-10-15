@@ -14,7 +14,7 @@ if "2" in which:
     boxes = [
         (3, 80, 42, 14, "Primary train/test partitions (authors' 80/20 split)\nScenario A2, 15 s, duplicates removed\nSame 23 features and seven labels"),
         (53, 80, 44, 14, "Fit RF and XGB separately by context\nPrimary TreeSHAP rankings on test sets\nSpearman, Kendall, Top-k, $\\kappa_k$, RBO, L1"),
-        (3, 52, 42, 21, "Within-context references (11 repeats each;\n80/20 partition redrawn every repeat)\n• flow-level random half-splits\n• cluster-grouped half-splits (140/35/10)\n• permutation null (pooled within class)"),
+        (3, 52, 42, 21, "Within-context references (11 repeats each;\n80/20 partition redrawn every repeat)\n\u2022 flow-level random half-splits\n\u2022 cluster-grouped halves (10/35/140, calibrated)\n\u2022 permutation null (pooled within class)"),
         (53, 52, 44, 21, "Confound and mechanism checks\nClass weighting; class-mix swap; matched\ntraining with a same-size reference\nDrop-one retraining; permutation importance\nFamilies, alternative grouping, clusters"),
         (3, 27, 42, 18, "Consequence tests\nDirect model transfer between contexts\nOwn vs transferred Top-5/10/15 (5 selection\nseeds; bottom-10 and 20 fixed random-10)"),
         (53, 27, 44, 18, "Sensitivity checks\nSentinel encodings S1/S2\nRF / XGB / Extra Trees; two SHAP methods\nXGB seeds and depth"),
@@ -75,8 +75,8 @@ if "5" in which:
 
 if "7" in which:
     designs = [("random", "Random\nhalves"), ("grouped10", "Grouped\n~10/cluster"), ("grouped35", "Grouped\n~35/cluster"),
-               ("grouped", "Grouped\n~140/cluster"), ("null", "Permutation\nnull")]
-    fig, axs = plt.subplots(1, 2, figsize=(11, 4.4), dpi=170)
+               ("grouped", "Grouped\n~140/cluster"), ("calibrated", "Grouped\ncalibrated"), ("null", "Permutation\nnull")]
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4.6), dpi=170)
     for ax, m, t in zip(axs, ("XGB", "RF"), ("XGBoost", "Random Forest")):
         xs = []
         for i, (d, lab) in enumerate(designs):
@@ -89,7 +89,7 @@ if "7" in which:
             ax.scatter(i + .15 + j[:len(cr)], cr, s=12, color="#8e44ad", alpha=.75, label="Across contexts" if i == 0 else None)
             ax.hlines([w.mean()], i - .3, i, color="#2d5a2b", lw=2); ax.hlines([cr.mean()], i, i + .3, color="#5b2a72", lw=2)
         ax.set_xticks([x for x, _ in xs]); ax.set_xticklabels([l for _, l in xs], rotation=0, fontsize=7)
-        ax.set_ylim(0.6 if m == "XGB" else 0.25, 1.0); ax.set_title(t); ax.grid(axis="y", alpha=.3)
+        ax.set_ylim(0.55 if m == "XGB" else 0.0, 1.0); ax.set_title(t); ax.grid(axis="y", alpha=.3)
     axs[0].set_ylabel("Spearman ρ between rankings"); fig.legend(*axs[0].get_legend_handles_labels(), frameon=False, fontsize=8, loc="upper center", ncol=2, bbox_to_anchor=(0.5, 1.03))
     plt.tight_layout(); plt.savefig(FIG2 / "fig7_references.png", bbox_inches="tight"); plt.close()
 

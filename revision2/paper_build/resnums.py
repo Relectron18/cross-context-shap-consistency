@@ -33,3 +33,11 @@ def fam(imp, fams, mean=False):
     return pd.Series({k: (imp[v].mean() if mean else imp[v].sum()) for k, v in fams.items()})
 def fam_rho(m, fams, mean=False):
     return spearmanr(fam(prim(m, "novpn"), fams, mean), fam(prim(m, "vpn"), fams, mean))[0]
+P5 = json.load(open(RES / "p5_results.json")) if (RES / "p5_results.json").exists() else {}
+TK2 = pd.read_csv(RES / "p5_topk_2x2.csv") if (RES / "p5_topk_2x2.csv").exists() else None
+# Capture files per class (prefix list of the Deep Packet code) and raw 15 s ARFF counts
+CAPTURE_FILES = {"novpn": {"CHAT": 20, "FT": 32, "MAIL": 4, "STREAMING": 19, "VOIP": 34}, "vpn": {"CHAT": 10, "FT": 6, "MAIL": 2, "STREAMING": 5, "VOIP": 7}}
+ARFF = pd.read_csv(RES / "arff_class_counts.csv").set_index("file")
+def flows_per_capture(ctx):
+    row = ARFF.loc["TimeBasedFeatures-Dataset-15s-%s.arff" % ("NO-VPN" if ctx == "novpn" else "VPN")]
+    return {k: row[k] / v for k, v in CAPTURE_FILES[ctx].items()}

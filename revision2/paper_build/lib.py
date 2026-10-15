@@ -100,3 +100,8 @@ def to_roman(n):
     for v, r in vals:
         while n >= v: s += r; n -= v
     return s
+
+def _eq_omml(self, inner, num):
+    self.raw('<w:p><w:pPr><w:tabs><w:tab w:val="center" w:pos="4513"/><w:tab w:val="right" w:pos="9026"/></w:tabs><w:spacing w:before="100" w:after="100"/></w:pPr>'
+             f'<w:r><w:tab/></w:r><m:oMath>{inner}</m:oMath><w:r><w:tab/><w:t>({num})</w:t></w:r></w:p>')
+Doc.eq_omml = _eq_omml

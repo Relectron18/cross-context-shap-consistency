@@ -33,7 +33,7 @@ def summarise(model, design):
 if __name__ == "__main__":
     S = {}
     for model in ("XGB", "RF"):
-        for design in ("random", "grouped10", "grouped35", "grouped", "null"):
+        for design in ("random", "grouped10", "grouped35", "grouped", "calibrated", "null"):
             try: df = summarise(model, design)
             except FileNotFoundError: continue
             df.to_csv(OUT2 / f"ref_summary_{model}_{design}.csv", index=False)

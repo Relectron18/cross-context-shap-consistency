@@ -1,0 +1,23 @@
+{'block_RF_novpn': {'block': 17.039037704467773, 'min_fiat': 4.348690032958984, 'min_biat': 4.422680854797363, 'min_flowiat': 8.267667770385742}, 'block_RF_vpn': {'block': 23.333498001098633, 'min_fiat': 8.283744812011719, 'min_biat': 8.14814567565918, 'min_flowiat': 6.901607036590576}, 'block_half_RF_novpn': {'mean': 16.280910535292193, 'sd': 0.5194253162956475}, 'block_half_RF_vpn': {'mean': 24.547700881958008, 'sd': 0.8420086192613921}, 'block_XGB_novpn': {'block': 26.312278747558594, 'min_fiat': 7.9716949462890625, 'min_biat': 4.300985813140869, 'min_flowiat': 14.039596557617188}, 'block_XGB_vpn': {'block': 24.707904815673828, 'min_fiat': 8.450392723083496, 'min_biat': 8.09621524810791, 'min_flowiat': 8.161297798156738}, 'block_half_XGB_novpn': {'mean': 27.00832002813166, 'sd': 1.0756903863060931}, 'block_half_XGB_vpn': {'mean': 25.721865740689363, 'sd': 0.9384688021284836}}
+RF novpn {'min_fiat': 4, 'min_biat': 3, 'min_flowiat': 2} ['flowBytesPerSecond', 'min_flowiat', 'min_biat', 'min_fiat', 'std_flowiat']
+RF vpn {'min_fiat': 3, 'min_biat': 2, 'min_flowiat': 4} ['flowBytesPerSecond', 'min_biat', 'min_fiat', 'min_flowiat', 'total_biat']
+XGB novpn {'min_fiat': 3, 'min_biat': 4, 'min_flowiat': 2} ['flowBytesPerSecond', 'min_flowiat', 'min_fiat', 'min_biat', 'flowPktsPerSecond']
+XGB vpn {'min_fiat': 2, 'min_biat': 4, 'min_flowiat': 3} ['flowBytesPerSecond', 'min_fiat', 'min_flowiat', 'min_biat', 'duration']
+           match                 vpn_list_gain                
+            mean     min     max          mean     min     max
+model k                                                       
+RF    5   0.0198  0.0184  0.0223        0.0361  0.0332  0.0374
+      10  0.0084  0.0044  0.0128        0.0086  0.0050  0.0116
+      15 -0.0021 -0.0034  0.0000       -0.0021 -0.0034  0.0000
+XGB   5  -0.0251 -0.0277 -0.0212        0.0059 -0.0087  0.0157
+      10  0.0095 -0.0013  0.0182        0.0008 -0.0006  0.0024
+      15  0.0006  0.0000  0.0009        0.0012  0.0000  0.0019
+{'r': 0, 'ctx': 'novpn', 'h': 0, 'rho': np.float64(1.0), 'top5': 5}
+{'r': 0, 'ctx': 'novpn', 'h': 1, 'rho': np.float64(0.9990118577075099), 'top5': 5}
+{'r': 0, 'ctx': 'vpn', 'h': 0, 'rho': np.float64(1.0), 'top5': 5}
+{'r': 0, 'ctx': 'vpn', 'h': 1, 'rho': np.float64(0.9980237154150198), 'top5': 5}
+{'r': 1, 'ctx': 'novpn', 'h': 0, 'rho': np.float64(0.9990118577075099), 'top5': 5}
+{'r': 1, 'ctx': 'novpn', 'h': 1, 'rho': np.float64(0.9980237154150198), 'top5': 5}
+{'r': 1, 'ctx': 'vpn', 'h': 0, 'rho': np.float64(0.9980237154150198), 'top5': 5}
+{'r': 1, 'ctx': 'vpn', 'h': 1, 'rho': np.float64(0.9990118577075099), 'top5': 5}
+done

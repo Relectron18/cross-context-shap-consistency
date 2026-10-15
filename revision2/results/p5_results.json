@@ -1,0 +1,274 @@
+{
+ "block_RF_novpn": {
+  "block": 17.039037704467773,
+  "min_fiat": 4.348690032958984,
+  "min_biat": 4.422680854797363,
+  "min_flowiat": 8.267667770385742
+ },
+ "block_RF_vpn": {
+  "block": 23.333498001098633,
+  "min_fiat": 8.283744812011719,
+  "min_biat": 8.14814567565918,
+  "min_flowiat": 6.901607036590576
+ },
+ "block_half_RF_novpn": {
+  "mean": 16.280910535292193,
+  "sd": 0.5194253162956475
+ },
+ "block_half_RF_vpn": {
+  "mean": 24.547700881958008,
+  "sd": 0.8420086192613921
+ },
+ "block_XGB_novpn": {
+  "block": 26.312278747558594,
+  "min_fiat": 7.9716949462890625,
+  "min_biat": 4.300985813140869,
+  "min_flowiat": 14.039596557617188
+ },
+ "block_XGB_vpn": {
+  "block": 24.707904815673828,
+  "min_fiat": 8.450392723083496,
+  "min_biat": 8.09621524810791,
+  "min_flowiat": 8.161297798156738
+ },
+ "block_half_XGB_novpn": {
+  "mean": 27.00832002813166,
+  "sd": 1.0756903863060931
+ },
+ "block_half_XGB_vpn": {
+  "mean": 25.721865740689363,
+  "sd": 0.9384688021284836
+ },
+ "cpi_RF_novpn": {
+  "rank_min": {
+   "min_fiat": 4,
+   "min_biat": 3,
+   "min_flowiat": 2
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_flowiat",
+   "min_biat",
+   "min_fiat",
+   "std_flowiat"
+  ],
+  "values": {
+   "duration": -0.00146,
+   "total_fiat": 0.0016,
+   "total_biat": -0.00201,
+   "min_fiat": 0.00825,
+   "min_biat": 0.01584,
+   "max_fiat": 0.00287,
+   "max_biat": 0.00091,
+   "mean_fiat": 0.00423,
+   "mean_biat": 0.00163,
+   "flowPktsPerSecond": 0.00039,
+   "flowBytesPerSecond": 0.078,
+   "min_flowiat": 0.05573,
+   "max_flowiat": -0.00382,
+   "mean_flowiat": -0.0009,
+   "std_flowiat": 0.00479,
+   "min_active": -0.001,
+   "mean_active": -0.00115,
+   "max_active": -0.0002,
+   "std_active": 0.00153,
+   "min_idle": -0.00093,
+   "mean_idle": -0.00166,
+   "max_idle": 0.00083,
+   "std_idle": 0.00353
+  }
+ },
+ "cpi_RF_vpn": {
+  "rank_min": {
+   "min_fiat": 3,
+   "min_biat": 2,
+   "min_flowiat": 4
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_biat",
+   "min_fiat",
+   "min_flowiat",
+   "total_biat"
+  ],
+  "values": {
+   "duration": -0.00344,
+   "total_fiat": 0.00187,
+   "total_biat": 0.00368,
+   "min_fiat": 0.02133,
+   "min_biat": 0.02669,
+   "max_fiat": -0.00304,
+   "max_biat": 0.00068,
+   "mean_fiat": -0.00033,
+   "mean_biat": 0.00265,
+   "flowPktsPerSecond": -0.00647,
+   "flowBytesPerSecond": 0.06089,
+   "min_flowiat": 0.00538,
+   "max_flowiat": -0.00465,
+   "mean_flowiat": -0.00626,
+   "std_flowiat": 0.00325,
+   "min_active": 0.00112,
+   "mean_active": -0.00126,
+   "max_active": -0.00048,
+   "std_active": 0.0002,
+   "min_idle": -0.00014,
+   "mean_idle": -0.00027,
+   "max_idle": -4e-05,
+   "std_idle": -0.00116
+  }
+ },
+ "cpi_cross_RF": {
+  "rho": 0.6571146245059288,
+  "tau": 0.541501976284585,
+  "top5": 4,
+  "top10": 7,
+  "rbo": 0.8049978180947972,
+  "l1": 0.6821574429252141
+ },
+ "cpi_XGB_novpn": {
+  "rank_min": {
+   "min_fiat": 3,
+   "min_biat": 4,
+   "min_flowiat": 2
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_flowiat",
+   "min_fiat",
+   "min_biat",
+   "flowPktsPerSecond"
+  ],
+  "values": {
+   "duration": 0.00096,
+   "total_fiat": 0.00305,
+   "total_biat": 0.00485,
+   "min_fiat": 0.03974,
+   "min_biat": 0.01746,
+   "max_fiat": 0.00047,
+   "max_biat": 0.00018,
+   "mean_fiat": 0.0064,
+   "mean_biat": 0.00212,
+   "flowPktsPerSecond": 0.00868,
+   "flowBytesPerSecond": 0.21127,
+   "min_flowiat": 0.10247,
+   "max_flowiat": -0.00067,
+   "mean_flowiat": 0.00348,
+   "std_flowiat": 0.00157,
+   "min_active": -0.00245,
+   "mean_active": -0.00205,
+   "max_active": 0.00034,
+   "std_active": 0.00143,
+   "min_idle": 0.0003,
+   "mean_idle": -0.00152,
+   "max_idle": -0.00013,
+   "std_idle": 0.00168
+  }
+ },
+ "cpi_XGB_vpn": {
+  "rank_min": {
+   "min_fiat": 2,
+   "min_biat": 4,
+   "min_flowiat": 3
+  },
+  "top5": [
+   "flowBytesPerSecond",
+   "min_fiat",
+   "min_flowiat",
+   "min_biat",
+   "duration"
+  ],
+  "values": {
+   "duration": 0.02353,
+   "total_fiat": 0.00936,
+   "total_biat": 0.01113,
+   "min_fiat": 0.06586,
+   "min_biat": 0.02986,
+   "max_fiat": 0.00858,
+   "max_biat": 0.00624,
+   "mean_fiat": 0.00449,
+   "mean_biat": 0.01206,
+   "flowPktsPerSecond": 0.00056,
+   "flowBytesPerSecond": 0.1362,
+   "min_flowiat": 0.036,
+   "max_flowiat": 0.01362,
+   "mean_flowiat": 0.01103,
+   "std_flowiat": 0.01465,
+   "min_active": 0.001,
+   "mean_active": 0.00165,
+   "max_active": 0.00083,
+   "std_active": 4e-05,
+   "min_idle": -0.00057,
+   "mean_idle": -0.00037,
+   "max_idle": 0.0007,
+   "std_idle": -6e-05
+  }
+ },
+ "cpi_cross_XGB": {
+  "rho": 0.575098814229249,
+  "tau": 0.42292490118577075,
+  "top5": 4,
+  "top10": 7,
+  "rbo": 0.7906721624594124,
+  "l1": 0.7195146397403643
+ },
+ "topk_2x2": "           match                 vpn_list_gain                \n            mean     min     max          mean     min     max\nmodel k                                                       \nRF    5   0.0198  0.0184  0.0223        0.0361  0.0332  0.0374\n      10  0.0084  0.0044  0.0128        0.0086  0.0050  0.0116\n      15 -0.0021 -0.0034  0.0000       -0.0021 -0.0034  0.0000\nXGB   5  -0.0251 -0.0277 -0.0212        0.0059 -0.0087  0.0157\n      10  0.0095 -0.0013  0.0182        0.0008 -0.0006  0.0024\n      15  0.0006  0.0000  0.0009        0.0012  0.0000  0.0019",
+ "classmix_sd": "                             f1         rho_same         rho_other         rbo_other        \n                           mean     std     mean     std      mean     std      mean     std\nmodel ctx   mix                                                                             \nRF    novpn nat_vs_swap     NaN     NaN   0.9242  0.0086       NaN     NaN       NaN     NaN\n            natural      0.8955  0.0066   0.9825  0.0090    0.7994  0.0171    0.5758  0.0194\n            swapped      0.8976  0.0026   0.9358  0.0094    0.7648  0.0086    0.5532  0.0231\n      vpn   nat_vs_swap     NaN     NaN   0.9720  0.0217       NaN     NaN       NaN     NaN\n            natural      0.8406  0.0057   0.9792  0.0091    0.8366  0.0218    0.5815  0.0016\n            swapped      0.8084  0.0063   0.9661  0.0082    0.8300  0.0168    0.6101  0.0401\nXGB   novpn nat_vs_swap     NaN     NaN   0.9769  0.0040       NaN     NaN       NaN     NaN\n            natural      0.9222  0.0078   0.9767  0.0114    0.8225  0.0115    0.6805  0.0122\n            swapped      0.9254  0.0050   0.9711  0.0152    0.8306  0.0170    0.7004  0.0320\n      vpn   nat_vs_swap     NaN     NaN   0.9719  0.0113       NaN     NaN       NaN     NaN\n            natural      0.8594  0.0033   0.9860  0.0071    0.7806  0.0237    0.7748  0.0375\n            swapped      0.8409  0.0061   0.9802  0.0085    0.7972  0.0149    0.7866  0.0312",
+ "rf800_halfmodels": [
+  {
+   "r": 0,
+   "ctx": "novpn",
+   "h": 0,
+   "rho": 1.0,
+   "top5": 5
+  },
+  {
+   "r": 0,
+   "ctx": "novpn",
+   "h": 1,
+   "rho": 0.9990118577075099,
+   "top5": 5
+  },
+  {
+   "r": 0,
+   "ctx": "vpn",
+   "h": 0,
+   "rho": 1.0,
+   "top5": 5
+  },
+  {
+   "r": 0,
+   "ctx": "vpn",
+   "h": 1,
+   "rho": 0.9980237154150198,
+   "top5": 5
+  },
+  {
+   "r": 1,
+   "ctx": "novpn",
+   "h": 0,
+   "rho": 0.9990118577075099,
+   "top5": 5
+  },
+  {
+   "r": 1,
+   "ctx": "novpn",
+   "h": 1,
+   "rho": 0.9980237154150198,
+   "top5": 5
+  },
+  {
+   "r": 1,
+   "ctx": "vpn",
+   "h": 0,
+   "rho": 0.9980237154150198,
+   "top5": 5
+  },
+  {
+   "r": 1,
+   "ctx": "vpn",
+   "h": 1,
+   "rho": 0.9990118577075099,
+   "top5": 5
+  }
+ ]
+}
