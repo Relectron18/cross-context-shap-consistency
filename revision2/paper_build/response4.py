@@ -68,7 +68,7 @@ C("1. The session proxy is uncalibrated, and the conclusion depends on the granu
    "different sets of captures it cannot be attributed to tunnelling. Splitting by capture file after regenerating flows from the "
    "raw PCAPs remains the way to settle it, and Section XI says so.",
    f"The overcorrected sentences are gone. \"They should not be read as an effect of the VPN\" and similar wording are replaced by "
-   f"\"cannot be attributed to tunnelling\" throughout, and Sections VI-C and X-A note that the Random Forest gap is still positive "
+   f"\"cannot be attributed to tunnelling\" throughout, and Section VI-C notes that the Random Forest gap is still positive "
    f"in all 11 repeats at about 35 flows per cluster ({f(ref('RF','grouped35','rho_gap'))}, minimum {f(ref('RF','grouped35','rho_gap','min'))})."])
 
 b = lambda m, c: P5[f"block_{m}_{c}"]["block"]; bh = lambda m, c: P5[f"block_half_{m}_{c}"]["mean"]
@@ -112,7 +112,7 @@ C("4. The XGBoost family-level gap does not shrink under grouping",
    f"or under the calibrated grouping ({sg(ref('XGB','calibrated','fam_gap'))}). The paragraph says that part of the XGBoost "
    f"difference survives fine grouping at the family level although it shrinks at the feature level, so the redundancy reading "
    f"applies less clearly to XGBoost families.",
-   f"The abstract now states the shrinkage only for the feature-level Spearman gap, and Sections X-A and XII use the same scope. "
+   f"The abstract now states the shrinkage only for the Spearman gap between feature rankings, and Section XII calls it the feature-level gap. "
    f"The family-level result is named in the summary of Section X-C. Section VII also reports that under the row-order blocks the "
    f"summed-family gaps stay positive for both models.",])
 
@@ -130,8 +130,8 @@ minor = [
  ("Revision history in the manuscript.", "Removed. The manuscript no longer refers to earlier versions in Sections III-D, IV-D, "
   "IV-G, VI-C, VI-D or IX (or anywhere else); a text search for \"previous version\", \"earlier version\" and \"earlier reading\" "
   "returns nothing. The notes that were there are collected below."),
- ("Abstract length.", "Shortened from about 300 to about 225 words. It keeps the headline contrast (random halves, grouped "
-  "halves with the calibrated setting, permutation null, model transfer and list transfer) and leaves the remaining numbers to "
+ ("Abstract length.", "Shortened from about 300 to about 225 words. It keeps the headline contrast (random halves, the two "
+  "grouping proxies, permutation null, model transfer and list transfer) and leaves the remaining numbers to "
   "the summary table, which is now Table XV."),
  ("Class-mix swap spreads and range.", "Table VIII now gives mean (SD) over the 3–5 draws for every entry, plus a column for the "
   "agreement between natural-mix and swapped-mix models of the same draw. The text now quotes the two ranges separately: "
