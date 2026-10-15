@@ -5,6 +5,10 @@ design = random  : each repeat redraws a stratified 80/20 partition of the conte
 design = grouped : same partition, but halves are formed from whole k-means clusters fitted within each
                    class on log(x+2)-standardised training features (proxy for capture sessions), so
                    near-duplicate flows cannot sit in both halves.
+design = ordered<B> / orderedcal / orderedhalf : halves are formed from whole blocks of consecutive rows of the original
+                   ARFF files (within class, about B training flows per block, or the capture-count
+                   calibrated number of blocks; orderedhalf = first versus second half of each class). Row order keeps capture locality (p6_arff_order.py), so this
+                   grouping does not depend on feature-space clustering.
 design = null    : permutation null. Flows are pooled within class across both contexts and randomly
                    reassigned to two pseudo-contexts with the original per-class counts; the random
                    design is then applied to the pseudo-contexts.
@@ -45,15 +49,25 @@ def calibrated_k(ctx, k):
         return max(4, int(round(ARFF_COUNTS[ctx][0] / per_file)))
     return max(4, CAPTURE_FILES[ctx][k])
 
-def grouped_halves(Xtr, ytr, seed, ctx=None):
-    Z = StandardScaler().fit_transform(logx2(Xtr))
+ORDERED = DESIGN.startswith("ordered")
+if ORDERED:
+    POS = {c: np.asarray(v) for c, v in json.load(open(OUT2 / "arff_order_positions.json")).items()}
+    BLOCK = None if DESIGN == "orderedcal" else "half" if DESIGN == "orderedhalf" else int(DESIGN[7:])
+
+def grouped_halves(Xtr, ytr, seed, ctx=None, pos=None):
+    if not ORDERED: Z = StandardScaler().fit_transform(logx2(Xtr))
     rng = np.random.default_rng(seed)
     A, B = [], []
     for k in range(7):
         ids = np.flatnonzero(ytr == k)
-        kc = calibrated_k(ctx, k) if DESIGN == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
-        lab = KMeans(n_clusters=kc, n_init=3, random_state=int(seed) + k).fit_predict(Z[ids])
-        groups = [ids[lab == g] for g in range(kc)]
+        if ORDERED:
+            kc = (calibrated_k(ctx, k) if BLOCK is None else 2 if BLOCK == "half"
+                  else max(4, int(round(len(ids) / BLOCK))))
+            groups = np.array_split(ids[np.argsort(pos[ids])], kc)   # contiguous runs of ARFF rows
+        else:
+            kc = calibrated_k(ctx, k) if DESIGN == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
+            lab = KMeans(n_clusters=kc, n_init=3, random_state=int(seed) + k).fit_predict(Z[ids])
+            groups = [ids[lab == g] for g in range(kc)]
         order = rng.permutation(len(groups))
         groups = sorted([groups[i] for i in order], key=len, reverse=True)
         a, b = [], []
@@ -73,8 +87,9 @@ for r in range(R):
         Xtr, ytr = X.iloc[itr].reset_index(drop=True), y[itr]
         Xte, yte = X.iloc[ite].reset_index(drop=True), y[ite]
         parts[c] = (Xtr, ytr, Xte, yte)
-        if DESIGN.startswith("grouped") or DESIGN == "calibrated":
-            halves[c] = grouped_halves(Xtr, ytr, 41000 + 100 * r + ci, ctx=c)
+        if DESIGN.startswith("grouped") or DESIGN == "calibrated" or ORDERED:
+            halves[c] = grouped_halves(Xtr, ytr, 41000 + 100 * r + ci, ctx=c,
+                                       pos=POS[c][itr] if ORDERED else None)
         else:
             rng = np.random.default_rng(5000 + 100 * r + ci)
             a, b = [], []
@@ -82,7 +97,7 @@ for r in range(R):
                 ids = rng.permutation(np.flatnonzero(ytr == k)); h = len(ids) // 2
                 a += list(ids[:h]); b += list(ids[h:2 * h])
             halves[c] = (np.array(a), np.array(b))
-    n_common = N_H if not (DESIGN.startswith("grouped") or DESIGN == "calibrated") else min(min(len(h) for h in halves[c]) for c in CTX)
+    n_common = N_H if not (DESIGN.startswith("grouped") or DESIGN == "calibrated" or ORDERED) else min(min(len(h) for h in halves[c]) for c in CTX)
     for ci, c in enumerate(CTX):
         Xtr, ytr, Xte, yte = parts[c]
         if MODEL == "RF":

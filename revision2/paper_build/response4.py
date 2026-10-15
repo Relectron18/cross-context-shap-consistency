@@ -11,7 +11,7 @@ st = d.styles["Normal"]; st.font.name = "Times New Roman"; st.font.size = Pt(11)
 d.add_heading("Response to the reviewer", 0)
 d.add_paragraph("Manuscript: Cross-Context Consistency of SHAP-Based Feature Importance for Application Classification "
                 "Across VPN and Non-VPN Traffic (revised version v8)")
-d.add_paragraph("We thank the reviewer for another careful report. This revision adds a calibrated grouping design, block-summed "
+d.add_paragraph("We thank the reviewer for another careful report. This revision adds a calibrated grouping design, a second grouping proxy based on the row order of the original ARFF files, block-summed "
                 "SHAP shares with a conditional permutation check, a list-origin by target decomposition of the feature-list "
                 "transfer, a family-share table and spreads for the class-mix swap. All revision history has been moved out of "
                 "the manuscript and is collected at the end of this letter. Section and table numbers refer to the revised "
@@ -46,9 +46,27 @@ C("1. The session proxy is uncalibrated, and the conclusion depends on the granu
    f"Its mean gap is {sg(cal('XGB','rho_gap'))} for XGBoost (SD {f(cal('XGB','rho_gap','sd'))}) and {sg(cal('RF','rho_gap'))} for "
    f"Random Forest (SD {f(cal('RF','rho_gap','sd'))}), with half-model macro F1 of {f(cal('XGB','f1_nv'),2)}/{f(cal('XGB','f1_vpn'),2)} "
    f"and {f(cal('RF','f1_nv'),2)}/{f(cal('RF','f1_vpn'),2)}.",
-   "We agree that this is weak evidence and say so where the result is stated (abstract, Section VI-C, Section X-A and the "
-   "conclusion): at the coarse and calibrated settings the half-models are weak and the gap varies widely between repeats. The "
-   "abstract now says the mean gap is \"close to zero, although the evidence at that setting is weak\".",
+   "We agree that this is weak evidence: at the coarse and calibrated cluster settings the half-models are weak and the gap "
+   "varies widely between repeats. Because clusters are built from the same features the models use, we also suspected that at "
+   "coarse settings they separate regions of feature space rather than captures, so we added a second proxy that does not use "
+   "the features.",
+   f"Row-order blocks (Section IV-D, new paragraph \"Row-order blocks\"; Table VII; Fig. 7). In the original Scenario A2 ARFF "
+   f"files, flows are sorted by class and then kept in the order the flow meter wrote them. Every deduplicated flow in our data "
+   f"matches exactly one ARFF row, so its position is known. Neighbouring rows are much more alike than random rows of the same "
+   f"class (nearest of the 40 rows within 20 positions at {f(N.LOC[N.LOC.lag=='win20'].ratio.min(),2)}–"
+   f"{f(N.LOC[N.LOC.lag=='win20'].ratio.max(),2)} of the random distance, in every class and context), which suggests that "
+   f"flows of one capture sit together. We therefore formed halves from contiguous blocks of rows within each class: about 10, 35 "
+   f"and 140 flows per block, as many blocks as capture files, and the first versus the second half of each class. Under this "
+   f"proxy the half-models stay accurate, and the gap does not vanish: {sg(ref('XGB','orderedcal','rho_gap'))} for XGBoost and "
+   f"{sg(ref('RF','orderedcal','rho_gap'))} for Random Forest with blocks calibrated to the capture counts, and "
+   f"{sg(ref('XGB','orderedhalf','rho_gap'))} and {sg(ref('RF','orderedhalf','rho_gap'))} with the first-versus-second-half "
+   f"split, at or above zero in all 11 repeats for both models.",
+   "This changes the conclusion of the paper, and the abstract, Sections VI-C, VI-F, VII, X-A, XI and XII now report both "
+   "proxies. The two disagree, and neither is a capture split: clusters may overcorrect, and blocks may undercorrect where a "
+   "capture crosses a block boundary. Read together, they show that part of the random-split gap reflects related flows and that "
+   "some excess probably remains. Its size cannot be pinned down without capture identifiers, and because the two contexts are "
+   "different sets of captures it cannot be attributed to tunnelling. Splitting by capture file after regenerating flows from the "
+   "raw PCAPs remains the way to settle it, and Section XI says so.",
    f"The overcorrected sentences are gone. \"They should not be read as an effect of the VPN\" and similar wording are replaced by "
    f"\"cannot be attributed to tunnelling\" throughout, and Sections VI-C and X-A note that the Random Forest gap is still positive "
    f"in all 11 repeats at about 35 flows per cluster ({f(ref('RF','grouped35','rho_gap'))}, minimum {f(ref('RF','grouped35','rho_gap','min'))})."])
@@ -94,8 +112,9 @@ C("4. The XGBoost family-level gap does not shrink under grouping",
    f"or under the calibrated grouping ({sg(ref('XGB','calibrated','fam_gap'))}). The paragraph says that part of the XGBoost "
    f"difference survives fine grouping at the family level although it shrinks at the feature level, so the redundancy reading "
    f"applies less clearly to XGBoost families.",
-   "The abstract now says \"the feature-level gap shrinks substantially\", and Sections X-A and XII use the same scope. The "
-   "family-level result is named in the summary of Section X-C."])
+   f"The abstract now states the shrinkage only for the feature-level Spearman gap, and Sections X-A and XII use the same scope. "
+   f"The family-level result is named in the summary of Section X-C. Section VII also reports that under the row-order blocks the "
+   f"summed-family gaps stay positive for both models.",])
 
 C("5. The model-transfer comparison is loose",
   "These protocols differ... and class mix and sessions are confounded in the transfer. Hedge it.",
@@ -111,7 +130,7 @@ minor = [
  ("Revision history in the manuscript.", "Removed. The manuscript no longer refers to earlier versions in Sections III-D, IV-D, "
   "IV-G, VI-C, VI-D or IX (or anywhere else); a text search for \"previous version\", \"earlier version\" and \"earlier reading\" "
   "returns nothing. The notes that were there are collected below."),
- ("Abstract length.", "Shortened from about 300 to about 210 words. It keeps the headline contrast (random halves, grouped "
+ ("Abstract length.", "Shortened from about 300 to about 225 words. It keeps the headline contrast (random halves, grouped "
   "halves with the calibrated setting, permutation null, model transfer and list transfer) and leaves the remaining numbers to "
   "the summary table, which is now Table XV."),
  ("Class-mix swap spreads and range.", "Table VIII now gives mean (SD) over the 3–5 draws for every entry, plus a column for the "

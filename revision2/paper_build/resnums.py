@@ -41,3 +41,4 @@ ARFF = pd.read_csv(RES / "arff_class_counts.csv").set_index("file")
 def flows_per_capture(ctx):
     row = ARFF.loc["TimeBasedFeatures-Dataset-15s-%s.arff" % ("NO-VPN" if ctx == "novpn" else "VPN")]
     return {k: row[k] / v for k, v in CAPTURE_FILES[ctx].items()}
+LOC = pd.read_csv(RES / "arff_order_locality.csv") if (RES / "arff_order_locality.csv").exists() else None
