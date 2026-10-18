@@ -1,4 +1,4 @@
-"""Response letter for the fourth-round concerns (Concerns4) -> paper/Response_to_Reviewer_v8.docx"""
+"""Response letter for the fourth-round concerns (Concerns4) -> paper/Response_to_Reviewer_v9.docx (v8 letter: same text, earlier label)"""
 import sys; sys.path.insert(0, ".")
 from pathlib import Path
 import docx
@@ -10,7 +10,7 @@ d = docx.Document()
 st = d.styles["Normal"]; st.font.name = "Times New Roman"; st.font.size = Pt(11)
 d.add_heading("Response to the reviewer", 0)
 d.add_paragraph("Manuscript: Cross-Context Consistency of SHAP-Based Feature Importance for Application Classification "
-                "Across VPN and Non-VPN Traffic (revised version v8)")
+                "Across VPN and Non-VPN Traffic (revised version v9)")
 d.add_paragraph("We thank the reviewer for another careful report. This revision adds a calibrated grouping design, a second grouping proxy based on the row order of the original ARFF files, block-summed "
                 "SHAP shares with a conditional permutation check, a list-origin by target decomposition of the feature-list "
                 "transfer, a family-share table and spreads for the class-mix swap. All revision history has been moved out of "
@@ -170,5 +170,5 @@ d.add_paragraph("The submission system flagged the previous file for an unsuppor
                 "equations, the running text now contains only ASCII characters, typographic quotes and dashes, and the accented "
                 "letters of author names in the reference list. The wording of the manuscript is unchanged by this step.")
 
-out = Path(__file__).resolve().parents[2] / "paper" / "Response_to_Reviewer_v8.docx"
+out = Path(__file__).resolve().parents[2] / "paper" / "Response_to_Reviewer_v9.docx"
 d.save(str(out)); print("ok", out)

@@ -27,7 +27,7 @@ files, so every number in the text comes straight from `revision2/results`. It u
 ```bash
 cd revision2/paper_build
 python build.py       # -> paper/SHAP_VPN_revised_v8.docx (citations renumbered by first appearance)
-python response4.py   # -> paper/Response_to_Reviewer_v8.docx
+python response4.py   # -> paper/Response_to_Reviewer_v9.docx
 python response.py    # -> paper/Response_to_Reviewer_v7.docx (previous round)
 ```
 
@@ -40,3 +40,15 @@ language to English (US) in every script slot. Outside equations the running tex
 quotes and dashes, and accented letters in author names; this avoids the "unsupported language" and
 "characters from other alphabets" flags that plain-text Greek letters and U+2212 minus signs raise in similarity checkers.
 The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
+
+## Final manuscript (v9)
+
+`paper/SHAP_VPN_revised_v9.docx` is the submitted version. The team rephrased 38 passages of v8 by hand
+(saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
+rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
+spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
+
+```bash
+cd revision2/paper_build
+python fix_v9.py "<team-edited docx>" ../../paper/SHAP_VPN_revised_v9.docx
+```
