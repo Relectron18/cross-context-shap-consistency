@@ -232,6 +232,17 @@ add("Correlated features complicate the interpretation",
     "whereas Random Forest assigns greater importance to the block feature.", "whereas for Random Forest the block as a whole gains importance under VPN.",
     "making the effect of related-flow redundancy less clear than at the feature level.", "so related-flow redundancy explains it less clearly than it explains the feature-level gap.")
 
+
+# ---------------- second read-through
+add("We audited the partitions prior to training",
+    "Within each partition, repeated instances of the same row were removed. After that, Non-VPN has",
+    "Counting each repeated row within a partition only once, Non-VPN has")
+add("Most prior work on explanation stability", "adversarial examples [41]", "adversarial manipulation of explanations [41]")
+add("Cluster grouping alters the picture", "At the same time, with approximately 35 flows per cluster Δ is 0.014 and 0.042, the Random Forest gap is positive",
+    "With approximately 35 flows per cluster, Δ is 0.014 and 0.042; the Random Forest gap is still positive")
+add("When ranked by mean importance per member", "emerging as the leading factor", "emerging as the leading family")
+add("An explanation report for a traffic classifier", "random splits of correlated flows can overestimate agreement", "random splits of correlated flows can overestimate within-context agreement")
+
 cache = {}
 for pre, old, new in R:
     if pre not in cache: cache[pre] = find_p(pre)   # resolve before an edit changes the paragraph's opening
