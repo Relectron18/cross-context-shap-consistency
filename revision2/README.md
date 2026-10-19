@@ -27,7 +27,7 @@ files, so every number in the text comes straight from `revision2/results`. It u
 ```bash
 cd revision2/paper_build
 python build.py       # -> paper/SHAP_VPN_revised_v8.docx (citations renumbered by first appearance)
-python response4.py   # -> paper/Response_to_Reviewer_v9.docx
+python response4.py   # -> paper/Response_to_Reviewer_v10.docx
 python response.py    # -> paper/Response_to_Reviewer_v7.docx (previous round)
 ```
 
@@ -41,9 +41,9 @@ quotes and dashes, and accented letters in author names; this avoids the "unsupp
 "characters from other alphabets" flags that plain-text Greek letters and U+2212 minus signs raise in similarity checkers.
 The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
 
-## Final manuscript (v9)
+## Team-edited versions (v9, v10)
 
-`paper/SHAP_VPN_revised_v9.docx` is the submitted version. The team rephrased 38 passages of v8 by hand
+`paper/SHAP_VPN_revised_v10.docx` is the final version. The team rephrased 38 passages of v8 by hand
 (saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
 rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
 spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
@@ -51,4 +51,12 @@ spacing and typos) while keeping the team's wording elsewhere. No number in the 
 ```bash
 cd revision2/paper_build
 python fix_v9.py "<team-edited docx>" ../../paper/SHAP_VPN_revised_v9.docx
+```
+
+The team then edited v9 again (saved as `paper/SHAP_VPN_v9_team_edited.docx`: twelve passages reworded, Section III-D
+deleted, en dashes turned into hyphens). `paper_build/fix_v10.py` (helpers in `edits_lib.py`) keeps that wording,
+restores Section III-D and the conclusion, re-adds lost equation symbols and fixes the remaining slips -> v10.
+
+```bash
+python fix_v10.py ../../paper/SHAP_VPN_v9_team_edited.docx ../../paper/SHAP_VPN_revised_v10.docx
 ```
