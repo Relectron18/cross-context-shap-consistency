@@ -27,7 +27,7 @@ files, so every number in the text comes straight from `revision2/results`. It u
 ```bash
 cd revision2/paper_build
 python build.py       # -> paper/SHAP_VPN_revised_v8.docx (citations renumbered by first appearance)
-python response4.py   # -> paper/Response_to_Reviewer_v10.docx
+python response4.py   # -> paper/Response_to_Reviewer_v12.docx
 python response.py    # -> paper/Response_to_Reviewer_v7.docx (previous round)
 ```
 
@@ -43,7 +43,7 @@ The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
 
 ## Team-edited versions (v9, v10)
 
-`paper/SHAP_VPN_revised_v11.docx` is the final version (v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
+`paper/SHAP_VPN_revised_v12.docx` is the final version (v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
 (saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
 rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
 spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
@@ -59,4 +59,19 @@ restores Section III-D and the conclusion, re-adds lost equation symbols and fix
 
 ```bash
 python fix_v10.py ../../paper/SHAP_VPN_v9_team_edited.docx ../../paper/SHAP_VPN_revised_v10.docx
+```
+
+## v12: revision after the in-project review
+
+`paper/reviews/` holds a constructive and an adversarial reading of v11 by separate AI sessions (not an outside review)
+and the collated issue list. `src/p7_audit_v12.py` reads existing results only (no model is refitted) and writes
+`results/p7_audit.json` (one-sided gaps, sign of RBO/Top-5 gaps in the first-versus-second-half split, permutation-importance
+cross-context agreement, family gaps, row-order locality on deduplicated flows); `results/p7_distinct_lists.json` counts the
+distinct Top-k lists produced by the five selection seeds. `paper_build/fix_v12.py` applies the text changes, adds the data
+and code availability section and two references (Kendall 1945; the public Deep-Packet implementation that supplied the
+capture-file prefix list) and renumbers references by first appearance (59 references, checked in order).
+
+```bash
+cd revision2/src && python p7_audit_v12.py
+cd ../paper_build && python fix_v12.py ../../paper/SHAP_VPN_revised_v11.docx ../../paper/SHAP_VPN_revised_v12.docx && python response4.py
 ```

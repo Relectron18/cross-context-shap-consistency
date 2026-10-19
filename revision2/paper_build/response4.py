@@ -1,16 +1,17 @@
-"""Response letter for the fourth-round concerns (Concerns4) -> paper/Response_to_Reviewer_v10.docx (earlier labels: v8, v9)"""
+"""Response letter for the fourth-round concerns (Concerns4) -> paper/Response_to_Reviewer_v12.docx (earlier labels: v8-v10)"""
 import sys; sys.path.insert(0, ".")
 from pathlib import Path
 import docx
 from docx.shared import Pt
-import resnums as N
+import resnums as N, json
+A7 = json.load(open(N.RES / "p7_audit.json"))
 from resnums import f, sg, ref, P1, P5, TK2
 
 d = docx.Document()
 st = d.styles["Normal"]; st.font.name = "Times New Roman"; st.font.size = Pt(11)
 d.add_heading("Response to the reviewer", 0)
 d.add_paragraph("Manuscript: Cross-Context Consistency of SHAP-Based Feature Importance for Application Classification "
-                "Across VPN and Non-VPN Traffic (revised version v10)")
+                "Across VPN and Non-VPN Traffic (revised version v12)")
 d.add_paragraph("We thank the reviewer for another careful report. This revision adds a calibrated grouping design, a second grouping proxy based on the row order of the original ARFF files, block-summed "
                 "SHAP shares with a conditional permutation check, a list-origin by target decomposition of the feature-list "
                 "transfer, a family-share table and spreads for the class-mix swap. All revision history has been moved out of "
@@ -35,7 +36,7 @@ C("1. The session proxy is uncalibrated, and the conclusion depends on the granu
   "A cheap estimate would be the number of source captures versus the number of flows... At the coarsest setting, half-model "
   "macro F1 is only 0.53–0.61 and RF Δ has SD 0.111... use \"cannot be attributed to tunnelling\" throughout.",
   [f"We followed the suggestion (Section IV-D, new paragraph \"Calibrating the grouping\"). The processed files carry no capture "
-   f"identifier, but the released captures can be counted: the capture-file prefix list in the public Deep Packet code [7] names "
+   f"identifier, but the released captures can be counted: the capture-file prefix list in a public, independent implementation of Deep Packet ([7], [56] in the manuscript) names "
    f"109 Non-VPN and 30 VPN capture files for CHAT, FT, MAIL, STREAMING and VOIP (plus one VPN P2P capture). Dividing each "
    f"class's flows in the 15 s files by its number of captures gives {lo('novpn'):.0f}–{hi('novpn'):.0f} flows per capture "
    f"without a VPN and {lo('vpn'):.0f}–{hi('vpn'):.0f} with one, about 80% of which falls in a training partition. Non-VPN "
@@ -52,15 +53,22 @@ C("1. The session proxy is uncalibrated, and the conclusion depends on the granu
    "the features.",
    f"Row-order blocks (Section IV-D, new paragraph \"Row-order blocks\"; Table VII; Fig. 7). In the original Scenario A2 ARFF "
    f"files, flows are sorted by class and then kept in the order the flow meter wrote them. Every deduplicated flow in our data "
-   f"matches exactly one ARFF row, so its position is known. Neighbouring rows are much more alike than random rows of the same "
-   f"class (nearest of the 40 rows within 20 positions at {f(N.LOC[N.LOC.lag=='win20'].ratio.min(),2)}–"
-   f"{f(N.LOC[N.LOC.lag=='win20'].ratio.max(),2)} of the random distance, in every class and context), which suggests that "
-   f"flows of one capture sit together. We therefore formed halves from contiguous blocks of rows within each class: about 10, 35 "
+   f"matches exactly one ARFF row, so its position is known. Over the deduplicated flows, the nearest of the 40 rows "
+   f"within 20 positions lies at {f(min(v['win20_dedup'] for v in A7['locality_dedup'].values()),2)}–"
+   f"{f(max(v['win20_dedup'] for v in A7['locality_dedup'].values()),2)} of the random distance, which suggests that many "
+   f"flows of one capture sit together. The manuscript also states where this evidence is weak: for VPN FT, MAIL, P2P and VOIP, "
+   f"adjacent rows are almost as different as random pairs, row position correlates with some features, and BROWSING and P2P "
+   f"cannot be split by capture at all. We therefore formed halves from contiguous blocks of rows within each class: about 10, 35 "
    f"and 140 flows per block, as many blocks as capture files, and the first versus the second half of each class. Under this "
    f"proxy the half-models stay accurate, and the gap does not vanish: {sg(ref('XGB','orderedcal','rho_gap'))} for XGBoost and "
    f"{sg(ref('RF','orderedcal','rho_gap'))} for Random Forest with blocks calibrated to the capture counts, and "
    f"{sg(ref('XGB','orderedhalf','rho_gap'))} and {sg(ref('RF','orderedhalf','rho_gap'))} with the first-versus-second-half "
-   f"split, at or above zero in all 11 repeats for both models.",
+   f"split. The Spearman gap is at or above zero in all 11 repeats, but the manuscript now says that this is weak evidence: the "
+   f"first-versus-second-half repeats reuse nearly the same halves, and the RBO and Top-5 gaps are negative in some of them.",
+   f"The manuscript also reports that the near-zero calibrated-cluster mean for Random Forest averages opposite gaps "
+   f"({sg(A7['onesided_RF_calibrated']['nv'])} on the Non-VPN side, {sg(A7['onesided_RF_calibrated']['vpn'])} on the VPN side), and it "
+   f"states what the designs do not test: the permutation null covers only random halves, the outer 80/20 split is always "
+   f"random, and within-context pairs are explained on the same test records while cross-context pairs are not.",
    "This changes the conclusion of the paper, and the abstract, Sections VI-C, VI-F, VII, X-A, XI and XII now report both "
    "proxies. The two disagree, and neither is a capture split: clusters may overcorrect, and blocks may undercorrect where a "
    "capture crosses a block boundary. Read together, they show that part of the random-split gap reflects related flows and that "
@@ -86,7 +94,9 @@ C("2. The min-IAT credit-redistribution conclusion holds for XGBoost but not cle
    "check in the spirit of Strobl et al. [36]: each minimum IAT is permuted within quintile cells of its two most correlated "
    "features. Its ranks for the three minima (2–4 in every model and context) are reported in Table IX next to the marginal "
    "ranks. Both permutation measures move the minima less than SHAP does, and the text presents this as a second view rather "
-   "than as a verdict, since conditional permutation depends on the conditioning scheme."])
+   "than as a verdict, since conditional permutation depends on the conditioning scheme. It also reports that over the whole "
+   "ranking permutation importance agrees less across contexts than SHAP does, so the smaller shifts apply to the minimum "
+   "IATs only."])
 
 C("3. The feature-list transfer should be read as a 2×2 (list × target)",
   "So the \"cost of transfer\" at the VPN target mostly reflects that the Non-VPN list is a worse list overall... Report this "
@@ -101,7 +111,8 @@ C("3. The feature-list transfer should be read as a 2×2 (list × target)",
    "\"A measurable cost\" has been removed. The text now says that most of the apparent per-target cost for the VPN Random Forest "
    "reflects a weaker Non-VPN list rather than a mismatch between list and context, and that the effect of matching a list to its "
    "context is small for lists of ten or more features. The summary table (Table XV), Section X-D and the conclusion use the same "
-   "framing."])
+   "framing. The manuscript also notes the limited power of this test: the five selection seeds yield only one to three "
+   "distinct lists per model, context and k, and each list is refitted once."])
 
 C("4. The XGBoost family-level gap does not shrink under grouping",
   "It needs a sentence of discussion, and the abstract's \"gap shrinks substantially\" should be scoped to feature level.",
@@ -170,5 +181,5 @@ d.add_paragraph("The submission system flagged the previous file for an unsuppor
                 "equations, the running text now contains only ASCII characters, typographic quotes and dashes, and the accented "
                 "letters of author names in the reference list. The wording of the manuscript is unchanged by this step.")
 
-out = Path(__file__).resolve().parents[2] / "paper" / "Response_to_Reviewer_v10.docx"
+out = Path(__file__).resolve().parents[2] / "paper" / "Response_to_Reviewer_v12.docx"
 d.save(str(out)); print("ok", out)

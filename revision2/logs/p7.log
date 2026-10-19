@@ -1,0 +1,204 @@
+{
+ "onesided_RF_random": {
+  "nv": 0.1624000000000001,
+  "vpn": 0.21040000000000003,
+  "mean": 0.1864
+ },
+ "onesided_RF_grouped": {
+  "nv": 0.0927,
+  "vpn": -0.08800000000000002,
+  "mean": 0.0023
+ },
+ "onesided_RF_calibrated": {
+  "nv": 0.2277,
+  "vpn": -0.1926,
+  "mean": 0.0175
+ },
+ "onesided_RF_orderedcal": {
+  "nv": 0.14169999999999994,
+  "vpn": 0.16379999999999995,
+  "mean": 0.1528
+ },
+ "onesided_RF_orderedhalf": {
+  "nv": 0.0606000000000001,
+  "vpn": 0.126,
+  "mean": 0.0933
+ },
+ "onesided_XGB_random": {
+  "nv": 0.11819999999999997,
+  "vpn": 0.13970000000000005,
+  "mean": 0.129
+ },
+ "onesided_XGB_grouped": {
+  "nv": 0.01639999999999997,
+  "vpn": -0.046800000000000064,
+  "mean": -0.0152
+ },
+ "onesided_XGB_calibrated": {
+  "nv": 0.06699999999999995,
+  "vpn": -0.034500000000000086,
+  "mean": 0.0163
+ },
+ "onesided_XGB_orderedcal": {
+  "nv": 0.06269999999999998,
+  "vpn": 0.08550000000000002,
+  "mean": 0.0741
+ },
+ "onesided_XGB_orderedhalf": {
+  "nv": 0.024500000000000077,
+  "vpn": 0.04139999999999999,
+  "mean": 0.0329
+ },
+ "orderedhalf_RF": {
+  "rho_gap": {
+   "min": 0.0452075098814228,
+   "n_neg": 0,
+   "n": 11
+  },
+  "rbo_gap": {
+   "min": -0.0256382384490437,
+   "n_neg": 2,
+   "n": 11
+  },
+  "top5_gap": {
+   "min": -0.25,
+   "n_neg": 2,
+   "n": 11
+  }
+ },
+ "orderedhalf_XGB": {
+  "rho_gap": {
+   "min": 0.0002470355731225,
+   "n_neg": 0,
+   "n": 11
+  },
+  "rbo_gap": {
+   "min": -0.0037394407427524,
+   "n_neg": 1,
+   "n": 11
+  },
+  "top5_gap": {
+   "min": -0.5,
+   "n_neg": 3,
+   "n": 11
+  }
+ },
+ "cross_rho": {
+  "RF": {
+   "shap": 0.8300395256916996,
+   "pi_marginal": 0.6106719367588932,
+   "pi_conditional": 0.6571146245059288
+  },
+  "XGB": {
+   "shap": 0.7855731225296443,
+   "pi_marginal": 0.7193675889328064,
+   "pi_conditional": 0.575098814229249
+  }
+ },
+ "family_gaps": {
+  "RF": {
+   "fam_gap": 0.1117,
+   "fam_mean_gap": 0.1494,
+   "fam_alt_gap": 0.0961,
+   "clust_gap": 0.0963
+  },
+  "XGB": {
+   "fam_gap": 0.0753,
+   "fam_mean_gap": 0.0636,
+   "fam_alt_gap": 0.0883,
+   "clust_gap": 0.099
+  }
+ },
+ "share_browsing_p2p_novpn": 0.39579020013802624,
+ "share_browsing_p2p_vpn": 0.33752665245202557,
+ "locality_dedup": {
+  "novpn_BROWSING": {
+   "n": 2500,
+   "win20_dedup": 0.4823901221439216,
+   "lag1_dedup": 0.6953745240065454,
+   "max_abs_rho_position_feature": 0.4452206307058036
+  },
+  "novpn_CHAT": {
+   "n": 887,
+   "win20_dedup": 0.5571177370900663,
+   "lag1_dedup": 0.6692893622826178,
+   "max_abs_rho_position_feature": 0.1626681352409897
+  },
+  "novpn_FT": {
+   "n": 857,
+   "win20_dedup": 0.3688284367038836,
+   "lag1_dedup": 0.6476039012442038,
+   "max_abs_rho_position_feature": 0.6766907724840036
+  },
+  "novpn_MAIL": {
+   "n": 238,
+   "win20_dedup": 0.5083871125320466,
+   "lag1_dedup": 0.7688995735673699,
+   "max_abs_rho_position_feature": 0.4612985746439073
+  },
+  "novpn_P2P": {
+   "n": 941,
+   "win20_dedup": 0.4252327978661432,
+   "lag1_dedup": 0.11140509976862281,
+   "max_abs_rho_position_feature": 0.6600295809890475
+  },
+  "novpn_STREAMING": {
+   "n": 450,
+   "win20_dedup": 0.47736415702210117,
+   "lag1_dedup": 0.13047612495417843,
+   "max_abs_rho_position_feature": 0.2212557229692274
+  },
+  "novpn_VOIP": {
+   "n": 2821,
+   "win20_dedup": 0.3974595116685104,
+   "lag1_dedup": 0.3536863834082567,
+   "max_abs_rho_position_feature": 0.3182160462434803
+  },
+  "vpn_BROWSING": {
+   "n": 2500,
+   "win20_dedup": 0.4163476937277601,
+   "lag1_dedup": 0.1938058425663765,
+   "max_abs_rho_position_feature": 0.6341152644652273
+  },
+  "vpn_CHAT": {
+   "n": 1158,
+   "win20_dedup": 0.47585335741526086,
+   "lag1_dedup": 0.4897600560932198,
+   "max_abs_rho_position_feature": 0.19920159847229404
+  },
+  "vpn_FT": {
+   "n": 1883,
+   "win20_dedup": 0.536962162171654,
+   "lag1_dedup": 0.8618394985211932,
+   "max_abs_rho_position_feature": 0.26518299593499134
+  },
+  "vpn_MAIL": {
+   "n": 432,
+   "win20_dedup": 0.6214329005991833,
+   "lag1_dedup": 0.9733882153897044,
+   "max_abs_rho_position_feature": 0.48668423625288537
+  },
+  "vpn_P2P": {
+   "n": 666,
+   "win20_dedup": 0.7563495032519996,
+   "lag1_dedup": 0.8124257571614751,
+   "max_abs_rho_position_feature": 0.3017161353402728
+  },
+  "vpn_STREAMING": {
+   "n": 475,
+   "win20_dedup": 0.6564417255503899,
+   "lag1_dedup": 0.13499782015260062,
+   "max_abs_rho_position_feature": 0.5505696903940139
+  },
+  "vpn_VOIP": {
+   "n": 2266,
+   "win20_dedup": 0.41672470336758005,
+   "lag1_dedup": 0.9939083412086943,
+   "max_abs_rho_position_feature": 0.46757753073986635
+  }
+ },
+ "distinct_lists_range": [
+  1,
+  3
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "RF_novpn_k5": 1,
+ "RF_novpn_k10": 3,
+ "RF_novpn_k15": 2,
+ "RF_vpn_k5": 3,
+ "RF_vpn_k10": 1,
+ "RF_vpn_k15": 1,
+ "XGB_novpn_k5": 2,
+ "XGB_novpn_k10": 3,
+ "XGB_novpn_k15": 2,
+ "XGB_vpn_k5": 1,
+ "XGB_vpn_k10": 3,
+ "XGB_vpn_k15": 1
+}

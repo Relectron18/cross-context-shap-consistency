@@ -1,0 +1,1317 @@
+Cross-Context Consistency of SHAP-Based Feature Importance for Application Classification Across VPN and Non-VPN Traffic
+Prabhav Gomase, Ganesh Khekare*, Piyush Kothari, B Jeevan Sai Reddy, Nishok Khumar SD
+School of Computer Science and Engineering, 
+Vellore Institute of Technology, Vellore, 632014, Tamil Nadu, India
+ prabhav.tushar2024@vitstudent.ac.in, ganesh.khekare@vit.ac.in*, piyush.kothari2024@vitstudent.ac.in, bandrevu.jeevan2024@vitstudent.ac.in, nishok.khumarsd2024@vitstudent.ac.in
+Abstract—Global SHAP rankings are commonly interpreted as a guide to encrypted traffic, but a ranking learned in one observation context may not apply elsewhere. We evaluate this on the seven-class application task of the ISCX VPN-nonVPN benchmark, using TreeSHAP to explain Random Forest and XGBoost models trained separately on Non-VPN and VPN flows. Each model keeps only three of its five leading features when the observation context changes. Compared to models trained on random halves of one context, cross-context Spearman agreement is lower by 0.13 (XGBoost) and 0.19 (Random Forest), which a permutation null preserving both class mixes does not replicate. Keeping related flows in the same half reduces the gap by an amount that depends on the proxy for capture sessions: to about zero on average with clusters of similar flows roughly the size of the capture files, where the half-models are weak and opposite gaps in the two contexts cancel, but only to 0.07 and 0.15 with blocks of consecutive flows in the original files, and to 0.03 and 0.09 with first- and second-half splits. A model trained in one context achieves at best 0.43–0.61 macro F1 in the other, while a SHAP-chosen Top-10 feature list loses little macro F1 when transferred, in a test of limited power. Part of the random-split gap is explained by related flows and part probably remains, although no design tests that remainder directly, and since the two contexts are different sets of captures, none of the differences can be attributed to tunnelling.
+Keywords: Encrypted traffic classification, VPN, explainable artificial intelligence, SHAP, TreeSHAP, explanation consistency, aggregated feature-family importance, network security
+I. INTRODUCTION
+Encryption now covers most network traffic, and a growing share of it also passes through virtual private networks. Under these conditions, payload inspection and port-based rules lose most of their value [1, 2]. One response has been to infer the application category from features that survive encryption, such as packet timings, sizes and volumes [3, 4]. Tree ensembles, convolutional networks and transformers have all been tried on this problem since, with good results [5–8].
+A VPN does not change which application a flow comes from. What it changes is how much an observer on the network can see. Inside a tunnel, keep-alive messages, encryption overhead and hidden traffic direction are layered onto the pattern of the application's own traffic, making two applications whose plaintext traffic looks different look similar [4]. Several encrypted flows may also share one tunnel. Extra headers and padding then enter the features measured at the tunnel entrance, and the classifier has to separate the mixed traffic with the same feature set. Draper-Gil et al. [4] showed that timing-based features were enough for this, and the ISCX VPN-nonVPN dataset released with their work has been a common benchmark ever since.
+High accuracy is only part of what a traffic classifier needs. When its output feeds security or network-management decisions, people also need to see why it decided as it did, so that the decision can be audited [9–12].
+Post-hoc explanation methods are a common tool for this kind of audit [13]. For tabular models, SHAP has become the most widely used of them, and TreeSHAP [14] computes SHAP values for tree ensembles quickly enough to be practical. Its output is usually presented as a feature ranking, with the most influential feature first. Readers then tend to treat that list as a description of the traffic itself, taking short inter-arrival gaps as the mark of VoIP, say, or high throughput as the mark of video. Such a reading assumes that the ranking is a stable property of the traffic, and there are good reasons to doubt it. Importance values depend on the training data, the model itself, and the explanation method [15–17]. Shapley values deal badly with correlated features: credit is apportioned according to the fitted model, not the data distribution [18–20], and flow-based traffic has heavily-correlated features. The minimum, mean, maximum and total inter-arrival times of a flow change together. When two similar models rank them differently, this could be due to an actual difference in modeling, or simply due to training randomness.
+The VPN and Non-VPN components of the dataset make it possible to compare model reliance across two observation contexts that use the same labels and the same feature encoding. The comparison is observational, though: class composition and capture sessions also differ between the components. Disagreement across contexts is therefore not informative on its own and has to be set against the disagreement between models trained on different data within one context. That reference is only as good as the independence of its data, and flows from a single capture session are often near repetitions of each other. A random division of one context therefore puts related flows on both sides of the split and makes within-context agreement look higher than it would be across sessions. Earlier classification studies have concentrated on predictive accuracy, and explanation consistency needs an assessment of its own (Section II). In this paper we ask whether models lean on similar flow features when making the same predictions for VPN and Non-VPN traffic, how that disagreement compares with within-context references of increasing strictness, and whether it has practical consequences. Telling VPN from Non-VPN traffic is not the classification target here.
+The work makes four contributions. First, it compares separately trained classifiers against three within-context references: flow-level random half-splits, half-splits that keep related flows together as a proxy for capture sessions, using either clusters of similar flows or blocks of consecutive flows in the original files, and a permutation null in which flows are reassigned at random between two pseudo-contexts. Second, it tests the class-mix explanation directly by resampling each context to the other's class mix. Third, it measures two practically relevant effects: the cost of using an already trained model in the other context, and the cost of reusing the other context’s SHAP-selected feature list. Fourth, it aggregates importance into semantic feature families and reports a set of sensitivity checks. No new classifier, attribution method or dataset is proposed. Section II reviews related work and Section III describes the data and its audit. Section IV gives the methodology and Sections V to IX the results. Section X summarises and discusses them, Section XI sets out threats to validity, and Section XII concludes.
+II. RELATED WORK
+A. Encrypted and VPN Traffic Classification
+As encryption became widespread, traffic classification gradually moved from port and payload analysis to statistical and learning-based methods, as several surveys report [1–3]. Encryption does not eliminate all information about the traffic flows, such as inter-arrival times, packet size distribution, byte and packet rates, and flow duration statistics, which can be used as features for machine learning. Traditional learning methods using these features have demonstrated good results on many tasks [3, 4]. However, in some cases, using deep learning methods and packet sequences or packet bytes [5–8, 21] as input data has demonstrated better results. The comparison of such methods is complicated by different approaches to data preparation, data splitting, and class labeling [22, 23]. VPN traffic adds another layer. Draper-Gil et al. [4] captured traffic from several application categories both inside and outside a VPN and showed that time-related features can be used both to detect VPN traffic and to identify the application inside the tunnel. Similar traffic features were used in the companion paper [24] to distinguish Tor traffic flows. The same data set was later used to evaluate the performance of deep learning models for packet and byte classification problems [5, 7]. In these studies a method is usually judged by its accuracy or F1 on a single train/test partition.
+B. Studies Using ISCX VPN-nonVPN
+ISCX VPN-nonVPN is a popular benchmark for encrypted and VPN traffic classification. Some works consider its temporal features [4], and some others rebuild packet- or byte-level input from the raw captures [5, 7, 8]. Two aspects of this benchmark are important to us: that it is old, and that it has been used intensively. Jacobs et al. [23] distilled network-security classifiers into interpretable surrogate models and found that several of them leveraged spurious and context-dependent patterns that would probably not hold outside the benchmark. Their warning applies directly to reading benchmark explanations as general facts about network traffic. We approach the benchmark differently: not seeking to improve a classifier, but keeping the classifier family fixed and asking whether its explanation is consistent across two observation contexts that the data set was constructed to contrast.
+C. Explainable AI in Network Security
+Explanation capability is being required of security classifiers for both analyst support and the uncovering of spurious correlations [11, 25–27]. Warnecke et al. [9] judged explanation methods for security models on several criteria, including stability and robustness. Intrusion detectors have been explained with SHAP and similar techniques by Wang et al. [10] and by El Houda et al. [28], and Nascita et al. [12] applied explainability to multimodal classifiers of mobile traffic. The work closest to ours is by Sarhan et al. [29], who examined how SHAP explanations of intrusion detectors vary over several datasets with a common standard feature set and found that the most influential features changed from one dataset to the next. Those datasets, however, come from different networks with different attack mixes and labels, so a change in explanation cannot be traced to one change in observation conditions. Security machine learning guidelines on evaluation methods require protection against sampling bias, data snooping and spurious correlations [26, 30]. These criteria should also apply to model interpretations.
+D. Shapley Values, TreeSHAP and Correlated Features
+In SHAP the model output is treated as a payoff of a cooperative game and each feature is assigned its Shapley value [31] in this game. For a single instance they sum up to the difference between the prediction of the model and a baseline value [13]. For tree ensembles this assignment can be computed efficiently with TreeSHAP [14] and there are two common formulations. The tree-path-dependent version uses the cover statistics that are stored in the trees as its reference behaviour by design and therefore does not require an additional background data set. The interventional version on the other hand averages over a background sample which removes dependencies between features resulting in a marginal (interventional) value function [19, 32]. The two versions answer different questions, and neither makes a claim about causal relationships in the data generating process [19, 32, 33].
+With correlated features, attribution can shift among the members of a correlated set depending on the fitted model and the value function [18, 20, 34]. Similar dependence problems affect other importance measures as well [35, 36]. Several grouped explanation methods exist for summarising related variables [37–39], although each aggregation rule measures something different. A signed sum at the instance level can cancel out, and treating a whole group as one player changes the game being solved. We do neither. Our analysis adds up mean absolute SHAP importances already computed for each member feature. We call this descriptive quantity aggregated feature-family importance and do not equate it with either instance-level Group SHAP construction.
+E. Stability of Explanations
+Most prior work on explanation stability considers either input perturbations [15, 16], sampling within local surrogate methods [40], adversarial manipulation of explanations [41], or instances where explanation methods disagree [17]. Fisher et al. [42] observe that sets of models with approximately equal performance may vary their importance profiles substantially, and therefore that a single importance profile from one model is only one possible example of a set. Comparisons between rankings of features require evaluation in terms of rank statistics, such as the number of shared features between the top features in each ranking. While Spearman’s ρ [43] and Kendall’s τ [44] are standard rank correlation coefficients that treat all ranks within a ranking as equal, rank-biased overlap [45] considers higher ranks within the ranking to be more important. Bootstrap resampling provides a method to compute confidence bounds around a given ordering of ranks [46, 47].
+F. Gap Addressed by This Study
+SHAP has been used before to explain the cross-domain performance of network intrusion detection [48], and explainable traffic-analysis studies have looked at encrypted-traffic datasets, ISCX VPN-nonVPN among them [49]. Our question is narrower. Within the shared ISCX feature schema and the same seven-class application task, do the global SHAP rankings of VPN and Non-VPN traffic differ by more than the rankings of models trained on different, and suitably independent, data from one context? We also aggregate importance into six predefined feature families and measure what happens to predictive performance when a trained model, or a Top-k feature list, is carried from one context to the other. The contribution is tied to this benchmark and this evaluation design, and it is not offered as the first SHAP study to span domains.
+III. DATASET AND EXPERIMENTAL SETUP
+A. Dataset and Observation Contexts
+Our input is the time-related feature release of the ISCX VPN-nonVPN dataset [4], distributed by the Canadian Institute for Cybersecurity at the University of New Brunswick [50]. We use the Scenario A2 files for the 15 s flow timeout (TimeBasedFeatures-Dataset-15s-NO-VPN.arff and TimeBasedFeatures-Dataset-15s-VPN.arff), containing 8,965 and 9,793 flows, respectively. Duplicate rows that were exactly equal in all 23 features and the label were removed (271 and 413 rows for Non-VPN and VPN contexts, respectively), resulting in 8,694 Non-VPN and 9,380 VPN flows. These were then split once in stratified 80% and 20% training and test partitions, respectively. This partitioning is our own and not provided with the dataset, hereafter referred to as the primary split and its parts as the primary partitions. We verified that every processed record could be mapped back to a row of the original ARFF files.
+Some feature vectors occur more than once within a training partition, even after that step: two vectors account for 6 Non-VPN training rows (4 surplus rows) and 11 vectors for 26 VPN training rows (15 surplus rows). All of them have more than one label, hence they survived exact-row deduplication. They are label conflicts, not copies, and like the collisions in Section III-C, they identify flows that the 23 features fail to distinguish.
+Every record is one flow, described by the 23 features in Table I. These cover flow duration, rates of bytes and packets, inter-arrival-time (IAT) statistics in the forward, backward and combined directions, and statistics of active and idle periods. Each record carries one of seven application labels: BROWSING (0), CHAT (1), FT (file transfer, 2), MAIL (3), P2P (4), STREAMING (5) and VOIP (6). Both contexts use the same feature definitions and label set. The target in each context is the application category, so we solve two separate seven-class problems. No model is trained on data from both contexts, and none predicts the context.
+TABLE I
+The 23 time-related flow features and six semantic feature families
+Feature
+Family
+Description
+flowBytesPerSecond
+Flow throughput
+Bytes per second over the flow
+flowPktsPerSecond
+Flow throughput
+Packets per second over the flow
+duration
+Flow duration
+Flow duration
+min_fiat
+Directional IAT statistics
+Minimum inter-arrival time of packets in the forward direction
+mean_fiat
+Directional IAT statistics
+Mean forward inter-arrival time
+max_fiat
+Directional IAT statistics
+Maximum forward inter-arrival time
+total_fiat
+Directional IAT statistics
+Sum of forward inter-arrival times
+min_biat
+Directional IAT statistics
+Minimum inter-arrival time of packets in the backward direction
+mean_biat
+Directional IAT statistics
+Mean backward inter-arrival time
+max_biat
+Directional IAT statistics
+Maximum backward inter-arrival time
+total_biat
+Directional IAT statistics
+Sum of backward inter-arrival times
+min_flowiat
+Flow IAT statistics
+Minimum inter-arrival time, both directions
+mean_flowiat
+Flow IAT statistics
+Mean inter-arrival time, both directions
+max_flowiat
+Flow IAT statistics
+Maximum inter-arrival time, both directions
+std_flowiat
+Flow IAT statistics
+Standard deviation of inter-arrival time, both directions
+min_active
+Active-period statistics
+Minimum length of an active period before the flow goes idle
+mean_active
+Active-period statistics
+Mean active-period length
+max_active
+Active-period statistics
+Maximum active-period length
+std_active
+Active-period statistics
+Standard deviation of active-period length
+min_idle
+Idle-period statistics
+Minimum idle-period length before the flow becomes active
+mean_idle
+Idle-period statistics
+Mean idle-period length
+max_idle
+Idle-period statistics
+Maximum idle-period length
+std_idle
+Idle-period statistics
+Standard deviation of idle-period length
+Note. The feature set is the time-related representation introduced by Draper-Gil et al. [4]. IAT values and active/idle lengths are stored in microseconds. Where a statistic cannot be defined for a flow (a flow with no backward packets, say, or with no idle period), the files hold -1; Section IV-H explains how this sentinel is treated. Every entry below -1 in the files belongs to min_flowiat (55 Non-VPN and 43 VPN training flows and 17 and 12 test flows, as low as -1,247); Section VI-E examines them.
+B. Class Distributions
+Table II and Fig. 1 show the distribution of all flows of each class in the primary partitions. Within each context, training and test have the same profile, with total variation distance between them equal to 0.001 for both Non-VPN and for VPN, as expected for a stratified split. By contrast, the picture is different across contexts. FT takes up 9.9% of Non-VPN training flows and 20.1% of VPN training flows, while VOIP decreases from 32.5% to 24.2%. MAIL is consistently the smallest class in either context, but increases between contexts from 2.7% to 4.6%. The total variation distance between the two training distributions is 0.142, and the chi-square homogeneity test yields χ2 = 447.4 with 6 degrees of freedom (p < 0.001), Cramér's V = 0.176. In Non-VPN the biggest class is 11.9 times bigger than the smallest, and 5.8 times bigger in the VPN. A model fitted to one class distribution can attribute importance differently from a model fitted to another, even when the flows within each class look the same, so we treat class mix as a potential confounder and test it directly in Section VI-D.
+BROWSING is the lone exception to these patterns. It has exactly 2,500 flows in both contexts (2,000 training and 500 test), while every other class differs in size between contexts. The cap comes from the dataset release. Every Scenario A2 file, for all four flow timeouts (15, 30, 60 and 120 s) and both contexts, contains exactly 2,500 BROWSING flows, and every Non-VPN file contains exactly 1,000 P2P flows, while the other classes vary with the timeout. None of the 2,500 BROWSING rows in the two 15 s files is an exact duplicate, so our deduplication kept all of them; 59 of the 1,000 Non-VPN P2P rows were duplicates, leaving 941. The frequencies of these two classes are therefore set by how the benchmark was assembled, not by the traffic, and we do not interpret them. They do contribute to the class-mix difference tested in Section VI-D.
+TABLE II
+Dataset statistics for the two observation contexts (primary partitions, verified counts)
+Non-VPN
+VPN
+Class
+Train
+Test
+Train %
+Train
+Test
+Train %
+0 = BROWSING
+2,000
+500
+28.8
+2,000
+500
+26.7
+1 = CHAT
+709
+178
+10.2
+926
+232
+12.3
+2 = FT
+686
+171
+9.9
+1,506
+377
+20.1
+3 = MAIL
+190
+48
+2.7
+346
+86
+4.6
+4 = P2P
+753
+188
+10.8
+533
+133
+7.1
+5 = STREAMING
+360
+90
+5.2
+380
+95
+5.1
+6 = VOIP
+2,257
+564
+32.5
+1,813
+453
+24.2
+Total
+6,955
+1,739
+100.0
+7,504
+1,876
+100.0
+Unique feature rows
+6,951
+1,737
+7,489
+1,875
+Train/test exact collisions
+1
+13
+Matched subset (per class)
+190
+48
+14.3
+190
+48
+14.3
+Matched subset (total)
+1,330
+336
+100.0
+1,330
+336
+100.0
+Note. An exact collision is a unique 23-dimensional feature vector found in both partitions after duplicate rows within each partition have been dropped; their labels disagree across partitions. The matched-subset rows give the per-class sizes used for class-matched training in Section VI-D.
+Fig. 1. Class make-up of the primary partitions for the two observation contexts. Each bar represents how many percent each class takes up in a partition, with the absolute number as the label. (a) Training partitions. (b) Test partitions. Within a context, the distribution of training and test examples is comparable, but differs between contexts for some classes, namely FT and VOIP.
+C. Leakage, Near-Duplicate and Grouping Audit
+We audited the partitions prior to training anything. Counting each repeated row within a partition only once, Non-VPN has 6,951 distinct feature vectors in the training set and 1,737 in the test set, and exactly one vector appears in both. VPN has 7,489 and 1,875, with thirteen shared. Each shared vector has one label in training and another in test, so we call them feature-vector collisions rather than copies. Since the labels are inconsistent, their memorization by the model cannot be used to improve the accuracy on the test set. These collisions make up at most 0.7% of the rows in the VPN test set, and we kept them.
+Near duplicates needed a different check. On standardised raw features the nearest-neighbour distances are tiny (Non-VPN median test-to-train distance 0.0032 standard deviations), because a few extreme values dominate each heavy-tailed feature.
+We therefore repeated the audit after a log transform, log(x + 2) with values clipped at -1 so that the sentinel maps to zero, followed by standardisation, and after a rank (quantile) transform, both fitted on training data only. For each record we measured the distance to the closest record on the other side of the split and to the closest other record on its own side. Under the log transform the median test-to-training distance is 0.108 for Non-VPN against 0.101 from training to training; for VPN the values are 0.109 and 0.108. The rank transform gives 0.088 and 0.092 (Non-VPN) and 0.075 and 0.074 (VPN).
+Test records are as close to the training data as training records are to each other. That is what a random split of correlated flows produces, so the audit rules out gross copying but not dependence between related flows. As a proxy for session grouping we clustered the log-transformed training flows of each context into 50 k-means clusters and compared five-fold cross-validation that keeps clusters intact with ordinary stratified five-fold cross-validation. On Non-VPN, macro F1 falls from 0.924 to 0.642 for XGBoost and from 0.901 to 0.475 for Random Forest; on VPN, from 0.880 to 0.551 and from 0.862 to 0.493. Holding out whole clusters also asks a model to extrapolate to unseen regions of feature space, so this drop overstates what session grouping alone would cost, but performance clearly depends on having similar flows on both sides of a split.
+The processed files carry no session or capture identifiers, so a true group-aware split cannot be built from them. The raw packet captures would allow one: flows could be regenerated with the original feature extractor and split by capture file. They are distributed separately as large PCAP archives, and regenerating the 23 features from them was beyond what this study could do while keeping the published feature set unchanged. We therefore keep the primary partitions for single fits and, as within-context references, use half-splits that keep together either clusters of similar flows or blocks of consecutive rows of the original files (Section IV-D), and we return to this limitation in Section XI.
+D. Models and Implementation
+Two tree ensembles are used because they handle correlated inputs differently. Random Forest [51] averages many deep trees, and each split picks from a random subset of features. XGBoost [52] grows shallower trees one after another, with regularisation. Both are explained with TreeSHAP, and Extra Trees [53] appears only in the robustness checks of Section IX. We did not keep a linear baseline: multinomial Logistic Regression, even after a log(x + 2) transform, reached only 0.754 (Non-VPN) and 0.724 (VPN) macro F1, against 0.85–0.93 for the ensembles.
+Table III lists the configurations, which are the same in both contexts. Hyperparameters were set once and not tuned; Section IX shows how far the rankings move under other XGBoost settings and seeds. The primary models use random_state 42, and every model in the repeated designs of Section IV-D has its own seed. The code uses scikit-learn [54] and XGBoost [52], with TreeSHAP from the SHAP library [14], and all results come from one software environment (Table III).
+TABLE III
+Model and explanation configurations
+Model
+Configuration
+Use
+Random Forest
+200 trees; max_features = sqrt; min_samples_leaf = 1; bootstrap = True; class_weight = None; random_state = 42
+TreeSHAP
+XGBoost
+200 estimators; multi:softprob, 7 classes; max_depth = 6; learning_rate = 0.1; subsample = 0.8; colsample_bytree = 0.8; min_child_weight = 1; eval_metric = mlogloss; random_state = 42
+TreeSHAP
+Extra Trees
+500 trees; max_features = sqrt; min_samples_leaf = 1; random_state = 42
+Robustness only
+TreeSHAP
+Path-dependent primary; interventional robustness with 200 training background records. Random Forest and Extra Trees: class probabilities; XGBoost: class margins
+Ranks and normalised shares
+Note. The same hyperparameters are used in both contexts, and all models take the original features. Every result was computed under Python 3.13.16, NumPy 2.5.3, pandas 3.0.5, scikit-learn 1.9.1, XGBoost 3.4.1 and SHAP 0.53.0 on Linux (x86-64). XGBoost was run single-threaded; refitting with two threads gave identical predictions.
+IV. METHODOLOGY
+A. Overview
+Fig. 2 sketches the analysis. Primary models and rankings are fitted on the primary partitions. Three within-context references describe how much rankings move without any change of context (Section IV-D). On top of that we test class composition directly, retrain without the minimum-IAT features and compare with permutation importance, aggregate importance into feature families, measure two practical consequences of explanation differences, and run sentinel and robustness checks.
+Fig. 2. Experimental pipeline. Each context is modelled on its own. The repeated designs redraw the 80/20 partition in every repeat, and the consequence tests select features inside training partitions only.
+B. TreeSHAP and Global Importance
+Take a model with class outputs fc, c=1,…,C (C=7). For an instance x described by m=23 features, SHAP returns attributions ϕj,cx, and these obey local accuracy:
+fcx=ϕ0,c+j=1mϕj,cx,c=1,…,C(1)
+where ϕ0,c is the expected output under the reference distribution [13]. For the primary analysis we use the tree-path-dependent form of TreeSHAP [14]. It has a reference distribution formed from cover statistics stored along the tree paths, and thus does not require a background sample. What is being explained depends on the model: for Random Forest it is the class probability, whereas for XGBoost (trained with the multiclass soft-probability objective) it is the raw margin of each class before the softmax. As a result, raw attribution sizes cannot be directly compared between the two models and wherever we perform such comparisons we use ranks or normalised shares, computed within each model. Explanations are always computed on the held-out test partition of the context in question. The global importance of feature j is given by the average of its absolute SHAP values over the n explained instances and all classes: its normalised share sj is this quantity divided by the sum over features:
+Ij=1nCi=1nc=1Cϕj,cxi,sj=Ijl=1mIl(2)
+Averaging over output classes leaves one global ranking for each model and context. That is not the same as balancing the true classes among the explained records. Each test record still counts once, so frequent classes contribute more records; we therefore also report importance with true classes weighted equally. Neither version speaks to class-specific or instance-level consistency.
+Two things about the method limit how far the rankings can be read. The tree-path-dependent algorithm reproduces the dependence structure learned by the trees. If multiple correlated features could be used for splitting, the one selected by the model receives the credit, and two otherwise similar models can divide attribution among correlated features quite differently [18, 19]. Moreover, SHAP values describe the model: a feature with a high attribution is one the model output depends on, which does not make it a cause of the application label [20, 32]. We therefore treat a ranking as a description of what a model relies on, and our comparisons across contexts are comparisons of that reliance.
+C. Ranking Agreement Measures
+Our first agreement measure is Spearman's rank correlation [43],
+ρ = 1 - 6j=1mdj2mm2 - 1(3)
+where dj is the rank difference for feature j. The second is Kendall's τb [55],
+τb = nc - ndn0 - n1n0 - n2(4)
+Its denominator corrects for ties. Spearman correlation is computed on ranks with tied values given their average rank, so (3) is just the familiar no-tie formula. Top-k overlap Ok is the number of features two Top-k sets share. With m = 23, two sets of size k must share at least max(0, 2k - m) features. For two Top-k sets picked independently at random, the expected overlap and a chance-corrected version are
+E[Ok] = k2m,    κk = Ok - E[Ok]k - E[Ok](5)
+where κk is 0 at random expectation and 1 when the two sets are identical. We also report mean absolute rank displacement, the average distance a feature's rank moves between the two lists. It expresses disagreement in rank positions, which the correlations do not.
+Spearman and Kendall weight a swap between ranks 20 and 21 as heavily as one between ranks 1 and 2, and the bottom third of each list carries only about 0.2–3% of importance per feature (Fig. 4). We therefore add two measures that emphasise the top. Rank-biased overlap [45] averages the overlap of the two Top-d sets with depth weights (1 - p)pd-1 that shrink by a factor p at each further depth d; we use the extrapolated form with p = 0.9. These depth weights sum to 1 - 0.910 ≈ 0.65 over the first ten depths, but the agreement at rank i enters the overlap at every depth d ≥ i, so the first ten ranks carry about 86% of the total weight (Webber et al. [45], Eq. 21). The second is the L1 distance between the normalised importance vectors, the sum over features of |sj - s′j|, which is twice the total-variation distance and ranges from 0 to 2. It compares the shares themselves, so features with negligible shares barely contribute.
+In short, we report Spearman, Kendall, Top-k overlap together with its chance-corrected form κk from (5), RBO and the L1 share distance. With m = 23, κ5 = 0.49 corresponds to three shared features out of five and κ10 = 0.65 to eight out of ten. Whole-ranking agreement and agreement at the top are read together, because either one alone can make two explanations look more interchangeable than they are.
+D. Within-Context References and Permutation Null
+A cross-context comparison needs a reference: how far do rankings move when the context does not change? We use three designs, the grouped one with two kinds of groups (feature clusters and blocks of consecutive rows) at several settings, each repeated 11 times for both models. In every repeat the deduplicated flows of each context are split afresh into stratified 80% training and 20% test partitions, with a seed that changes from repeat to repeat, so the spread over repeats includes partition-level variation as well as training and seed variation.
+Flow-level random half-splits. The training partition of each context is split, stratified by class, into two disjoint halves, and each half is subsampled (again stratified) to at most 3,477 records (3,476–3,477) so that all halves have the same size in both contexts. Each half-model gets its own random_state and is explained on the test partition of its repeat. Within-context agreement compares the two halves of one context; cross-context agreement averages the four Non-VPN-half versus VPN-half pairs of the same repeat. The gap is
+Δ=12ρwithin,NV+ρwithin,VPN−ρcross(6)
+computed per repeat, and in the same way for RBO, Top-5 overlap, κ5 and family-level ρ.
+Cluster-grouped half-splits. Random halves put near-duplicate flows from one session on both sides, which can inflate within-context agreement. As a proxy for sessions, the training flows of each class are clustered with k-means on log(x + 2)-standardised features. The number of clusters is set so that the average cluster holds about 10, 35 or 140 flows, with at least four clusters per class. Whole clusters are assigned at random to the two halves, larger clusters first, each to the currently smaller half. Each class is then subsampled to the size of its smaller half, and the halves of both contexts are subsampled to a common size (3,368–3,476 records). Only the division of the training partition into halves is grouped: the outer 80/20 partition remains a random stratified split, so the explained test records are not separated by cluster from either half, and the design tests sensitivity to grouping, not session independence. About 10 flows per cluster keeps only very close neighbours together. About 140 also separates broader regions of feature space, which is why the half-models' macro F1 falls as the clusters grow (Table VII).
+Calibrating the grouping. The processed files do not record which capture a flow came from, but the released captures can be counted. The list of capture-file prefixes in a public, independent implementation of Deep Packet [7, 56] names 109 Non-VPN and 30 VPN capture files for CHAT, FT, MAIL, STREAMING and VOIP, plus one VPN P2P capture; BROWSING has no dedicated captures. Dividing each class's flows in the 15 s files by its number of captures gives 25–83 flows per capture without a VPN (median 44) and 95–324 with one (median 246), and about 80% of that in a training partition. Non-VPN captures are therefore closest to the setting of about 35 flows per cluster, and VPN captures to the coarsest setting or beyond. We added a calibrated design in which the number of clusters for each class equals its number of capture files (at least four), and BROWSING gets as many clusters as its flows divided by the context's median flows per capture. The estimate is rough: the prefix list comes from third-party code, P2P has at most one capture per context, a capture is not necessarily one session, and a 15 s timeout splits a long session into many flows.
+Row-order blocks. The clusters are built from the same features that the models use, so at coarse settings they may separate the halves by region of feature space rather than by capture. A second proxy does not use the features. In the released Scenario A2 ARFF files, flows are sorted by class and, within a class, appear in the order in which the flow meter wrote them. Every deduplicated flow matches exactly one ARFF row, so its position in the file is known. Neighbouring rows are more alike than random rows of the same class, though not equally in every class. Over the deduplicated flows, the nearest of the 40 rows within 20 positions lies at 0.37–0.76 times the distance of the nearest of 40 random rows, so some local structure exists in every class. Adjacent rows, however, are almost as different as random pairs for VPN FT, MAIL, P2P and VOIP (median distance ratio 0.81–0.99, against 0.11–0.77 in the other classes), and within a class the row position is itself correlated with some features (|ρ| up to 0.68). The files therefore seem to keep many flows of one capture close together, but the evidence is weak for those four VPN classes, and the dataset documentation does not describe the row order. We form halves from contiguous blocks of rows within each class: blocks of about 10, 35 or 140 training flows, as many blocks as the class has capture files (calibrated, as above), and, as the strictest setting, the first versus the second half of each class. Blocks are assigned to halves in the same way as clusters. This grouping has its own weaknesses. Equal-sized blocks do not follow capture boundaries, so a capture can straddle two blocks and reach both halves, and the first-versus-second-half split may also separate different applications within a class. BROWSING has no capture files of its own and P2P has a single capture per context, so for these two classes, which hold 34–40% of the training flows, no within-class grouping can separate captures. The row-order blocks are a proxy for related flows, not a capture split, and they do not establish session independence.
+Permutation null. For each class, the flows of both contexts are pooled and randomly reassigned to two pseudo-contexts that keep the original per-class counts. The pseudo-contexts therefore inherit the class mixes of Non-VPN and VPN but not their capture conditions. The flow-level random design is then applied to the pseudo-contexts and Δ is computed in the same way. Under this null, Δ shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts.
+XGBoost half-models are explained on the full test partition of each repeat. Random Forest TreeSHAP is much slower, so each Random Forest half-model is explained on a class-stratified sample of 800 test records; rankings from such samples agree with the full-test ranking at ρ ≥ 0.997 for the primary models and at ρ ≥ 0.998 for eight half-models refitted and explained on their full test partitions, with the same five leading features in every case. Within-context pairs are thus explained on the same test records, whereas cross-context pairs are explained on the two contexts' different test partitions. Part of the cross-context disagreement may therefore come from the difference in explained records rather than from the models, and none of the designs controls for this. Importance is also computed with true classes weighted equally. The repeats share one dataset and overlap in their test records, so they are not independent replications. We use the standard deviation and range of Δ across repeats to describe its spread, not as a standard error. The other ISCX time windows (30, 60 and 120 s) are recomputed from the same captures and cannot serve as an independent second pair of contexts.
+E. Class-Composition Tests
+Three checks address class mix. First, global importance is recomputed with true classes weighted equally, on the primary fits and in every half-split repeat. Second, in a class-mix swap, each context's training partition is resampled without replacement to 3,400 flows with the other context's class proportions, the largest size both contexts allow. As a control, it is also resampled to 3,400 flows with its own proportions. Both models are explained on the context's own test partition and compared with the primary rankings of both contexts, using five draws for XGBoost and three for Random Forest. If class mix drove the cross-context disagreement, the swapped models should move toward the other context's ranking. Third, class-matched training uses 190 training flows per class, the number of Non-VPN MAIL flows. Six draws of 1,330 flows per context are compared with a same-size within-context reference built from two disjoint draws with each context's natural class mix.
+F. Aggregated Feature-Family Importance
+Table I sorts the 23 features into six semantic families: one flow-duration feature, eight directional IAT statistics, two throughput features, and four statistics each for flow IAT, active periods and idle periods. For a family G, we add up the global importances Ij of its members from (2) and then normalise across the six families. Because absolute values are taken before summing, member contributions of opposite sign cannot cancel. The result is aggregated feature-family importance; it is neither instance-level Group SHAP nor a Shapley game with families as players.
+Two features of this grouping affect what it can show. Families have different sizes, so a large family can lead a ranking by size alone; we therefore also rank families by the mean importance of their members. And the grouping is a choice: total_fiat and total_biat correlate with duration at Spearman 0.89–0.95 yet sit in the directional family, while duration forms a family of one. We therefore also use an alternative grouping that moves the two totals into a duration-and-totals family, and data-driven clusters formed by average-linkage clustering of 1 - |ρS|, where ρS is the Spearman correlation between two features averaged over the two training partitions, cut at 0.2. Family-level agreement is computed on the primary fits and in every half-split repeat.
+G. Consequence Tests
+A difference between explanations has practical weight if acting on it changes predictive performance. We test two actions. In direct model transfer, the primary model of one context is applied unchanged to the test partition of the other. This shows whether the learned mapping from features to applications carries over at all, and it is the scenario that motivates the study: a classifier trained without a VPN and deployed where traffic is tunnelled, or the reverse.
+The selection process in the feature list transfer involves selection from the training data only [57–59]. Every training split is separated into a stratified 80% inner-training and a 20% inner-validation split. A selector is learned on the former, the importance is calculated by using the TreeSHAP measure of the latter (the Random Forest case uses a stratified sampling of 800 inner-validation records to compute importance), and the k most important features are kept. The reduced model is learned again using these features and then evaluated on the independent test split. The own list comes from the target context, and the transferred list comes from the other context with the same inner-split seed. We run k = 5, 10 and 15 for both models, give them equal weight, and repeat the selection with five inner-split seeds. Since each list is scored on both targets, the four scores of a model form a 2 × 2 design of list origin by target which isolates a context-match effect from a difference in overall list quality.
+There are two sets of control selections that serve as a check on the importance of any SHAP-based selection: the bottom-10, which corresponds to the ten least important features of the selector in the target context, and 20 random selections of 10 features, drawn once and used for every model and target. For the first selection seed with k = 10, 3,000 class-stratified paired bootstrap resamples of the test records give percentile intervals for the own-minus-transferred difference. These intervals fix the fitted models and ignore the uncertainty associated with training and selection, which the five seeds show separately.
+H. Sentinel Representations and Robustness Configurations
+In the processed features, the value -1 encodes an undefined statistic. The sentinel experiment creates ten indicator variables, one each for min_fiat, min_biat, max_fiat, max_biat, min_flowiat, max_flowiat, min_active, max_active, min_idle and max_idle, which are one if their source feature equals -1. The primary representation preserves the raw sentinels for all 23 features. In S1, -1 is left in the original features and the ten indicators are appended; while in S2, -1 is replaced by NaN, which is handled natively by both tree models, and the same indicators are appended. Over both partitions, min_fiat is -1 in 12.6% of Non-VPN and 10.0% of VPN flows, min_biat in 16.1% and 16.6%, the active and idle minima and maxima in 65.0% and 53.5%, and min_flowiat in only 0.3% and 0.4%. Ranks are compared over the 23 original features and the share of these indicators is reported separately.
+The robustness analysis crosses three tree models (Random Forest, XGBoost and Extra Trees [53]) with the path-dependent and interventional TreeSHAP formulations. Each model is explained on a class-stratified sample of 500 test records of its own context (seed 42). For interventional TreeSHAP, the background is a separate class-stratified set of 200 training records from the same context, all of which are used. Percentile 95% intervals for cross-context ρ come from 2,000 resamples of the explained records within each context, with models and backgrounds fixed; they reflect explained-record noise only. We also refit XGBoost with three other seeds and with max_depth = 3 and 10.
+I. Statistical Reporting
+We report effect sizes and their spread, not significance tests. For consistency, the effect is Δ in Spearman units (and the analogous gaps in RBO, Top-5 overlap and κ5), and its spread is the standard deviation and range over the 11 repeats of each design. Because these repeats share one dataset and overlapping test records, ratios of Δ to its standard deviation are not test statistics, and we do not report them. For the consequence tests, effects are paired differences in macro F1, read against the spread over selection seeds and against the random-subset controls. All intervals are marginal 95% percentile intervals, and none allows for clustering by capture or session.
+V. BASELINE CLASSIFICATION RESULTS
+Table IV and Fig. 3 report results on the primary test partitions. Both ensembles do well in both contexts, with XGBoost slightly ahead. Without a VPN, XGBoost reaches 0.9586 accuracy and 0.9340 macro F1, and Random Forest 0.9454 and 0.9171. With a VPN, XGBoost drops to 0.9051 and 0.8836 and Random Forest to 0.8811 and 0.8533, a macro F1 loss of 0.0504 and 0.0637. We prefer macro F1 because class mixes differ between contexts and BROWSING and VOIP fill over half of each test partition.
+Per class, VOIP is relatively unaffected with recall above 0.99 for both contexts and BROWSING stays at 0.93 or above. CHAT, FT, MAIL and P2P bear most of the cost: with XGBoost MAIL recall drops from 0.917 to 0.826, P2P from 0.979 to 0.910, CHAT from 0.865 to 0.767 and FT from 0.901 to 0.841. STREAMING goes the other way, from 0.856 to 0.916 (XGBoost) and from 0.822 to 0.926 (Random Forest). We do not read this as indication that a VPN makes streaming easier to identify; the captured streaming sessions or the classes streaming is confused with might differ between contexts, and a flow-level dataset cannot separate these explanations.
+TABLE IV
+Baseline performance and per-class recall on the primary test partitions
+Context
+Model
+Acc.
+Macro F1
+BROW
+CHAT
+FT
+MAIL
+P2P
+STRM
+VOIP
+Non-VPN
+RF
+0.9454
+0.9171
+0.980
+0.809
+0.871
+0.917
+0.979
+0.822
+0.991
+Non-VPN
+XGB
+0.9586
+0.9340
+0.988
+0.865
+0.901
+0.917
+0.979
+0.856
+0.993
+VPN
+RF
+0.8811
+0.8533
+0.934
+0.767
+0.782
+0.744
+0.835
+0.926
+0.993
+VPN
+XGB
+0.9051
+0.8836
+0.950
+0.767
+0.841
+0.826
+0.910
+0.916
+0.991
+Note. BROW = BROWSING, STRM = STREAMING. Test support (Non-VPN / VPN): BROWSING 500/500, CHAT 178/232, FT 171/377, MAIL 48/86, P2P 188/133, STREAMING 90/95, VOIP 564/453.
+Fig. 3. Baseline performance on the primary test partitions. (a) Macro F1 (bars) and accuracy (diamonds). (b) Recall per class. Under VPN the ensembles lose 0.050 (XGBoost) and 0.064 (Random Forest) macro F1, mostly in CHAT, FT, MAIL and P2P.
+VI. EXPLANATION CONSISTENCY
+A. Global Rankings in Each Context
+The primary importance profiles are given in Table V and Fig. 4. Without a VPN, the five most important features account for 40.3% of total importance in Random Forest and 50.1% in XGBoost; with a VPN, 41.1% and 45.3%. The top ten take between 65.1% and 75.4%. These are normalised sums of mean absolute SHAP, not shares of explained variance.
+On Non-VPN data the top five for Random Forest are total_biat, min_flowiat, total_fiat, flowBytesPerSecond and duration; on VPN data they are flowBytesPerSecond, min_fiat, min_biat, min_flowiat and total_biat. XGBoost puts flowBytesPerSecond, min_flowiat, total_biat, min_fiat and flowPktsPerSecond on top for Non-VPN, and flowBytesPerSecond, min_fiat, min_flowiat, min_biat and mean_biat for VPN. The two models agree with each other at Spearman 0.814 on Non-VPN and 0.917 on VPN.
+TABLE V
+Ten leading features of the primary TreeSHAP rankings, with normalised importance shares (%)
+Rank
+RF Non-VPN
+RF VPN
+XGB Non-VPN
+XGB VPN
+1
+total_biat (9.83)
+flowBytesPerSecond (10.94)
+flowBytesPerSecond (14.05)
+flowBytesPerSecond (13.48)
+2
+min_flowiat (8.27)
+min_fiat (8.28)
+min_flowiat (14.04)
+min_fiat (8.45)
+3
+total_fiat (8.09)
+min_biat (8.15)
+total_biat (8.30)
+min_flowiat (8.16)
+4
+flowBytesPerSecond (7.86)
+min_flowiat (6.90)
+min_fiat (7.97)
+min_biat (8.10)
+5
+duration (6.29)
+total_biat (6.78)
+flowPktsPerSecond (5.76)
+mean_biat (7.15)
+6
+std_flowiat (5.92)
+duration (5.82)
+mean_flowiat (5.56)
+duration (6.58)
+7
+mean_fiat (4.89)
+mean_biat (5.78)
+duration (5.43)
+max_flowiat (6.44)
+8
+mean_biat (4.79)
+total_fiat (5.59)
+total_fiat (5.09)
+std_flowiat (6.06)
+9
+max_flowiat (4.71)
+max_flowiat (5.38)
+std_flowiat (4.85)
+total_fiat (4.99)
+10
+min_biat (4.42)
+std_flowiat (5.26)
+min_biat (4.30)
+mean_flowiat (4.63)
+Note. Shares are percentages of total mean absolute SHAP, averaged over test records and model output classes; within each model and context they sum to 100% over all 23 features. Fig. 4 shows all 23 shares.
+Fig. 4. Primary TreeSHAP importance shares, Random Forest left and XGBoost right. Features are ordered by Non-VPN importance so that the two contexts can be compared directly.
+B. Cross-Context Agreement on the Primary Split
+For Random Forest, the Spearman ρ between the Non-VPN and VPN rankings is 0.8300 and Kendall τb is 0.6443; for XGBoost, ρ = 0.7856 and τb = 0.5810 (Table VI). The whole-ranking correlations are high, but each model keeps only three of its top five features (κ5 = 0.49), and RBO is 0.580 for Random Forest and 0.755 for XGBoost. The L1 distance between the share vectors is 0.333 and 0.360, which means that about one sixth of the total importance changes hands, and the mean absolute rank change is 3.04 and 3.39. With ten features the overlap is 9 of 10 for Random Forest (κ10 = 0.82) and 8 of 10 for XGBoost (κ10 = 0.65). Equal weighting of the true classes changes the rankings within contexts very little (ρ between the weighted and unweighted rankings 0.976–0.998), and the cross-context values stay at about the same level.
+Fig. 5 plots single features (Non-VPN rank to VPN rank). In Random Forest, min_fiat (11 to 2) and min_biat (10 to 3) move up, but total_biat (1 to 5), total_fiat (3 to 8) and mean_fiat (7 to 14) all move down. In XGBoost, mean_biat (12 to 5), min_biat (10 to 4) and max_flowiat (13 to 7) rise, whereas total_biat (3 to 12) and flowPktsPerSecond (5 to 14) fall. Some directional features rise while others in the same family fall, so a description in terms of forward versus backward misses most of what happens.
+Some of the movers are correlated with other features (Fig. 6), which is important to how SHAP shares out credit. Nearly redundant pairs are duration versus total_fiat and total_biat (Spearman’s correlation 0.89–0.95), total_fiat versus total_biat (0.84–0.90), and the two throughput features (0.94). A model can move credit within such a group with little change in its predictions, which fits the fall of total_biat and total_fiat. The three minimum IATs are less tightly linked. Spearman correlation is 0.60 (Non-VPN) and 0.60 (VPN) between min_fiat and min_biat, 0.11 and 0.41 between min_fiat and min_flowiat, and 0.19 and 0.24 between min_biat and min_flowiat. By construction min_flowiat never exceeds the smaller of min_fiat and min_biat, but it equals that minimum in only 43% of Non-VPN and 31% of VPN training flows, because interleaved forward and backward packets create shorter gaps. Moderate and non-monotone dependence of this kind can still redistribute SHAP credit, so Section VI-E tests the minimum-IAT shifts by retraining.
+TABLE VI
+Cross-context ranking agreement of the primary fits
+Model
+Spearman ρ
+Kendall τb
+RBO
+L1
+Top-5 (κ5)
+Top-10 (κ10)
+Rank disp.
+RF
+0.8300
+0.6443
+0.580
+0.333
+3/5 (0.49)
+9/10 (0.82)
+3.04
+XGB
+0.7856
+0.5810
+0.755
+0.360
+3/5 (0.49)
+8/10 (0.65)
+3.39
+RF, classes weighted
+0.8211
+0.6443
+0.732
+0.270
+3/5 (0.49)
+8/10 (0.65)
+—
+XGB, classes weighted
+0.7925
+0.5968
+0.778
+0.376
+3/5 (0.49)
+7/10 (0.47)
+—
+Note. Single fits on the primary partitions, explained on the full test partitions. RBO is extrapolated rank-biased overlap with p = 0.9; L1 is the distance between normalised share vectors (0 to 2); κk is the chance-corrected Top-k overlap of (5); rank disp. is the mean absolute rank displacement. Class-weighted rows give every true class the same weight in (2).
+Fig. 5. Feature ranks under Non-VPN and VPN on the primary split, for Random Forest (left) and XGBoost (right). Each line joins the two ranks of a feature; dotted lines mark the Top-5 and Top-10 cut-offs. Features that move by three or more ranks are drawn in colour.
+Fig. 6. Spearman correlations between the 23 features on the training partition of (a) Non-VPN and (b) VPN flows. Values are printed for the three minimum IAT features (min_fiat, min_biat, min_flowiat). Duration and the total IATs, the two throughput features, and the maximum, active and idle statistics form tightly correlated blocks.
+C. Within-Context References and Permutation Null
+Table VII and Fig. 7 set the cross-context agreement against the reference designs. With flow-level random halves, within-context agreement is high (0.943 and 0.964 for XGBoost on Non-VPN and VPN, 0.928 and 0.976 for Random Forest) and cross-context agreement is lower (0.825 and 0.766). The gap is 0.129 for XGBoost (SD 0.028, range 0.072 to 0.163 over 11 repeats) and 0.186 for Random Forest (SD 0.036, range 0.143 to 0.252). Because each repeat redraws the 80/20 partition, these spreads include partition-level variation. The gap appears at the top of the list as well: random halves of one context share 4.1–4.4 of five leading XGBoost features against 3.1 across contexts, and the RBO gap is 0.152 for XGBoost and 0.302 for Random Forest. With true classes weighted equally the ρ gaps are 0.133 and 0.183.
+The permutation null shows that the gap is not caused by either the half-split method or the class-mix difference alone. Allocating flows at random between two pseudo-contexts with the same Non-VPN and VPN class mixes gives a Δ of -0.002 for XGBoost (range -0.018 to 0.009) and +0.028 for Random Forest (range -0.010 to 0.052).
+Cluster grouping alters the picture. Preserving clusters of approximately ten similar flows in one half reduces within-context agreement (XGBoost 0.888 and 0.934, Random Forest 0.850 and 0.809) while cross-context agreement is barely changed, and Δ shrinks to 0.079 and 0.100. Even this fine grouping reduces the XGBoost gap by 39% and the Random Forest gap by 47%. With approximately 35 flows per cluster, Δ is 0.014 and 0.042; the Random Forest gap is still positive in all 11 repeats (0.015 to 0.071) and the RBO gaps are 0.063 and 0.084. With approximately 140 flows per cluster the mean Spearman gap is -0.015 and +0.002, but this is weak evidence of no gap: the half-models achieve only 0.53–0.61 macro F1, and the Random Forest gap varies widely (SD 0.111, range -0.183 to 0.226).
+The calibrated grouping, using approximately as many clusters per class as there are capture files, gives a gap of +0.016 for XGBoost (SD 0.039) and +0.018 for Random Forest (SD 0.084), with RBO gaps of +0.018 and +0.029. It shares the weaknesses of the coarse setting: because a VPN class is divided into only a few large clusters, the VPN half-models disagree strongly with each other (within-VPN ρ 0.751 for XGBoost and 0.296 for Random Forest) and half-model macro F1 is 0.53–0.68. The near-zero mean also hides opposite signs. For Random Forest, within-Non-VPN agreement exceeds cross-context agreement by 0.228, whereas within-VPN agreement lies 0.193 below it (XGBoost: +0.067 and -0.035). The calibrated mean therefore does not show that the gap disappears in either context; it averages a positive and a negative gap.
+Blocks of consecutive rows in the original files yield a different picture (Section IV-D). They reduce within-context agreement considerably less than clusters do, and the half-models remain accurate (macro F1 0.73–0.90). With blocks of approximately 10, 35 and 140 training flows, Δ is 0.113, 0.111 and 0.079 for XGBoost and 0.168, 0.159 and 0.127 for Random Forest. With as many blocks per class as capture files it is 0.074 (range 0.058 to 0.104) and 0.153 (0.105 to 0.193), and so grouping by row order removes 43% of the XGBoost gap and 18% of the Random Forest gap at that setting. The strictest split, training one half on the first and the other on the second half of each class, gives 0.033 (0.000 to 0.082) and 0.093 (0.045 to 0.143), with RBO gaps of +0.091 and +0.046. Under every row-order setting the Spearman gap is at or above zero in all 11 repeats for both models, but this is a weak observation. The repeats are not independent replications: they share one dataset, and in the first-versus-second-half split every repeat uses nearly the same two halves of each class, so only the outer partition and the seeds change. The smallest XGBoost value there is 0.0002, and the RBO and Top-5 gaps are negative in some of these repeats (RBO in 1 of 11 for XGBoost and 2 of 11 for Random Forest, Top-5 in 3 and 2).
+Taken together, cross-context rankings disagree more than random halves of one context do, and this excess is not an artefact of the half-split procedure or of class mix. How much of it reflects related flows depends on how relatedness is approximated. Feature clusters remove most of the gap as they grow, but at the settings the capture counts point to they also leave weak half-models with widely varying rankings, which implies that they divide regions of feature space as well as captures. Blocks of consecutive rows divide flows by their position in the files rather than directly by their features, and leave a positive mean Spearman gap at every setting. Neither proxy is a capture split. Clusters may overcorrect, and blocks may undercorrect wherever a capture crosses a block boundary. Reading them as rough bounds, they place the excess that remains once related flows are kept together between about zero and 0.07 for XGBoost and between about zero and 0.15 for Random Forest, with 0.03 and 0.09 under the strictest row-order split. These are descriptive comparisons, not a test of that excess: the permutation null was run only for random halves, where it already gives +0.028 for Random Forest, no grouped design keeps the test records apart from the training sessions, and within-context pairs are explained on shared test records while cross-context pairs are not. Part of the random-split gap therefore reflects variation between groups of related flows, and part of it is retained under grouping by row order. In every design the outer 80/20 partition is random, and because the two contexts are different sets of captures, the remaining differences cannot be attributed to tunnelling.
+TABLE VII
+Within- and cross-context Spearman agreement under the reference designs
+Model / design
+Half-model F1
+NV / VPN
+Within
+NV
+Within
+VPN
+Cross
+Δρ mean (SD)
+range
+ΔRBO
+ΔTop-5
+Δρ classes
+weighted
+XGBoost (11 repeats per design)
+Random halves
+0.912 / 0.865
+0.943
+0.964
+0.825
++0.129 (0.028)
+0.072 to 0.163
++0.152
++1.14
++0.133
+Grouped, ~10 per cluster
+0.818 / 0.747
+0.888
+0.934
+0.832
++0.079 (0.028)
+0.034 to 0.136
++0.111
++0.73
++0.074
+Grouped, ~35 per cluster
+0.709 / 0.649
+0.825
+0.877
+0.837
++0.014 (0.017)
+-0.014 to 0.039
++0.063
+-0.05
++0.017
+Grouped, ~140 per cluster
+0.614 / 0.552
+0.804
+0.740
+0.787
+-0.015 (0.025)
+-0.048 to 0.026
++0.021
++0.07
+-0.020
+Grouped, calibrated to captures
+0.683 / 0.555
+0.853
+0.751
+0.786
++0.016 (0.039)
+-0.053 to 0.073
++0.018
++0.14
++0.013
+Row blocks, ~10 per block
+0.903 / 0.857
+0.947
+0.951
+0.835
++0.113 (0.026)
+0.073 to 0.148
++0.175
++1.14
++0.120
+Row blocks, ~35 per block
+0.878 / 0.844
+0.941
+0.950
+0.834
++0.111 (0.021)
+0.078 to 0.149
++0.119
++0.91
++0.116
+Row blocks, ~140 per block
+0.851 / 0.816
+0.917
+0.928
+0.844
++0.079 (0.016)
+0.040 to 0.101
++0.120
++0.66
++0.085
+Row blocks, calibrated to captures
+0.870 / 0.807
+0.919
+0.942
+0.856
++0.074 (0.015)
+0.058 to 0.104
++0.093
++0.77
++0.081
+Row blocks, first vs second half
+0.800 / 0.752
+0.883
+0.900
+0.858
++0.033 (0.024)
+0.000 to 0.082
++0.091
++0.18
++0.034
+Permutation null
+0.843 / 0.853
+0.938
+0.944
+0.942
+-0.002 (0.009)
+-0.018 to 0.009
+-0.007
+-0.11
+-0.002
+Random Forest (11 repeats per design)
+Random halves
+0.887 / 0.842
+0.928
+0.976
+0.766
++0.186 (0.036)
+0.143 to 0.252
++0.302
++1.64
++0.183
+Grouped, ~10 per cluster
+0.774 / 0.715
+0.850
+0.809
+0.730
++0.100 (0.018)
+0.078 to 0.128
++0.171
++0.84
++0.079
+Grouped, ~35 per cluster
+0.661 / 0.623
+0.723
+0.726
+0.682
++0.042 (0.017)
+0.015 to 0.071
++0.084
++0.59
++0.030
+Grouped, ~140 per cluster
+0.589 / 0.531
+0.612
+0.431
+0.519
++0.002 (0.111)
+-0.183 to 0.226
+-0.054
+-0.73
+-0.023
+Grouped, calibrated to captures
+0.656 / 0.526
+0.717
+0.296
+0.489
++0.018 (0.084)
+-0.097 to 0.238
++0.029
++0.36
++0.004
+Row blocks, ~10 per block
+0.879 / 0.836
+0.926
+0.956
+0.773
++0.168 (0.029)
+0.115 to 0.209
++0.295
++1.64
++0.164
+Row blocks, ~35 per block
+0.852 / 0.825
+0.902
+0.950
+0.767
++0.159 (0.022)
+0.121 to 0.202
++0.255
++1.57
++0.143
+Row blocks, ~140 per block
+0.819 / 0.789
+0.851
+0.919
+0.758
++0.127 (0.026)
+0.091 to 0.175
++0.217
++1.57
++0.098
+Row blocks, calibrated to captures
+0.848 / 0.785
+0.884
+0.906
+0.743
++0.153 (0.030)
+0.105 to 0.193
++0.226
++1.57
++0.130
+Row blocks, first vs second half
+0.779 / 0.732
+0.803
+0.868
+0.742
++0.093 (0.027)
+0.045 to 0.143
++0.046
++0.27
++0.065
+Permutation null
+0.816 / 0.826
+0.949
+0.953
+0.923
++0.028 (0.019)
+-0.010 to 0.052
++0.062
++0.27
++0.032
+Note. Every repeat redraws the stratified 80/20 partition of each context. Within values compare the two halves of one context; cross values average the four Non-VPN-half versus VPN-half pairs of the same repeat. Δ is the within value minus the cross value, averaged over repeats; SD and range describe its spread across repeats and are not standard errors. Half-model F1 is macro F1 on the repeat’s test partition. Grouped designs keep whole k-means clusters (fitted within class on log(x + 2)-standardised features) in one half of the training partition; the calibrated design sets the number of clusters per class to that class’s number of capture files (Section IV-D). Row-block designs keep whole blocks of consecutive rows of the original ARFF files (within class) in one half. The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts. Random Forest half-models are explained on 800 test records per repeat (their macro F1 uses the full test partition).
+Fig. 7. Within-context (green) and cross-context (purple) Spearman agreement for each repeat of the eleven reference designs, with means as bars. The gap Δ under each design is given below its label. Values are dependent across repeats and are shown descriptively.
+D. Class Composition
+Table VIII reports the class-mix swap. Resampling a context to the other context's class mix changes its own ranking only a little: a natural-mix and a swapped-mix model of the same context agree at ρ = 0.924–0.977 (last column), and each stays close to its context's primary ranking (ρ = 0.936–0.986). The swap does not bring a context closer to the other one. Agreement with the other context's primary ranking changes by +0.008, +0.017, -0.035, -0.007 for XGBoost (Non-VPN, VPN) and Random Forest (Non-VPN, VPN), against a cross-context gap of 0.13–0.19 under random halves. The permutation null of Section VI-C, which keeps both class mixes and removes everything else, gives no XGBoost gap and a Random Forest gap of 0.03. Class-weighted importance leaves the gaps in place (Table VII).
+Class-matched training yields the same answer given comparison with a reference of the same size. With 1,330 training flows per model, two disjoint natural-mix draws of one context agree at ρ = 0.946 (Non-VPN) and 0.945 (VPN); natural-mix draws of differing contexts agree at 0.853 and class-matched draws at 0.857. The higher cross-context ρ of small matched training sets (approximately 0.85, compared to 0.77–0.82 for full-size models) is therefore a characteristic of small training sets, which agree more closely with everything, and not evidence that class mix explains the discrepancy: at this size the within-minus-cross gap is still 0.09 with natural mixes. Two matched draws from Non-VPN share all 190 MAIL flows, so their agreement (0.971) is not used as a reference.
+TABLE VIII
+Class-mix swap: models trained on 3,400 flows with their own or the other context's class proportions
+Model / context
+Training mix
+Macro F1
+ρ with own
+primary ranking
+ρ with other
+context's ranking
+RBO with other
+context's ranking
+ρ natural vs
+swapped
+XGB / Non-VPN (5 draws)
+Own
+0.922 (0.008)
+0.977 (0.011)
+0.823 (0.012)
+0.681 (0.012)
+XGB / Non-VPN (5 draws)
+Other context's
+0.925 (0.005)
+0.971 (0.015)
+0.831 (0.017)
+0.700 (0.032)
+0.977 (0.004)
+XGB / VPN (5 draws)
+Own
+0.859 (0.003)
+0.986 (0.007)
+0.781 (0.024)
+0.775 (0.038)
+XGB / VPN (5 draws)
+Other context's
+0.841 (0.006)
+0.980 (0.008)
+0.797 (0.015)
+0.787 (0.031)
+0.972 (0.011)
+RF / Non-VPN (3 draws)
+Own
+0.895 (0.007)
+0.983 (0.009)
+0.799 (0.017)
+0.576 (0.019)
+RF / Non-VPN (3 draws)
+Other context's
+0.898 (0.003)
+0.936 (0.009)
+0.765 (0.009)
+0.553 (0.023)
+0.924 (0.009)
+RF / VPN (3 draws)
+Own
+0.841 (0.006)
+0.979 (0.009)
+0.837 (0.022)
+0.581 (0.002)
+RF / VPN (3 draws)
+Other context's
+0.808 (0.006)
+0.966 (0.008)
+0.830 (0.017)
+0.610 (0.040)
+0.972 (0.022)
+Note. Mean (SD) over draws. Models are explained on their own context's test partition and compared with the primary rankings of Section VI-A (Random Forest on a fixed 800-record test sample). The last column compares the natural-mix and swapped-mix models of the same draw. If class mix drove the cross-context disagreement, the swapped rows would show higher agreement with the other context than the own-mix rows.
+E. The Minimum Inter-Arrival-Time Shifts
+The features that move most between contexts are the three minimum IATs. Because they are moderately correlated, a SHAP shift among them could reflect credit passing between features that the model treats as substitutes. We tested this in four ways (Table IX).
+Combined share. If the shift were only a redistribution of credit, the summed SHAP share of the three minima would stay about the same across contexts. It does for XGBoost (26.3% without a VPN and 24.7% with one) but not for Random Forest (17.0% and 23.3%; means over the random half-splits 16.3% and 24.5%). For Random Forest the block as a whole gains about six percentage points under VPN.
+Drop-one and grouped retraining. Dropping any one of the three and retraining changes macro F1 by +0.001 to -0.016, whereas dropping all three costs 0.012–0.028. As a group, the minimum IATs contain information that the other features do not have (individually, they are partially substitutable); dropping one increases the credit of the others: For example, in the VPN Random Forest, dropping min_fiat increases the shares of min_flowiat and min_biat by 2.2 and 1.5 percentage points, respectively; whereas in the Non-VPN XGBoost dropping min_flowiat moves min_biat up the ranking from 10th to 5th. With all three dropped, the remaining 20 features have cross-context ρ of 0.890 (Random Forest) and 0.833 (XGBoost), so the disagreement between contexts is not confined to the three minima.
+Permutation importance. Permutation importance on the test partitions, measured in the decrease of the macro F1, does not obey the Shapley rules, but it is not a neutral reference either: with dependent features, it evaluates the model at feature combinations that do not occur in the data [34]. We therefore report a conditional variant as well, which permutes each feature only within quintile cells of its two most correlated features [36]. Both measures rank min_fiat and min_biat high already without a VPN (marginal: 4 and 3 for Random Forest, 3 and 5 for XGBoost; conditional: 4 and 3, 3 and 4), and move them up by at most two places with one. The large SHAP rises of min_fiat (Random Forest, 11 to 2) and min_biat (Random Forest 10 to 3, XGBoost 10 to 4) are not reproduced by either measure. Permuting the three minima jointly costs 0.168 and 0.155 macro F1 for Random Forest and 0.326 and 0.267 for XGBoost. These statements concern the minimum IATs. Over the whole ranking, permutation importance agrees less across contexts than SHAP does: cross-context ρ is 0.611 (Random Forest) and 0.719 (XGBoost) for marginal and 0.657 and 0.575 for conditional permutation importance, against 0.830 and 0.786 for SHAP.
+Entries below -1. All entries below -1 in the data are negative min_flowiat values. There are 55 Non-VPN training flows (43 of them FT) and 43 VPN training flows (22 P2P). Such a negative gap between consecutive packets is simply not possible, probably due to an error in the timestamps. There are 17 and 12 flows with negative gaps, respectively, in these testing samples; these flows account for 0.6% and 0.5% of the min_flowiat attribution of the Random Forest models (1.0% and 0.6% for XGBoost). When they are omitted from training, the rankings stay virtually unaltered (ρ with the main ranking 0.986–0.997), so they are not responsible for the minimum-IAT changes.
+In other words, the minimum IATs are important as a group. For XGBoost, the block maintains its combined share and the visible SHAP shift is largely a redistribution of credit between the correlated timing features. For Random Forest, credit is redistributed within the block, but the block itself gains importance under VPN, so part of the shift is a change in what the models rely on. Permutation-based measures move the minimum IATs less than SHAP does for both models, although their whole rankings differ more between contexts, and the remaining differences cannot be attributed to tunnelling, as the data cannot distinguish tunnelling from differences between capture sessions.
+TABLE IX
+Checks on the minimum-IAT features: combined share, retraining without them and permutation importance
+Model / context
+SHAP ranks
+fiat / biat / flowiat
+SHAP share of
+the three (%)
+ΔF1 drop
+min_fiat
+ΔF1 drop
+min_biat
+ΔF1 drop
+min_flowiat
+ΔF1 drop
+all three
+Permutation ranks
+marginal / conditional
+ΔF1 joint
+permutation
+RF / Non-VPN
+11 / 10 / 2
+17.0
+-0.007
+-0.009
+-0.004
+-0.028
+4 / 3 / 2
+4 / 3 / 2
+-0.168
+RF / VPN
+2 / 3 / 4
+23.3
++0.001
+-0.009
+-0.002
+-0.012
+3 / 2 / 4
+3 / 2 / 4
+-0.155
+XGB / Non-VPN
+4 / 10 / 2
+26.3
+-0.007
+0.000
+-0.004
+-0.026
+3 / 5 / 2
+3 / 4 / 2
+-0.326
+XGB / VPN
+2 / 4 / 3
+24.7
+-0.016
+-0.012
+-0.007
+-0.024
+2 / 4 / 6
+2 / 4 / 3
+-0.267
+Note. SHAP ranks and the combined share of min_fiat, min_biat and min_flowiat are those of the primary models on the full test partitions (Table V, Fig. 5); share changes after dropping a feature are computed on a fixed 800-record test sample for Random Forest. ΔF1 is the change in macro F1 after retraining without the listed feature(s), or after permuting all three minima together in the test partition (mean of 10 permutations). Permutation ranks use macro F1 and 10 repeats; the conditional version permutes within quintile cells of each feature's two most correlated features.
+F. Why VPN Rankings Look Steadier
+Under flow-level random halves, VPN rankings agree with each other more closely than Non-VPN rankings do (XGBoost 0.964 against 0.943; Random Forest 0.976 against 0.928), even though VPN accuracy is lower. This trend inverts under cluster grouping. With clusters of approximately 140 flows, within-VPN agreement falls below within-Non-VPN agreement for both models (0.740 against 0.804, and 0.431 against 0.612), and Random Forest reverses the trend at about ten flows per cluster. With blocks of consecutive rows, however, within-VPN rankings are again steadier (calibrated blocks: 0.942 against 0.919 for XGBoost, 0.906 against 0.884 for Random Forest), so that the reversal in trend depends on the nature of the grouping. The capture counts of Section IV-D indicate the same direction: A VPN capture contributes several-fold more flows than a Non-VPN capture, hence random halves of VPN data share more related flows. Part of the apparent steadiness of the VPN explanations may therefore stem from redundancy among related VPN flows rather than from any stability of the VPN explanation itself. Class balance may also play a role as the rarest VPN class has 4.6% of training flows against 2.7% for Non-VPN MAIL, and rare classes give noisier attributions.
+VII. AGGREGATED FEATURE-FAMILY IMPORTANCE
+Table X gives the family shares of the primary fits. Under the six semantic families, directional IAT comes first, flow IAT second and throughput third in every model and context. From Non-VPN to VPN the directional share of Random Forest grows from 43.07% to 45.73% and that of XGBoost from 37.51% to 42.63%; flow IAT moves from 23.00% to 22.18% and from 28.23% to 25.30%. Table XI compares four aggregation rules on the primary fits and in the half-split repeats.
+TABLE X
+Aggregated feature-family importance shares (%) of the primary fits, with ranks
+Family (members)
+RF Non-VPN
+RF VPN
+XGB Non-VPN
+XGB VPN
+Directional IAT (8)
+43.07 (1)
+45.73 (1)
+37.51 (1)
+42.63 (1)
+Flow IAT (4)
+23.00 (2)
+22.18 (2)
+28.23 (2)
+25.30 (2)
+Flow throughput (2)
+12.08 (3)
+15.68 (3)
+19.81 (3)
+16.66 (3)
+Flow duration (1)
+6.29 (6)
+5.82 (5)
+5.43 (5)
+6.58 (4)
+Active period (4)
+6.76 (5)
+3.71 (6)
+6.52 (4)
+3.81 (6)
+Idle period (4)
+8.80 (4)
+6.88 (4)
+2.50 (6)
+5.03 (5)
+Note. Summed mean absolute SHAP of the family members, normalised over the six families; ranks in parentheses. Absolute values are taken before aggregation, so opposing contributions do not cancel.
+The stability of the six-family summary depends on the grouping method. Summed across six families, the half-split gap is 0.112 for Random Forest and 0.075 for XGBoost. These values are lower than the feature-level gaps. However, rankings based on six families are coarse, as swapping one adjacent pair changes ρ by approximately 0.06. The eight-member directional family ranks highest in every comparison, partly because of its larger size.
+When ranked by mean importance per member, the gaps are 0.149 for Random Forest and 0.064 for XGBoost, with throughput or duration emerging as the leading family. Moving total_fiat and total_biat into a duration-and-totals family produces gaps of 0.096 for Random Forest and 0.088 for XGBoost. This regrouping changes the primary summary: the shares of the three leading families on Non-VPN data are within 2.1 percentage points of one another for Random Forest, while Flow IAT leads for XGBoost without a VPN and Directional IAT leads with a VPN. The eight data-driven clusters produce gaps of 0.096 for Random Forest and 0.099 for XGBoost. For XGBoost this is larger than every semantic-family gap (0.064–0.088), which fits with the three minimum IATs staying in separate clusters; for Random Forest it is not (0.096–0.149 under the semantic groupings).
+Grouping the training data affects family-level gaps differently from feature-level gaps. For Random Forest, the summed-family gap decreases from 0.112 to +0.005 with clusters of approximately ten flows. For XGBoost, the gap remains similar, changing from 0.075 with random halves to 0.077 with clusters of approximately ten flows, and from 0.099 to 0.091 with correlation-based clusters. It decreases to 0.014 with clusters of approximately 35 flows and to +0.016 under calibrated grouping. With blocks of consecutive rows, the summed-family gaps range from +0.016 to +0.116 for both models.
+These results indicate that, under fine grouping, part of the XGBoost difference between contexts persists at the family level even though it shrinks at the level of individual features; with clusters of about 35 flows or the calibrated grouping, the XGBoost family gap also falls (0.014 and +0.016). Therefore, redundancy among related flows does not fully explain the observed differences. Statements about gap reduction under grouping refer specifically to the feature level. Family summaries should always be interpreted alongside their grouping method and family sizes.
+TABLE XI
+Family-level agreement under four aggregation rules
+Model / aggregation
+Primary ρ
+Within NV
+Within VPN
+Cross
+Δ random
+halves
+Δ grouped
+~10 per cluster
+RF / Six families, summed
+0.943
+0.953
+0.990
+0.860
++0.112
++0.005
+RF / Six families, mean per member
+0.886
+0.865
+0.943
+0.754
++0.149
++0.016
+RF / Totals moved to duration, summed
+0.943
+0.927
+1.000
+0.868
++0.096
++0.006
+RF / Eight correlation clusters, summed
+0.881
+0.989
+0.950
+0.873
++0.096
++0.055
+XGB / Six families, summed
+0.829
+0.958
+0.974
+0.891
++0.075
++0.077
+XGB / Six families, mean per member
+0.886
+0.974
+0.922
+0.884
++0.064
++0.054
+XGB / Totals moved to duration, summed
+0.886
+0.984
+0.943
+0.875
++0.088
++0.070
+XGB / Eight correlation clusters, summed
+0.905
+0.983
+0.948
+0.866
++0.099
++0.091
+Note. Within, cross and Δ are means over the 11 flow-level random half-split repeats (Section IV-D); the last column uses the cluster-grouped design with about ten flows per cluster. The alternative grouping moves total_fiat and total_biat from the directional family into a duration-and-totals family. Clusters come from average-linkage clustering of 1 - |ρS| on training data, cut at 0.2.
+VIII. CONSEQUENCE TESTS
+A. Direct Model Transfer
+Models do not carry over between contexts (Fig. 8a). The Non-VPN XGBoost model reaches 0.430 macro F1 on VPN test flows, against 0.884 for the VPN model, and the VPN model reaches 0.613 on Non-VPN flows, against 0.934. Random Forest gives 0.438 and 0.606. BROWSING keeps the highest recall (0.78 and 0.89 for XGBoost), and VOIP transfers well only from VPN to Non-VPN (0.98, against 0.62 in the other direction). CHAT, FT and P2P recall falls to 0.20–0.29 for the Non-VPN XGBoost model on VPN data. These scores fall in the same range as the cluster-grouped cross-validation of Section III-C (0.47–0.64), but the comparison is only indicative. The protocols differ (50 clusters and 80% of one context's training data there, a full model of the other context here), and the change of context also changes the class mix and the capture sessions, which this test cannot separate. For the practical question that motivates the study, the answer is still clear: a classifier trained on one context needs retraining on the other.
+B. Transfer of a SHAP-Selected Feature List
+Reusing the other context's feature list costs much less. Own and transferred lists share 3 of 5 features at k = 5, 7.4–8.4 of 10 at k = 10 and 14–15 of 15 at k = 15 (means over five selection seeds), so each contrast rests on the features that differ. At k = 10 the own-minus-transferred difference in macro F1, averaged over seeds, is -0.004 and +0.013 for Random Forest (Non-VPN and VPN targets) and +0.004 and +0.006 for XGBoost (Table XII). The VPN Random Forest contrast is positive for all five seeds (+0.007 to +0.017) and its paired interval for the first seed, [0.006, 0.028], excludes zero; the XGBoost VPN contrast is positive for every seed but smaller (+0.002 to +0.009), with an interval that includes zero. The five seeds are not five different lists: they yield one to three distinct Top-k lists per model, context and k, and each distinct list is refitted once with a fixed seed.
+These per-target contrasts mix two effects, because each list is evaluated on both targets: the four scores of a model form a 2 × 2 design of list origin by target (Table XIII). One effect is whether one context's list is simply better on both targets. For Random Forest it is: the VPN-derived list beats the Non-VPN list on both targets, by 0.009 on average at k = 10 and 0.036 at k = 5. Most of the apparent cost at the VPN target therefore reflects a weaker Non-VPN list, not a mismatch between contexts. The other effect, the context-match term, is the sum of the two own-minus-transferred contrasts. It is small: +0.008 for Random Forest and +0.010 for XGBoost at k = 10, +0.020 and -0.025 at k = 5, and within 0.002 of zero at k = 15.
+The controls make it clear that SHAP-based selection is doing real work. The bottom-10 lists reach 0.685–0.735 macro F1 on average over seeds, and the 20 random 10-feature lists average 0.818–0.899. Own Top-10 lists beat 80–100% of the random lists and transferred lists 87–100% (means over seeds; Table XII). A ranking learned in the other context is thus a reasonable guide to which features to keep, even though the model built on those features must be retrained.
+TABLE XII
+Transfer of SHAP-selected Top-k feature lists (macro F1 on the untouched test partitions)
+Target / model
+Shared
+k = 5/10/15
+Δ k = 5
+mean [min, max]
+Δ k = 10
+mean [min, max]
+Δ k = 15
+mean
+Δ k = 10, seed 1
+95% interval
+Bottom-10
+Random-10
+mean [min, max]
+Beat random
+own / transferred
+Non-VPN / RF
+3.0 / 8.4 / 14.4
+-0.026
+[-0.027, -0.022]
+-0.004
+[-0.007, -0.003]
++0.001
+[-0.018, 0.006]
+0.717
+0.887
+[0.852, 0.924]
+80% / 90%
+Non-VPN / XGB
+3.0 / 7.4 / 14.4
+-0.018
+[-0.030, -0.002]
++0.004
+[-0.003, +0.010]
+-0.001
+[-0.006, 0.010]
+0.696
+0.899
+[0.854, 0.938]
+92% / 87%
+VPN / RF
+3.0 / 8.4 / 14.4
++0.046
+[+0.044, +0.048]
++0.013
+[+0.007, +0.017]
+-0.003
+[0.006, 0.028]
+0.685
+0.818
+[0.783, 0.863]
+100% / 89%
+VPN / XGB
+3.0 / 7.4 / 14.4
+-0.007
+[-0.019, +0.002]
++0.006
+[+0.002, +0.009]
++0.001
+[-0.006, 0.015]
+0.735
+0.838
+[0.808, 0.876]
+100% / 100%
+Note. Δ is macro F1 of the own list minus that of the transferred list on the given target; means, minima and maxima are over five inner-split selection seeds. The interval is a 3,000-draw class-stratified paired bootstrap over test records for the first seed, with models fixed. Bottom-10 is the mean over seeds of the ten lowest-ranked features of the target selector. The 20 random 10-feature lists are drawn once and shared by every model and target; the last column gives the share of them that the own and transferred Top-10 lists beat, averaged over seeds.
+TABLE XIII
+List origin by target: decomposition of the Top-k transfer
+Model
+k
+Context-match term
+mean [min, max]
+VPN-list advantage
+mean [min, max]
+RF
+5
++0.020 [+0.018, +0.022]
++0.036 [+0.033, +0.037]
+RF
+10
++0.008 [+0.004, +0.013]
++0.009 [+0.005, +0.012]
+RF
+15
+-0.002 [-0.003, 0.000]
+-0.002 [-0.003, 0.000]
+XGB
+5
+-0.025 [-0.028, -0.021]
++0.006 [-0.009, +0.016]
+XGB
+10
++0.010 [-0.001, +0.018]
++0.001 [-0.001, +0.002]
+XGB
+15
++0.001 [0.000, +0.001]
++0.001 [0.000, +0.002]
+Note. For each model, k and selection seed, the Non-VPN and VPN lists are each scored on both targets. The context-match term is the sum of the two own-minus-transferred contrasts of Table XII; positive values mean that lists do better in the context they were selected in. The VPN-list advantage is the mean over both targets of the VPN list's macro F1 minus the Non-VPN list's. Statistics are over five seeds.
+Fig. 8. Consequences of the cross-context differences. (a) Macro F1 of models applied to their own context and to the other context. (b) Own-minus-transferred macro F1 for Top-k feature lists; grey points are the five selection seeds and black markers their mean. Positive values favour the own list.
+IX. SENTINEL AND ROBUSTNESS CHECKS
+Table XIV collects the sensitivity checks. The two sentinel encodings differ in macro F1 by at most 0.0085, and within one context they rank the 23 original features at ρ = 0.887–0.943. Random Forest gives the indicators 8.54% (S1) and 7.16% (S2) of total importance on Non-VPN data and 4.17% and 3.56% on VPN data; XGBoost gives them at most 0.59%. These numbers describe how the models allocate importance, not how much information missingness carries.
+How large is the encoding effect? The S1-versus-S2 disagreement, 1 - ρ = 0.06–0.11, is about 1.5 to 4 times smaller than the cross-context disagreement on the primary split (1 - ρ = 0.17–0.21). The more relevant comparison is the disagreement between random halves of one context (1 - ρ = 0.02–0.07). The two ranges overlap, although the encoding change can produce the larger disagreement, so changing the encoding of undefined statistics moves a ranking by an amount comparable in scale to random-half retraining variation. Cross-context agreement under the alternative encodings stays close to the primary values: ρ = 0.8281 under both S1 and S2 for Random Forest, and 0.7915 (S1) and 0.7806 (S2) for XGBoost. We recomputed the identical Random Forest values from the saved rankings; the two rankings differ (Kendall τb 0.6364 and 0.6285, Top-5 overlap 3 and 2), but their squared rank differences happen to sum to the same total.
+Across the six model and TreeSHAP configurations explained on 500 records, cross-context ρ ranges from 0.681 to 0.819, and three of five leading features are shared in all six. Within one model and context, path-dependent and interventional rankings agree at ρ = 0.969–0.984 for Random Forest and XGBoost and 0.960–0.970 for Extra Trees. Extra Trees agrees less well with Random Forest (ρ = 0.730–0.801 for the path-dependent and 0.709–0.776 for the interventional formulation). Refitting XGBoost with three other seeds gives mean within-context ρ of 0.9928 (Non-VPN) and 0.9928 (VPN), so seed noise alone is small, and max_depth = 3 or 10 leaves cross-context ρ at 0.767 and 0.803. Table XIV gives percentile intervals from resampling the explained records. The resampled values are centred within 0.015 of the point estimates, above them for some configurations and below for others, so we see no consistent bias.
+TABLE XIV
+Sensitivity of cross-context agreement to sentinel encoding, model, TreeSHAP formulation and hyperparameters
+Configuration
+Macro F1
+NV / VPN
+Cross-context ρ
+95% interval
+(explained records)
+RBO
+Top-5
+Primary fits and sentinel encodings (full test partitions)
+RF, raw sentinel (primary)
+0.917 / 0.853
+0.8300
+—
+0.580
+3/5
+RF, S1
+0.919 / 0.855
+0.8281
+—
+0.639
+3/5
+RF, S2
+0.920 / 0.853
+0.8281
+—
+0.564
+2/5
+XGB, raw sentinel (primary)
+0.934 / 0.884
+0.7856
+—
+0.755
+3/5
+XGB, S1
+0.935 / 0.886
+0.7915
+—
+0.809
+3/5
+XGB, S2
+0.933 / 0.878
+0.7806
+—
+0.766
+3/5
+Model and TreeSHAP formulation (500 explained records per context)
+Random Forest, path-dependent
+0.917 / 0.853
+0.8192
+[0.803, 0.841]
+0.578
+3/5
+Random Forest, interventional
+0.917 / 0.853
+0.8024
+[0.771, 0.814]
+0.767
+3/5
+XGBoost, path-dependent
+0.934 / 0.884
+0.7955
+[0.769, 0.804]
+0.658
+3/5
+XGBoost, interventional
+0.934 / 0.884
+0.7727
+[0.761, 0.794]
+0.754
+3/5
+Extra Trees, path-dependent
+0.899 / 0.849
+0.6808
+[0.633, 0.763]
+0.764
+3/5
+Extra Trees, interventional
+0.899 / 0.849
+0.7381
+[0.661, 0.771]
+0.750
+3/5
+XGBoost hyperparameters (full test partitions)
+XGBoost, max_depth = 3
+0.928 / 0.864
+0.7668
+—
+0.727
+3/5
+XGBoost, max_depth = 10
+0.931 / 0.872
+0.8034
+—
+0.768
+3/5
+Note. S1 keeps -1 and appends ten undefined-value indicators; S2 replaces -1 by NaN and appends the same indicators; agreement is computed over the 23 original features. Intervals are 95% percentile intervals from 2,000 resamples of the explained records within each context, with models and backgrounds fixed; they exclude training, background and session-level uncertainty.
+X. SUMMARY AND DISCUSSION
+Table XV collects the main quantities from Sections V to IX in one place.
+TABLE XV
+Summary of the main results
+Quantity
+Random Forest
+XGBoost
+Section
+Macro F1, Non-VPN / VPN
+0.917 / 0.853
+0.934 / 0.884
+V
+Primary cross-context ρ / RBO / Top-5
+0.830 / 0.580 / 3
+0.786 / 0.755 / 3
+VI-B
+Half-split cross-context ρ (mean)
+0.766
+0.825
+VI-C
+Δρ, random halves (SD)
++0.186 (0.036)
++0.129 (0.028)
+VI-C
+Δρ, permutation null (SD)
++0.028 (0.019)
+-0.002 (0.009)
+VI-C
+Δρ, grouped ~10 / ~35 / ~140 per cluster
++0.100 / +0.042 / +0.002
++0.079 / +0.014 / -0.015
+VI-C
+Δρ, grouped calibrated to captures (SD)
++0.018 (0.084)
++0.016 (0.039)
+VI-C
+Δρ, row blocks ~10 / ~35 / ~140 per block
++0.168 / +0.159 / +0.127
++0.113 / +0.111 / +0.079
+VI-C
+Δρ, row blocks calibrated to captures (SD)
++0.153 (0.030)
++0.074 (0.015)
+VI-C
+Δρ, row blocks first vs second half (SD)
++0.093 (0.027)
++0.033 (0.024)
+VI-C
+Class-mix swap: change in ρ with the other context (NV / VPN)
+-0.035 / -0.007
++0.008 / +0.017
+VI-D
+SHAP share of the three minimum IATs, NV / VPN (%)
+17.0 / 23.3
+26.3 / 24.7
+VI-E
+Model transfer macro F1, Non-VPN to VPN / VPN to Non-VPN
+0.438 / 0.606
+0.430 / 0.613
+VIII-A
+Top-10 list transfer, own - transferred F1 (NV / VPN target)
+-0.004 / +0.013
++0.004 / +0.006
+VIII-B
+Top-10 context-match term
++0.008
++0.010
+VIII-B
+Within-context ρ, S1 vs S2 encoding (NV / VPN)
+0.914 / 0.887
+0.942 / 0.943
+IX
+Note. Δρ is the mean over 11 repeats of within-context minus cross-context Spearman agreement at feature level; SD describes the spread over repeats. Positive transfer differences favour the list selected in the target context; the context-match term is the sum of the two per-target differences.
+A. What the References Show
+ The answer to the question posed in the title depends on what cross-context agreement is compared with. Against models trained on random halves of one context, VPN and Non-VPN rankings disagree more, in every repeat, and the permutation null shows that neither the half-split procedure nor the class-mix difference produces such a gap. Keeping related flows together reduces the gap, but by how much depends on the proxy for related flows. Feature clusters eliminate most of it; at the settings that the capture counts point to the mean gap is near zero, but the half-models are weak, the gap varies widely, and for Random Forest the mean averages a gap of +0.23 on the Non-VPN side and -0.19 on the VPN side, and clusters also separate regions of feature space that a capture split would not. Blocks of consecutive rows in the original files do not exploit the features and leave the half-models accurate. At the capture-calibrated setting they reduce the gap to 0.07 for XGBoost and 0.15 for Random Forest, and even the first-versus-second-half split leaves 0.03 and 0.09 on average. The Spearman gap stays at or above zero in every repeat, but the repeats reuse nearly the same halves, and the RBO and Top-5 gaps turn negative in some of them. The two proxies disagree, and neither is a capture split: clusters may overcorrect and blocks may undercorrect. Together they suggest that part of the random-split gap reflects variation between groups of related flows, from about 20% to nearly all of it depending on the proxy and model, and that some excess probably remains. That excess is described, not tested: the permutation null covers only random halves, the outer split is random in every design, and within-context and cross-context pairs are explained on different kinds of test records. Without capture identifiers or an independent second capture, the size of that excess cannot be quantified, and because the contexts are different sets of captures it cannot be attributed to tunnelling. A random within-context split, which is the usual way such references are built, would have exaggerated it.
+B. Accuracy and Correlation Do Not Guarantee Consistent Explanations
+Predictive accuracy, whole-ranking correlation and agreement among the leading features are distinct properties. A cross-context Spearman of about 0.8 goes together with only three shared Top-5 features and an RBO of 0.58–0.75, and the leading features also change with the explanation method: the minimum IATs that rise most under SHAP move much less under marginal or conditional permutation importance. Reporting performance, whole-ranking and top-weighted agreement, a within-context reference obtained from as independent data as possible, and a secondary importance measure provide a more comprehensive view than any single summary.
+C. Correlated Features and the Role of Grouping
+Aggregation into semantic families reduces the gaps, but family-level rankings differ from feature-level rankings, and the grouping definitions influence the results. Summing importance favours larger families. Per-member means give a larger gap than summing for Random Forest but not for XGBoost, and correlation-based clusters give a larger gap for XGBoost but not for Random Forest. Moving two correlated totals into the duration family also changes which family ranks highest.
+Correlated features complicate the interpretation of individual feature shifts. For XGBoost, the three minimum IATs maintain their combined importance share across contexts, whereas for Random Forest the block as a whole gains importance under VPN. At the family level, the XGBoost gap remains similar when using clusters of approximately ten flows, so related-flow redundancy explains it less clearly than it explains the feature-level gap. Therefore, family-level conclusions should always be interpreted alongside the grouping method and family sizes.
+D. Do Explanation Differences Matter?
+The two consequence tests show different tendencies. A trained model does not transfer well across contexts, with macro F1 dropping to 0.43–0.61. SHAP-selected feature lists, however, transfer more reliably. At k = 10 and k = 15, transferring a feature list reduces macro F1 by at most about 0.013 on average across selection seeds, with a maximum of 0.017 for an individual seed. For some target contexts, the transferred list performs better than the context-specific list. The test has limited power, however: the selection seeds yield only one to three distinct lists per model, context and k, each list is refitted once, and there is no equivalence margin, so the test rules out a large cost rather than showing that there is none.
+At k = 10, matching the feature list to its context has a small effect, with differences of +0.008 for Random Forest and +0.010 for XGBoost. The largest per-target cost occurs for the VPN Random Forest and mostly reflects a Non-VPN feature list that is weaker on both targets. At k = 5, where two of the five selected features differ, single comparisons reach 0.05. The conclusion therefore holds only for moderately long feature lists.
+E. Implications for Explainable Network Security Systems
+An explanation report for a traffic classifier should specify the observation context, fitted model, attribution method, handling of undefined statistics, and aggregation rules. Consistency statements should be checked relative to a proper reference that does not involve overlapping sessions because the random partitioning of dependent streams would result in an overestimation of within-context consistency. If there is an application of the explanations for decision-making tasks, such as in selecting features, the performance of these explanations should be tested on out-of-sample data drawn from the target context. Similar explanations alone do not guarantee that a deployed model will perform reliably in a different observation context.
+XI. THREATS TO VALIDITY AND LIMITATIONS
+Session dependence and the missing group split. This is the most serious limitation, which determines the main conclusion. The processed files have no session or capture identifiers, and so no reference in this paper is a true group split. Both groupings are proxies. Fine clusters may well allow related flows to cross the split, and coarse clusters also separate regions of feature space that a session split would not; at the settings the capture counts point to, the cluster half-models are weak. Blocks of consecutive rows are based on our inference, from the similarity of neighbouring rows, that the original files retain flows of one capture together; equal-sized blocks do not follow capture boundaries, and the first-versus-second-half split may also separate applications within a class. For VPN FT, MAIL, P2P and VOIP, adjacent rows are nearly as different as random rows, and BROWSING and P2P cannot be split by capture at all. The two proxies give different answers (a mean gap near zero against a positive mean gap), and the calibration from capture counts is rough. Only the division of training data into halves is grouped; the outer 80/20 split is random, and the permutation null was run only for random halves. Within-context pairs are explained on shared test records and cross-context pairs are not; a comparison on a common set of explained records is left for future work. The size of the cross-context excess therefore depends on an unknown session structure. Regenerating flows from the raw captures and splitting by capture file, or using a second independent capture of both contexts, would settle this.
+Benchmark age, reuse and construction. The ISCX VPN-nonVPN captures are several years old, come from one laboratory and one VPN service, and reflect the applications and protocols in use at the time. The dataset is among the most reused benchmarks in the field, and the released files cap BROWSING at 2,500 flows and Non-VPN P2P at 1,000 flows, so two class frequencies reflect the dataset's construction. We claim no dataset novelty and draw no conclusions about present-day applications or VPN technologies.
+Class distribution. The contexts have different class mixes. Class weighting, the class-mix swap, class-matched training with a same-size reference and the permutation null all leave the class-mix effect small, but the swapped training sets are limited to 3,400 flows and the matched sets reuse every Non-VPN MAIL flow.
+Correlated features and aggregation. How attribution is allocated depends on the model and the value function. Permutation importance does not resolve this, because marginal permutation evaluates the model off the data distribution and the conditional variant used here conditions on only two features. Summed family importance neither corrects for feature dependence nor provides an instance-level group attribution, and other groupings give other consistency patterns.
+Model, TreeSHAP and global aggregation. Only tree ensembles are explained, hyperparameters were not tuned, and only two TreeSHAP formulations were compared, the interventional one with a background of 200 training records. Importance is averaged over model outputs and explained records, so the results say nothing definite about consistency for particular classes or single flows.
+Consequence tests. The feature-list test uses five inner splits per context, which yield only one to three distinct lists, and one refit per feature set; its intervals hold the models fixed, and it is not an equivalence test. The model-transfer test uses one model per context, and its comparison with cluster-grouped cross-validation is only indicative.
+Representation. The data offer 23 time-related flow statistics and nothing else. Packet-size features and packet sequences, which modern encrypted-traffic classifiers rely on, are missing, and so are newer protocols such as TLS 1.3 and QUIC and VPN technologies such as WireGuard. Other treatments of undefined statistics, such as dropping them or imputation, were not evaluated, and some timestamp artefacts (negative minimum IATs) remain in the released files.
+Replication. Every conclusion concerns one dataset, one flow timeout and one feature representation. The repeated designs reuse one dataset and overlapping test records, and Random Forest half-models are explained on 800 test records each. None of this replaces replication on independent captures or modern traffic.
+XII. CONCLUSION AND FUTURE WORK
+This study examined whether the features used by a classifier to distinguish seven application categories remain consistent when network traffic is observed with and without a VPN. Experiments were conducted using the ISCX VPN-nonVPN benchmark and its 23 time-related flow features. The results show that classification performance declines in the VPN setting for both models. XGBoost's macro F1-score falls from 0.9340 to 0.8836, while Random Forest's decreases from 0.9171 to 0.8533. The cross-context results are less favourable, with macro F1-scores ranging from 0.43 to 0.61 when a model trained in one context is evaluated in the other. Although the SHAP feature rankings remain correlated across contexts, they are not identical. Spearman's rank correlations are 0.83 for Random Forest and 0.79 for XGBoost, while the corresponding RBO values are 0.58 and 0.75. Both models retain three of their five highest-ranked features, suggesting that some important features remain consistent even when the observation context changes.
+A key finding is that the measured difference in feature importance depends on the reference used for comparison. When each context is divided into randomly selected halves, the average feature-level gaps across 11 repetitions are 0.13 for XGBoost and 0.19 for Random Forest. However, a permutation-based null comparison that preserves both class distributions produces little or no gap. Grouping related traffic flows together also reduces the observed differences. For clusters containing approximately 10 flows, the gap ranges from 0.08 to 0.10, whereas clusters of around 35 flows reduce it to between 0.01 and 0.04. At the coarser resolution suggested by the capture statistics, the average gap approaches zero, although the resulting half-models are also weak. These results indicate that the apparent instability of SHAP rankings is influenced, at least in part, by how traffic flows are grouped within the same context.
+The experiments using consecutive blocks of flows from the original files provide a different perspective. Unlike feature-based clustering, this approach does not rely on the input features to construct groups. At the resolution suggested by the capture statistics, the observed gaps are 0.07 for XGBoost and 0.15 for Random Forest. Splitting each class into its first and second halves produces gaps of 0.03 and 0.09, respectively. The Spearman gaps remain non-negative across the tested repetitions, but these repetitions share one dataset and, for the first-versus-second-half split, nearly the same halves, and the RBO and Top-5 gaps are negative in some of them. Not all measures of explanation stability respond equally to these changes: the top-weighted RBO gap and the XGBoost family-level gap decrease less under feature-based clustering than the Spearman gap. Changes in class composition have comparatively little effect on the results.
+The feature-level analysis also reveals differences between the two models. Minimum inter-arrival time (IAT) features show the most noticeable change in importance across contexts. For XGBoost, this change appears to arise mainly from a redistribution of Shapley values among features. Random Forest, in contrast, shows an increase in the importance of the minimum-IAT feature group itself. Despite these differences in feature attribution, the practical impact on feature selection is relatively small. For SHAP-selected feature sets containing at least 10 features, transferring the selected set between contexts results in an average macro-F1 loss of no more than approximately 0.013 across selection seeds. Matching the selected feature set to its original context provides only a small additional benefit. Because the selection seeds produced few distinct feature sets, this result has limited power.
+Taken together, these findings suggest that differences between SHAP rankings cannot be interpreted solely as evidence of a VPN-induced change in model behaviour. Some of the observed gap also reflects variation among related flows within a context, and the estimated contribution of this variation depends on the grouping strategy. Feature-based clustering reduces the average excess gap to approximately zero at a coarse resolution, partly because opposite gaps in the two contexts cancel, whereas grouping flows by their position in the original files leaves a positive average difference. Neither result is a direct test of the remaining excess. These experiments do not establish that tunnelling causes the observed changes, nor do they determine the magnitude of a genuine between-session effect. The grouping strategies used here are proxies and cannot fully separate within-session variation from differences between sessions. Further investigation will require datasets that preserve session identifiers or independent captures of both traffic contexts, and a comparison in which both contexts are explained on a common set of records. Evaluating more recent traffic and examining explanations separately for each application category would also help establish whether the observed patterns generalise beyond this benchmark.
+DATA AND CODE AVAILABILITY
+The ISCX VPN-nonVPN data, including the Scenario A2 time-based ARFF files used here, are publicly available from the Canadian Institute for Cybersecurity [50]. The analysis code, the deduplicated partitions and the result files behind the tables and figures are kept in a private repository and are available from the corresponding author on reasonable request. The mapping of each flow to its row in the original ARFF files can be regenerated from the public files with that code.
+REFERENCES
+[1]P. Velan, M. Čermák, P. Čeleda, and M. Drašar, “A survey of methods for encrypted traffic classification and analysis,” Int. J. Netw. Manage., vol. 25, no. 5, pp. 355-374, 2015, doi: 10.1002/nem.1901.
+[2]S. Rezaei and X. Liu, “Deep learning for encrypted traffic classification: An overview,” IEEE Commun. Mag., vol. 57, no. 5, pp. 76-81, 2019, doi: 10.1109/MCOM.2019.1800819.
+[3]T. T. T. Nguyen and G. Armitage, “A survey of techniques for internet traffic classification using machine learning,” IEEE Commun. Surveys Tuts., vol. 10, no. 4, pp. 56-76, 2008, doi: 10.1109/SURV.2008.080406.
+[4]G. Draper-Gil, A. H. Lashkari, M. S. I. Mamun, and A. A. Ghorbani, “Characterization of encrypted and VPN traffic using time-related features,” in Proc. 2nd Int. Conf. Inf. Syst. Secur. Privacy (ICISSP), Rome, Italy, 2016, pp. 407-414, doi: 10.5220/0005740704070414.
+[5]W. Wang, M. Zhu, J. Wang, X. Zeng, and Z. Yang, “End-to-end encrypted traffic classification with one-dimensional convolution neural networks,” in Proc. IEEE Int. Conf. Intell. Secur. Informat. (ISI), 2017, pp. 43-48, doi: 10.1109/ISI.2017.8004872.
+[6]G. Aceto, D. Ciuonzo, A. Montieri, and A. Pescapè, “Mobile encrypted traffic classification using deep learning: Experimental evaluation, lessons learned, and challenges,” IEEE Trans. Netw. Service Manag., vol. 16, no. 2, pp. 445-458, 2019, doi: 10.1109/TNSM.2019.2899085.
+[7]M. Lotfollahi, M. J. Siavoshani, R. S. H. Zade, and M. Saberian, “Deep packet: A novel approach for encrypted traffic classification using deep learning,” Soft Comput., vol. 24, no. 3, pp. 1999-2012, 2020, doi: 10.1007/s00500-019-04030-2.
+[8]X. Lin, G. Xiong, G. Gou, Z. Li, J. Shi, and J. Yu, “ET-BERT: A contextualized datagram representation with pre-training transformers for encrypted traffic classification,” in Proc. ACM Web Conf. (WWW), 2022, pp. 633-642.
+[9]A. Warnecke, D. Arp, C. Wressnegger, and K. Rieck, “Evaluating explanation methods for deep learning in security,” in Proc. IEEE Eur. Symp. Secur. Privacy (EuroS&P), 2020, pp. 158-174.
+[10]M. Wang, K. Zheng, Y. Yang, and X. Wang, “An explainable machine learning framework for intrusion detection systems,” IEEE Access, vol. 8, pp. 73127-73141, 2020.
+[11]N. Capuano, G. Fenza, V. Loia, and C. Stanzione, “Explainable artificial intelligence in cybersecurity: A survey,” IEEE Access, vol. 10, pp. 93575-93600, 2022.
+[12]A. Nascita, A. Montieri, G. Aceto, D. Ciuonzo, V. Persico, and A. Pescapè, “XAI meets mobile traffic classification: Understanding and improving multimodal deep learning architectures,” IEEE Trans. Netw. Service Manag., vol. 18, no. 4, pp. 4225-4246, 2021.
+[13]S. M. Lundberg and S.-I. Lee, “A unified approach to interpreting model predictions,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), vol. 30, 2017, pp. 4765-4774.
+[14]S. M. Lundberg, G. Erion, H. Chen, A. DeGrave, J. M. Prutkin, B. Nair, R. Katz, J. Himmelfarb, N. Bansal, and S.-I. Lee, “From local explanations to global understanding with explainable AI for trees,” Nature Mach. Intell., vol. 2, no. 1, pp. 56-67, 2020, doi: 10.1038/s42256-019-0138-9.
+[15]D. Alvarez-Melis and T. S. Jaakkola, “On the robustness of interpretability methods,” 2018, arXiv:1806.08049.
+[16]A. Ghorbani, A. Abid, and J. Zou, “Interpretation of neural networks is fragile,” in Proc. AAAI Conf. Artif. Intell., vol. 33, 2019, pp. 3681-3688.
+[17]S. Krishna, T. Han, A. Gu, J. Pombra, S. Jabbari, S. Wu, and H. Lakkaraju, “The disagreement problem in explainable machine learning: A practitioner's perspective,” 2022, arXiv:2202.01602.
+[18]K. Aas, M. Jullum, and A. Løland, “Explaining individual predictions when features are dependent: More accurate approximations to Shapley values,” Artif. Intell., vol. 298, Art. no. 103502, 2021, doi: 10.1016/j.artint.2021.103502.
+[19]H. Chen, J. D. Janizek, S. Lundberg, and S.-I. Lee, “True to the model or true to the data?” 2020, arXiv:2006.16234.
+[20]I. E. Kumar, S. Venkatasubramanian, C. Scheidegger, and S. Friedler, “Problems with Shapley-value-based explanations as feature importance measures,” in Proc. 37th Int. Conf. Mach. Learn. (ICML), PMLR vol. 119, 2020, pp. 5491-5500.
+[21]T. Shapira and Y. Shavitt, “FlowPic: Encrypted internet traffic classification is as easy as image recognition,” in Proc. IEEE INFOCOM Workshops, 2019, pp. 680-687.
+[22]J. Holland, P. Schmitt, N. Feamster, and P. Mittal, “New directions in automated traffic analysis,” in Proc. ACM SIGSAC Conf. Comput. Commun. Secur. (CCS), 2021, pp. 3366-3383.
+[23]A. S. Jacobs, R. Beltiukov, W. Willinger, R. A. Ferreira, A. Gupta, and L. Z. Granville, “AI/ML for network security: The emperor has no clothes,” in Proc. ACM SIGSAC Conf. Comput. Commun. Secur. (CCS), 2022, pp. 1537-1551.
+[24]A. H. Lashkari, G. Draper-Gil, M. S. I. Mamun, and A. A. Ghorbani, “Characterization of Tor traffic using time based features,” in Proc. 3rd Int. Conf. Inf. Syst. Secur. Privacy (ICISSP), Porto, Portugal, 2017, pp. 253-262.
+[25]R. Sommer and V. Paxson, “Outside the closed world: On using machine learning for network intrusion detection,” in Proc. IEEE Symp. Secur. Privacy, 2010, pp. 305-316, doi: 10.1109/SP.2010.25.
+[26]D. Arp, E. Quiring, F. Pendlebury, A. Warnecke, F. Pierazzi, C. Wressnegger, L. Cavallaro, and K. Rieck, “Dos and don'ts of machine learning in computer security,” in Proc. 31st USENIX Secur. Symp., 2022, pp. 3971-3988.
+[27]G. Apruzzese, P. Laskov, E. Montes de Oca, W. Mallouli, L. Brdalo Rapa, A. V. Grammatopoulos, and F. Di Franco, “The role of machine learning in cybersecurity,” Digit. Threats: Res. Pract., vol. 4, no. 1, Art. no. 8, 2023.
+[28]Z. A. El Houda, B. Brik, and L. Khoukhi, “‘Why should I trust your IDS?’: An explainable deep learning framework for intrusion detection systems in Internet of Things networks,” IEEE Open J. Commun. Soc., vol. 3, pp. 1164-1176, 2022.
+[29]M. Sarhan, S. Layeghy, and M. Portmann, “Evaluating standard feature sets towards increased generalisability and explainability of ML-based network intrusion detection,” Big Data Res., vol. 30, Art. no. 100359, 2022.
+[30]F. Pendlebury, F. Pierazzi, R. Jordaney, J. Kinder, and L. Cavallaro, “TESSERACT: Eliminating experimental bias in malware classification across space and time,” in Proc. 28th USENIX Secur. Symp., 2019, pp. 729-746.
+[31]L. S. Shapley, “A value for n-person games,” in Contributions to the Theory of Games, vol. II, H. W. Kuhn and A. W. Tucker, Eds. Princeton, NJ, USA: Princeton Univ. Press, 1953, pp. 307-317.
+[32]D. Janzing, L. Minorics, and P. Blöbaum, “Feature relevance quantification in explainable AI: A causal problem,” in Proc. 23rd Int. Conf. Artif. Intell. Statist. (AISTATS), PMLR vol. 108, 2020, pp. 2907-2916.
+[33]M. Sundararajan and A. Najmi, “The many Shapley values for model explanation,” in Proc. 37th Int. Conf. Mach. Learn. (ICML), PMLR vol. 119, 2020, pp. 9269-9278.
+[34]G. Hooker, L. Mentch, and S. Zhou, “Unrestricted permutation forces extrapolation: Variable importance requires at least one more model, or there is no free variable importance,” Statist. Comput., vol. 31, Art. no. 82, 2021.
+[35]C. Strobl, A.-L. Boulesteix, A. Zeileis, and T. Hothorn, “Bias in random forest variable importance measures: Illustrations, sources and a solution,” BMC Bioinformatics, vol. 8, Art. no. 25, 2007, doi: 10.1186/1471-2105-8-25.
+[36]C. Strobl, A.-L. Boulesteix, T. Kneib, T. Augustin, and A. Zeileis, “Conditional variable importance for random forests,” BMC Bioinformatics, vol. 9, Art. no. 307, 2008, doi: 10.1186/1471-2105-9-307.
+[37]M. Jullum, A. Redelmeier, and K. Aas, “groupShapley: Efficient prediction explanation with Shapley values for feature groups,” 2021, arXiv:2106.12228.
+[38]Q. Au, J. Herbinger, C. Stachl, B. Bischl, and G. Casalicchio, “Grouped feature importance and combined features effect plot,” Data Min. Knowl. Discov., vol. 36, pp. 1401-1450, 2022.
+[39]I. Covert, S. M. Lundberg, and S.-I. Lee, “Understanding global feature contributions with additive importance measures,” in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), vol. 33, 2020, pp. 17212-17223.
+[40]G. Visani, E. Bagli, F. Chesani, A. Poluzzi, and D. Capuzzo, “Statistical stability indices for LIME: Obtaining reliable explanations for machine learning models,” J. Oper. Res. Soc., vol. 73, no. 1, pp. 91-101, 2022.
+[41]D. Slack, S. Hilgard, E. Jia, S. Singh, and H. Lakkaraju, “Fooling LIME and SHAP: Adversarial attacks on post hoc explanation methods,” in Proc. AAAI/ACM Conf. AI, Ethics, Soc. (AIES), 2020, pp. 180-186, doi: 10.1145/3375627.3375830.
+[42]A. Fisher, C. Rudin, and F. Dominici, “All models are wrong, but many are useful: Learning a variable's importance by studying an entire class of prediction models simultaneously,” J. Mach. Learn. Res., vol. 20, no. 177, pp. 1-81, 2019.
+[43]C. Spearman, “The proof and measurement of association between two things,” Amer. J. Psychol., vol. 15, no. 1, pp. 72-101, 1904.
+[44]M. G. Kendall, “A new measure of rank correlation,” Biometrika, vol. 30, no. 1/2, pp. 81-93, 1938.
+[45]W. Webber, A. Moffat, and J. Zobel, “A similarity measure for indefinite rankings,” ACM Trans. Inf. Syst., vol. 28, no. 4, Art. no. 20, 2010, doi: 10.1145/1852102.1852106.
+[46]B. Efron and R. J. Tibshirani, An Introduction to the Bootstrap. New York, NY, USA: Chapman & Hall, 1993.
+[47]P. Hall and H. Miller, “Using the bootstrap to quantify the authority of an empirical ranking,” Ann. Statist., vol. 37, no. 6B, pp. 3929-3959, 2009.
+[48]S. Layeghy and M. Portmann, “Explainable cross-domain evaluation of ML-based network intrusion detection systems,” Comput. Electr. Eng., vol. 108, Art. no. 108692, 2023, doi: 10.1016/j.compeleceng.2023.108692.
+[49]S. Mali, S. Agarwal, R. Chintawar, and A. K. Cherukuri, “Analyzing encrypted traffic analysis using explainable AI,” Ann. Math. Comput. Sci., vol. 31, pp. 1-22, 2025, doi: 10.56947/amcs.v31.660.
+[50]Canadian Institute for Cybersecurity, “VPN-nonVPN dataset (ISCXVPN2016),” University of New Brunswick. [Online]. Available: https://www.unb.ca/cic/datasets/vpn.html
+[51]L. Breiman, “Random forests,” Mach. Learn., vol. 45, no. 1, pp. 5-32, 2001, doi: 10.1023/A:1010933404324.
+[52]T. Chen and C. Guestrin, “XGBoost: A scalable tree boosting system,” in Proc. 22nd ACM SIGKDD Int. Conf. Knowl. Discov. Data Min., 2016, pp. 785-794, doi: 10.1145/2939672.2939785.
+[53]P. Geurts, D. Ernst, and L. Wehenkel, “Extremely randomized trees,” Mach. Learn., vol. 63, no. 1, pp. 3-42, 2006, doi: 10.1007/s10994-006-6226-1.
+[54]F. Pedregosa et al., “Scikit-learn: Machine learning in Python,” J. Mach. Learn. Res., vol. 12, pp. 2825-2830, 2011.
+[55]M. G. Kendall, “The treatment of ties in ranking problems,” Biometrika, vol. 33, no. 3, pp. 239-251, 1945, doi: 10.1093/biomet/33.3.239.
+[56]munhouiani, “Deep-Packet: PyTorch implementation of Deep Packet,” GitHub repository. Accessed: Oct. 15, 2026. [Online]. Available: https://github.com/munhouiani/Deep-Packet
+[57]C. Ambroise and G. J. McLachlan, “Selection bias in gene extraction on the basis of microarray gene-expression data,” Proc. Nat. Acad. Sci. USA, vol. 99, no. 10, pp. 6562-6566, 2002.
+[58]S. Kaufman, S. Rosset, C. Perlich, and O. Stitelman, “Leakage in data mining: Formulation, detection, and avoidance,” ACM Trans. Knowl. Discov. Data, vol. 6, no. 4, Art. no. 15, 2012.
+[59]S. Kapoor and A. Narayanan, “Leakage and the reproducibility crisis in machine-learning-based science,” Patterns, vol. 4, no. 9, Art. no. 100804, 2023.
