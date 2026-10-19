@@ -1,0 +1,49 @@
+Major concerns
+1. The within-context reference cannot support the “context effect” reading.
+Both references split randomly within one capture pool. The authors’ own cluster-grouped CV shows macro F1 falling from 0.92 to 0.64 (Non-VPN) and from 0.88 to 0.55 (VPN), so near-duplicate flows from the same session sit on both sides. Within-context agreement is therefore inflated, and the gap Δ overstates what context alone does. Section XIII calls this the most serious limitation, but the abstract and conclusion state the gap without that qualifier.
+Specific suggestions:
+Rebuild flows from the raw PCAPs, if accessible, and split by capture file. The processed ARFF files lack identifiers, but the raw captures may not.
+At minimum, use cluster-grouped half-splits as the reference.
+Add a permutation null: pool flows within class, randomly assign them to two pseudo-contexts, and compute the same gap.
+2. Uncertainty language is inconsistent with the paper’s own stance.
+Section VII-B says the XGBoost gap is “about 10 standard deviations from zero”. That ratio uses the SD across repeats, not a standard error, and the repeats are not independent. They reuse one training partition and one test set per context, so partition-level uncertainty is absent. The RF gap (0.165, quoted in the abstract) rests on 3 repeats. Section IV-I also says effect sizes are reported instead of significance tests. Please remove the “10 SD” framing and report RF with its n = 3 caveat in the abstract.
+3. The consequence test is nearly guaranteed to find nothing.
+The own and transferred Top-10 sets share 7–9 of 10 features, so each contrast rests on 1–3 swapped features. Further problems:
+k = 10 was chosen after the planned k = 15, and RF has no k = 5 or 15 runs.
+Random-subset controls number 3, 6 and 20 despite being “drawn once and shared by both contexts”.
+The “beat 67–100% of random subsets” figure is not shown in any table.
+The VPN RF contrast (0.0092, CI excluding zero) is a measurable cost, yet the abstract says “less than 0.01”.
+A more convincing consequence test is direct model transfer (train on one context, test on the other), which the paper never reports. The introduction’s practical motivation would be much better served by it.
+4. Numerical noise is comparable to the effects interpreted.
+Table XIV and Table XV report different XGBoost values for the same experiment, from two software environments:
+The 0.0114 gap on the transferred set contradicts the note that values differ by “up to about 0.005” and the text’s “a few thousandths”.
+The own-minus-transferred sign flips for the VPN XGB contrast.
+The effects being discussed (0.002–0.005) are below this environment-to-environment noise.
+The XGBoost version in the revision environment is not stated.
+Please rerun everything in a single environment.
+5. The sentinel conclusion is overstated.
+The text and conclusion say encoding “moves rankings almost as much as the change of context”. The numbers say otherwise:
+S1-vs-S2 ρ is 0.887–0.962, so 1−ρ is roughly 0.04–0.11.
+Cross-context ρ is about 0.78–0.83, so 1−ρ is roughly 0.17–0.22, two to four times larger.
+S1-vs-S2 agreement is similar to the within-context half-split ρ (0.92–0.97), which is a better comparison.
+The RF cross-context ρ of 0.8281 is also identical under S1 and S2 to four decimals. Please verify it isn’t a copy error.
+6. The class-mix control is indirect.
+Class-matched models use only 1,330 training flows, and no matching within-context reference at that size is given. Cross-context ρ actually rises to 0.85, which could reflect noisier within-context rankings.
+The direct test is missing: resample the Non-VPN training set to the VPN class mix (and vice versa) and compare against the original same-context ranking.
+BROWSING has exactly 2,000 train and 500 test flows in both contexts after deduplication. That looks like a cap or preprocessing artefact and needs explaining.
+7. Interpretation of the minimum-IAT shifts goes slightly beyond the evidence.
+The claim that the shifts “are not just credit passing between redundant features” rests on Spearman 0.11–0.60. The upper bound (0.60) does not appear in Section VI-B, which only gives 0.11–0.41 and 0.19–0.24.
+Moderate and non-monotone dependence can still redistribute SHAP credit.
+Table I’s note reports 55 and 43 training entries below −1 (negative IAT or active/idle values). These are never examined, and they plausibly concentrate in the minimum-IAT features that move most.
+A drop-one or grouped-retraining check, or a permutation-importance comparison, would test this more directly.
+Minor points
+“Provided partitions” is a misnomer. The 80/20 split was created by the authors, not provided by the dataset. Rename it.
+Duplicate handling: after removing exact duplicates, 4 and 15 duplicate feature vectors remain within the Non-VPN and VPN training partitions. Clarify whether these are label conflicts.
+The chance-corrected overlap κ_k (Eq. 5) is defined but never reported.
+Family design: total_fiat and total_biat (ρ ≈ 0.9 with duration) sit in the directional-IAT family while duration is its own family. This grouping choice affects the “steadier summary” claim.
+Section VII-E notes that VPN rankings are more stable despite lower accuracy but offers no explanation.
+The Logistic Regression baseline is weak and adds little, even after the log transform. Strengthen it or drop it.
+The abstract mixes single-fit numbers (ρ 0.83/0.81, RBO 0.58/0.71) with half-split gaps. Consider reporting the bootstrap or half-split means alongside them.
+log(1 + x + 1) should be written log(x + 2).
+IEEE numbering: [55]–[57] are cited before [48]–[54] and should be renumbered by first appearance.
+Length and redundancy: 17 tables, 13 figures and 15 limitation paragraphs. The headline results recur in Sections VI-B, VII-A, VII-B and XIV. A single summary table, with Sections VI–VII merged, would help the reader.

@@ -1,0 +1,27 @@
+Remaining concerns
+1. The session proxy is still uncalibrated, and the conclusion depends on the granularity.
+The gap goes from 0.13/0.19 (random) to about 0 (~140 flows per cluster), so the verdict hinges on which granularity is session-like. The paper says the three settings “bracket” the unknown structure but never estimates it. A cheap estimate would be the number of source captures versus the number of flows: the average flows per capture file would indicate which setting is relevant. If it is nearer ~100+, the coarsest setting is the meaningful one. Please state this, even roughly.
+Two related points:
+At the coarsest setting, half-model macro F1 is only 0.53–0.61 and RF Δ has SD 0.111, so "Δ ≈ 0" there is weak evidence.
+Some sentences overcorrect. “They should not be read as an effect of the VPN” is stronger than the evidence, since the RF gap is still positive in all 11 repeats at ~35 flows. The abstract’s “cannot be attributed to tunnelling” is the better wording, so use it throughout.
+2. The min-IAT “credit redistribution” conclusion holds for XGBoost but not clearly for RF.
+The text says a substantial part of the visible SHAP shift is Shapley credit moving among correlated timing features. If so, the combined share of the three minima should be roughly stable across contexts. From Table V (and the unchanged RF min_fiat value of 4.35 for Non-VPN):
+So for XGBoost the redistribution story fits, but for RF the block itself gains about 6 points. Please report block-summed SHAP shares in Table IX and temper the sentence for RF.
+Also, permutation importance is not a neutral arbiter with correlated features (ref. [34]). Say so, or add a grouped or conditional permutation check.
+3. The feature-list transfer should be read as a 2×2 (list × target), not “own vs transferred”.
+For RF, the VPN-derived list does better on both targets:
+k = 10: +0.004 on the Non-VPN target and +0.013 on the VPN target.
+k = 5: +0.026 on the Non-VPN target and +0.046 on the VPN target.
+So the “cost of transfer” at the VPN target mostly reflects that the Non-VPN list is a worse list overall. The context-match effect (the sum of the two own-minus-transferred contrasts) is small:
+Report this interaction term, and soften “a measurable cost” for the VPN RF target.
+4. The XGBoost family-level gap does not shrink under grouping.
+Table X shows XGB summed-family Δ at +0.075 (random) vs +0.077 (grouped ~10), and clusters at 0.099 vs 0.091. That sits awkwardly with the narrative that the gap mostly reflects related-flow redundancy. It needs a sentence of discussion, and the abstract’s “gap shrinks substantially” should be scoped to feature level.
+5. Model-transfer comparison is loose.
+Section VIII-A compares transfer F1 (0.43–0.61) with cluster-CV F1 (0.47–0.64) to say the contexts differ “at least as much” as distant clusters. These protocols differ (50 clusters, 80% training data, versus a full other-context model), and class mix and sessions are confounded in the transfer. Hedge it.
+Minor and presentational points
+Revision history in the manuscript. “The previous version…”, “An earlier version…” and “the earlier reading” appear in Sections III-D, IV-D, IV-G, VI-C, VI-D and IX. Move these to the response letter and write the paper as a standalone document.
+Abstract length. It runs to roughly 300+ words with a dozen or more numbers, which is over most journals’ limits. Keep the headline contrast (random-half vs grouped vs null, model transfer, list transfer) and move the rest to Table XIII.
+Class-mix swap. Table VIII has no spread across the 3–5 draws, and the “0.924–0.977” range in the text does not match the table’s ρ columns (0.936–0.986). Add SDs and reconcile.
+RF explained on 800 records. The RF half-model rankings use 800-record test samples while primary RF fits use the full test set. This is validated (ρ ≥ 0.997) only for the primary models, so please confirm for half-models.
+Table XI, bottom-10 range. The text says 0.67–0.77, while the table means are 0.685–0.735. Align them.
+Table XII. The family-share table and figure from v6 were dropped. Since Section VII quotes family shares, consider a compact table of shares.
