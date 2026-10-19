@@ -43,7 +43,7 @@ The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
 
 ## Team-edited versions (v9, v10)
 
-`paper/SHAP_VPN_revised_v10.docx` is the final version. The team rephrased 38 passages of v8 by hand
+`paper/SHAP_VPN_revised_v11.docx` is the final version (v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
 (saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
 rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
 spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
