@@ -20,7 +20,9 @@ for m in ("XGB", "RF"):
             null_gap_n_negative=int((df.rho_gap < 0).sum()),
             real_gap=float(real.rho_gap.mean()), real_rbo_gap=float(real.rbo_gap.mean()),
             real_minus_null=float(real.rho_gap.mean() - df.rho_gap.mean()),
-            real_minus_null_rbo=float(real.rbo_gap.mean() - df.rbo_gap.mean()))
+            real_minus_null_rbo=float(real.rbo_gap.mean() - df.rbo_gap.mean()),
+            real_repeats_above_null_max=int((real.rho_gap > df.rho_gap.max()).sum()),
+            real_repeats_above_null_mean=int((real.rho_gap > df.rho_gap.mean()).sum()))
     rnd = pd.read_csv(OUT2 / f"ref_summary_{m}_null.csv")
     OUT["grouped_null"][f"{m}_random"] = dict(null={k: float(rnd[k].mean()) for k in KEYS},
                                               real_gap=float(pd.read_csv(OUT2 / f"ref_summary_{m}_random.csv").rho_gap.mean()))
