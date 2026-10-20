@@ -32,8 +32,9 @@ def rep(old, new, where=None):
 
 PI = A["pi_cross"]; ET = A["et_vs_rf"]; MF = A["minflowiat_equality"]; DR = A["drop_RF_vpn_min_fiat"]; RL = A["min_iat_reliance_RF"]
 CW = A["class_weighting"]; MT = A["matched1330"]; G10 = A["grouped10_cross"]; CM = A["classmix_delta"]
+assert all(CM[k]["mean"] < CM[k]["sd_natural"] for k in ("XGB_novpn", "XGB_vpn"))
 assert A["xgb_tree_method"]["auto_vs_hist_max_abs_prob_diff_novpn"] == 0.0
-assert all(v["identical_predictions"] and v["all_cores_vs_one_max_abs_prob_diff"] == 0.0 for v in A["xgb_threads"].values())
+assert all(v["identical_predictions"] and v["all_cores_vs_one_max_abs_prob_diff"] == 0.0 and v["default_n_jobs_xgb"] == 1 for v in A["xgb_threads"].values())
 et_ii = sorted(ET[c]["interv_interv"] for c in ("novpn", "vpn")); et_pp = sorted(ET[c]["path_path"] for c in ("novpn", "vpn"))
 pct = lambda x: f"{100 * x:.0f}%"
 HS = A["half_sizes"]
@@ -78,12 +79,10 @@ R = [
  ("Blocks are assigned to halves in the same way as clusters.",
   f"Blocks are assigned to halves in the same way as clusters. The resulting halves hold {HS_O[0]:,}–{HS_O[1]:,} training flows ({HS_O[0]:,} with blocks of about 140 flows), against {HS['RF_random'][0]:,}–{HS['RF_random'][1]:,} for random halves."),
  ("BROWSING has no capture files of its own and P2P has a single capture per context, so for these two classes, which hold 34–40% of the training flows, no within-class grouping can separate captures.",
-  "BROWSING and P2P, which hold 34–40% of the training flows, cannot be divided by capture at all: BROWSING has no capture files of its own in the prefix list, so its flows cannot be traced to captures, and P2P has at most one listed capture per context."),
+  "BROWSING and P2P, which hold 34–40% of the training flows, cannot be divided by capture with the information available: BROWSING has no capture files of its own in the prefix list, so its flows cannot be traced to captures, and P2P has at most one listed capture per context."),
  ("rather than from the models, and none of the designs controls for this.",
   f"rather than from the models. The permutation null shares this asymmetry, since each pseudo-context is explained on its own test partition; with records that are exchangeable between pseudo-contexts, the asymmetry and the class-mix difference together give a mean gap of +{f3(A['table7']['RF_null']['gap'])} for Random Forest and {A['table7']['XGB_null']['gap']:.3f} for XGBoost. No grouped design controls for it, and in the real contexts the explained records also differ in distribution."),
  # ---- IV-E, IV-G, IV-H
- ("XGBoost was run single-threaded; refitting with two threads gave identical predictions.",
-  "XGBoost used one thread in the repeated designs and all available cores in the other fits; refitting the primary models with one thread and with two gave identical predictions."),
  ("Third, class-matched training uses 190 training flows per class",
   "Third, class-matched training, run for XGBoost only, uses 190 training flows per class"),
  ("while in S2, -1 is replaced by NaN, which is handled natively", "while in S2, -1 is replaced by NaN in every feature, which is handled natively"),
@@ -104,10 +103,16 @@ R = [
   "so what changes from repeat to repeat is mainly the outer partition, the subsample drawn from each half and the seeds."),
  ("Clusters may overcorrect, and blocks may undercorrect wherever a capture crosses a block boundary. Reading them as rough bounds,",
   f"Clusters may overcorrect. Blocks may undercorrect wherever a capture crosses a block boundary, but they are not independent of the features either: row position is correlated with some features within a class, and the first-versus-second-half split lowers half-model macro F1 to {F1H[0]:.2f}–{F1H[1]:.2f}, so it may also separate regions of feature space. Reading the two proxies, with these caveats, as rough bounds,"),
+ # ---- VI-F, VI-C, X-A, III-C (second verification pass)
+ ("The capture counts of Section IV-D indicate the same direction: A VPN capture",
+  "The capture counts of Section IV-D suggest one reason for the steadier VPN rankings under random halves: a VPN capture"),
+ ("They reduce within-context agreement considerably less than clusters do, and the half-models remain accurate (macro F1 0.73–0.90).",
+  "They reduce within-context agreement considerably less than clusters do, and the half-models remain far more accurate than under coarse clusters (macro F1 0.73–0.90)."),
+ ("into 50 k-means clusters and compared", "into 50 k-means clusters (three initialisations, fixed seed) and compared"),
  # ---- VI-D
  ("The swap does not bring a context closer to the other one.", "The swap does not bring a context materially closer to the other one."),
  ("against a cross-context gap of 0.13–0.19 under random halves.",
-  f"against a cross-context gap of 0.13–0.19 under random halves. The two XGBoost changes are small moves toward the other context, no larger than the spread across draws (SD {min(v[s] for v in CM.values() for s in ('sd_natural', 'sd_swapped')):.3f}–{max(v[s] for v in CM.values() for s in ('sd_natural', 'sd_swapped')):.3f})."),
+  f"against a cross-context gap of 0.13–0.19 under random halves. The two XGBoost changes are small moves toward the other context, smaller than the spread of the natural-mix models across draws (SD {CM['XGB_novpn']['sd_natural']:.3f} and {CM['XGB_vpn']['sd_natural']:.3f})."),
  ("the class-mix swap, class-matched training with a same-size reference", "the class-mix swap, class-matched training of XGBoost with a same-size reference"),
  ("Class-matched training yields the same answer given comparison with a reference of the same size.",
   "Class-matched training of XGBoost gives the same answer when it is compared with a reference of the same size."),
@@ -141,7 +146,7 @@ R = [
   f"{f3(et_pp[0])}–{f3(et_pp[1])} when both are explained with the path-dependent formulation and {f3(et_ii[0])}–{f3(et_ii[1])} when both use the interventional one)."),
  # ---- X
  ("Blocks of consecutive rows in the original files do not exploit the features and leave the half-models accurate.",
-  "Blocks of consecutive rows in the original files are not built from the features, although row position is correlated with some of them, and they leave the half-models accurate."),
+  "Blocks of consecutive rows in the original files are not built from the features, although row position is correlated with some of them, and they leave the half-models far more accurate than coarse clusters do."),
  ("clusters may overcorrect and blocks may undercorrect.",
   "clusters may overcorrect, and blocks may undercorrect or, at their strictest, also separate regions of feature space."),
  ("whereas for Random Forest the block as a whole gains importance under VPN.",

@@ -36,13 +36,15 @@ expect = {
  "VII spread": "within 2.15 percentage points",
  "k 10 or 15": "feature sets of 10 or 15 features",
  "corresponding author": "*Corresponding author.",
+ "class-mix SD (XGB natural)": f"(SD {A['classmix_delta']['XGB_novpn']['sd_natural']:.3f} and {A['classmix_delta']['XGB_vpn']['sd_natural']:.3f})",
+ "threads": "XGBoost was run single-threaded; refitting with two threads gave identical predictions.",
 }
 gone = ["0.611 (Random Forest)", "2.2 and 1.5 percentage points, respectively", "0.709–0.776 for the interventional", "0.77–0.82",
         "in only 43% of Non-VPN", "containing at least 10 features", "fall in the same range", "is barely changed",
         "none of the designs controls", "Whole clusters are assigned at random", "Explanations are always computed", "give them equal weight",
         "the block itself gains importance", "the block as a whole gains importance", "macro-F1", "data set", "Kendall’s", "Spearman’s",
         "Explanation capability is being required", "If there is an application of the explanations", "do not exploit the features",
-        "P2P has a single capture per context", "within 2.1 percentage", "(Fig. 4). We therefore"]
+        "P2P has a single capture per context", "cannot be divided by capture at all", "indicate the same direction", "all available cores", "within 2.1 percentage", "(Fig. 4). We therefore"]
 fails = [k for k, v in expect.items() if v not in t] + [f"still present: {g}" for g in gone if g in t]
 
 # Table VII: every numeric cell against the per-repeat means

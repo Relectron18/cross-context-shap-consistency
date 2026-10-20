@@ -191,9 +191,10 @@ th = {}
 for c in CTX:
     Xtr, Xte, ytr, yte = D[c]
     p1 = make_model("XGB", n_jobs=1).fit(Xtr, ytr).predict_proba(Xte); p2 = make_model("XGB", n_jobs=2).fit(Xtr, ytr).predict_proba(Xte)
-    pall = make_model("XGB").fit(Xtr, ytr).predict_proba(Xte)          # the primary models use n_jobs=-1 (all cores)
+    pall = make_model("XGB", n_jobs=-1).fit(Xtr, ytr).predict_proba(Xte)   # all cores; c2.make_model defaults XGBoost to one thread
     th[c] = dict(identical_predictions=bool((p1.argmax(1) == p2.argmax(1)).all()), max_abs_prob_diff=float(np.abs(p1 - p2).max()),
-                 all_cores_vs_one_max_abs_prob_diff=float(np.abs(p1 - pall).max()), n_cores=os.cpu_count())
+                 all_cores_vs_one_max_abs_prob_diff=float(np.abs(p1 - pall).max()), n_cores=os.cpu_count(),
+                 default_n_jobs_xgb=make_model("XGB").get_params()["n_jobs"])
 OUT["xgb_threads"] = th
 import xgboost
 cfg = json.loads(make_model("XGB").fit(D["novpn"][0], D["novpn"][2]).get_booster().save_config())

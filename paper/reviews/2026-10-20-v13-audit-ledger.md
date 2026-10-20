@@ -40,7 +40,7 @@ All numbers used by the corrections are read from `revision2/results/p8_v13.json
 | D22 | IV-G | "give them equal weight"; garbled clauses | code applies no weighting across k | yes | paragraph rewritten (same content, no weighting claim) | fix_v13.py | compared with `p2_consequence.py` lines 24–40 (stratified 80/20 inner split, selector on the 80%, SHAP on the 20% or 800 records for RF, reduced model refitted on the full training partition) | C |
 | D23 | IV-D | medians 44.5 / 245.5 printed 44 / 246 | `p8_v13.json` flows_per_capture | yes | 44.5 and 245.5 | fix_v13.py | check script | C |
 | D24 | refs | [49] details; "Webber et al. [45], Eq. 21" vs code comment "eq. 32" | [49]: title, journal, vol. 31, pp. 1–22, 2025 and article id 660 confirmed by search result of annalsmcs.org; authors and use of ISCX VPN-nonVPN not confirmed (site blocks automated reading). Eq. 21 of Webber et al. is the top-d weight (gives 0.856 for p = 0.9, d = 10, matching the paper's 86%); Eq. 32 is extrapolated RBO, which the code implements. Equation numbers confirmed via two implementations that cite the paper (changyaochen/rbo, gespeR), not from the paper itself | no conflict | none | — | computed Eq. 21 value | N (Eq.), P ([49]) |
-| D25 | G | two-thread XGB check not recorded; Table XI clusters from earlier run | re-run: one, two and all threads give identical predictions; clusters at 0.2 regenerated in this environment are identical to `clusters_0.2.json`. Table III note claimed "XGBoost was run single-threaded", but primary fits use n_jobs=-1 | yes (note) | note corrected: one thread in repeated designs, all cores elsewhere, identical predictions | p8_v13_audit.py, fix_v13.py | p8_v13.json xgb_threads, clusters_0.2 | C |
+| D25 | G | two-thread XGB check not recorded; Table XI clusters from earlier run | re-run: `c2.make_model` defaults XGBoost to one thread (n_jobs=1), so every reported XGBoost fit was single-threaded; one thread, two threads and all cores (n_jobs=-1, two cores here) give identical predictions; clusters at 0.2 regenerated in this environment are identical to `clusters_0.2.json` | records missing; text correct | none to the text (v12 note "run single-threaded; ... two threads gave identical predictions" is accurate and kept); checks recorded in `p8_v13.json` xgb_threads and clusters_0.2 | p8_v13_audit.py | p8_v13.json | C (records) |
 | D26 | VI-F | row blocks used as evidence that VPN rankings are steadier | weak locality in VPN FT, MAIL, P2P, VOIP (lag-1 0.81–0.99) | yes | caveat added; "neither proxy settles it" | fix_v13.py | diff | C |
 | D27 | VI-C, X-A, XII | blocks "do not exploit the features"; clusters overcorrect / blocks undercorrect | row position correlates with features (|ρ| up to 0.68); first-vs-second-half F1 0.73–0.80 | yes | both caveats added in VI-C, X-A and XII | fix_v13.py | diff | C |
 | D28 | IV-D | "none of the designs controls for this" (explained-record asymmetry) | the permutation null explains each pseudo-context on its own test partition | yes | null named as covering record asymmetry plus class mix (+0.028 RF, -0.001 XGB); grouped designs do not | fix_v13.py | design code read | C |
@@ -60,7 +60,7 @@ Mapping: review 1->D1, 2->D2, 3->D6, 4->D4, 5->D5, 6->D3, 7->D10, 8->D7, 9->D8, 
 |---|---|---|---|---|---|
 | F1 | Table VII, VI-C | double rounding: 4-decimal summaries rounded again to 3 decimals in 9 cells (e.g. XGB null Δ -0.002 -> -0.001, range -0.018 -> -0.019; RF calibrated within-VPN 0.296 -> 0.297; RF ordered10 SD 0.029 -> 0.030; RF row-block calibrated cross 0.743 -> 0.742; RF first-vs-second-half ΔRBO 0.046 -> 0.047) | per-repeat CSV means | all 176 numeric cells of Table VII now equal the CSV means rounded once (check script) | C |
 | F2 | Table XI | same double rounding (RF mean-per-member cross 0.754 -> 0.755; XGB mean-per-member Δ ~10 +0.054 -> +0.055) | CSV means 0.75455, 0.05455 | corrected | C |
-| F3 | Table III note | "XGBoost was run single-threaded" (see D25) | `common.py` primary XGB n_jobs=-1 | corrected | C |
+| F3 | Table III note | (retracted) a first v13 build changed "XGBoost was run single-threaded" to "all available cores in the other fits", reading `common.py` instead of the `c2.make_model` wrapper that the revision2 scripts use. The independent check caught it; the v12 wording is correct and was restored | `c2.py` lines 47-51 | restored | retracted |
 | F4 | formatting | X-E paragraph in Heading 1 style (appears in the navigation pane); one paragraph in BodyText style; ten body paragraphs without indent/justification; four empty paragraphs before headings; 24 runs tagged en-IN | document.xml | standard body formatting; empty paragraphs removed; language en-US | C |
 
 Figures: all eight rendered and inspected (LibreOffice PDF). Fig. 1 counts match Table II; Fig. 3 matches Table IV; Fig. 4
@@ -70,3 +70,15 @@ permutation-importance tie handling, so none was regenerated.
 
 Not resolved (needs data or experiments; stated in XI): a capture-level split, a grouped permutation null, and a
 comparison of both contexts on a common set of explained records.
+
+## Independent re-check of v13 (separate AI session, 2026-10-20)
+
+Report: 25 of 30 items fixed correctly; five leftovers or new problems, all checked by the drafting session and fixed:
+1. Table III thread note made false by the first v13 build (F3 above) -> v12 wording restored; audit now tests n_jobs=-1 explicitly.
+2. VI-D: SD range 0.009–0.024 mixed Random Forest and XGBoost draws -> XGBoost natural-mix SDs 0.012 and 0.024, which both moves are below (asserted in fix_v13.py).
+3. IV-D still said BROWSING and P2P "cannot be divided by capture at all" -> same wording as XI ("with the information available").
+4. VI-F "indicate the same direction" lost its referent -> reworded.
+5. Row-block half-models called "accurate" while 0.73–0.80 is read as a warning sign -> "far more accurate than under coarse clusters" (VI-C, X-A).
+Also from that report: the k-means settings of the 50-cluster grouped CV in III-C were not stated -> "(three initialisations, fixed seed)" (`p1` line 52: n_init=3, random_state=0).
+The verifier confirmed that every SHAP result is unchanged by the tie fix (including XGBoost depth 3/10, S1/S2 and 1,330-flow fits, which it refitted), and that the permutation-importance cross-context ρ is the only reported quantity that depends on tie handling.
+Full report kept at paper/reviews/2026-10-20-v13-verification.md.

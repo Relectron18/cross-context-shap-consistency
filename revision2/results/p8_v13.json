@@ -815,13 +815,15 @@
    "identical_predictions": true,
    "max_abs_prob_diff": 0.0,
    "all_cores_vs_one_max_abs_prob_diff": 0.0,
-   "n_cores": 2
+   "n_cores": 2,
+   "default_n_jobs_xgb": 1
   },
   "vpn": {
    "identical_predictions": true,
    "max_abs_prob_diff": 0.0,
    "all_cores_vs_one_max_abs_prob_diff": 0.0,
-   "n_cores": 2
+   "n_cores": 2,
+   "default_n_jobs_xgb": 1
   }
  },
  "xgb_tree_method": {
