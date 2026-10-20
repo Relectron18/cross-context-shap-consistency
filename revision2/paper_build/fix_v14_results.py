@@ -1,5 +1,6 @@
 # Part B of fix_v14.py (executed inside it): the two new analyses. Every number is read from
 # results/p11_v14.json (src/p11_v14_summary.py). Uses rep / rew / guard / find_c / body from fix_v14.py.
+import numpy as np
 G = json.load(open(RES / "p11_v14.json"))
 GN, CR = G["grouped_null"], G["common_records"]
 f3 = lambda x: f"{x:.3f}"
@@ -98,47 +99,63 @@ rep("of -0.001 for XGBoost (range -0.019 to 0.009) and +0.028 for Random Forest 
 def new_par_after(anchor_text, text):
     a = find_c(anchor_text); p = copy.deepcopy(a); a.addnext(p); rewrite(p, [text]); return p
 
-# ---- VI-C: grouped null (result); claims are asserted against the numbers before they are written
-NG, NS = GN["nullgroup"], GN["nullstrat"]
+# ---- VI-C: grouped null and row blocks on common records (result); claims are asserted before they are written
+NG, NS = GN["nullgroup"], GN["nullstrat"]; CRB = G["common_records_rowblocks"]
 ROWD, CLUD = ("orderedcal", "orderedhalf"), ("grouped10", "grouped35", "calibrated")
-row_nulls = [V[f"{m}_{d}"]["null"]["rho_gap"] for V in (NG, NS) for m in ("XGB", "RF") for d in ROWD]
+MM = ("XGB", "RF")
+row_nulls = [V[f"{m}_{d}"]["null"]["rho_gap"] for V in (NG, NS) for m in MM for d in ROWD]
 assert max(abs(x) for x in row_nulls) < 0.04, row_nulls                     # "close to zero" (real row-block gaps are 0.03-0.15)
-exc = {m: [NG[f"{m}_{d}"]["real_minus_null"] for d in ROWD] for m in ("XGB", "RF")}
+exc = {m: [NG[f"{m}_{d}"]["real_minus_null"] for d in ROWD] for m in MM}
 assert all(x > 0 for v in exc.values() for x in v)
-above = [NG[f"{m}_{d}"]["real_repeats_above_null_max"] for m in ("XGB", "RF") for d in ROWD]
-cl_flow = [NS[f"{m}_{d}"]["null"]["rho_gap"] for m in ("XGB", "RF") for d in CLUD]
-cl_grp = [NG[f"{m}_{d}"]["null"]["rho_gap"] for m in ("XGB", "RF") for d in CLUD]
-cl_real = [NG[f"{m}_{d}"]["real_gap"] for m in ("XGB", "RF") for d in CLUD]
-between = all(NS[f"{m}_{d}"]["null"]["rho_gap"] < NG[f"{m}_{d}"]["real_gap"] < NG[f"{m}_{d}"]["null"]["rho_gap"] for m in ("XGB", "RF") for d in CLUD)
-assert max(cl_flow) < 0 < min(cl_grp), (cl_flow, cl_grp)                     # the two versions lie on either side of zero
-sd_grp = max(NG[f"{m}_{d}"]["null_gap_sd"] for m in ("XGB", "RF") for d in CLUD)
-real_within_grp = all(NG[f"{m}_{d}"]["null_gap_min"] < NG[f"{m}_{d}"]["real_gap"] < NG[f"{m}_{d}"]["null_gap_max"] for m in ("XGB", "RF") for d in CLUD)
-assert real_within_grp
+above = [NG[f"{m}_{d}"]["real_repeats_above_null_max"] for m in MM for d in ROWD]
+crb = {(m, d): (min(CRB[f"{m}_{d}"]["gap"][x] for x in ("nv", "vpn", "union")), max(CRB[f"{m}_{d}"]["gap"][x] for x in ("nv", "vpn", "union"))) for m in MM for d in ROWD}
+assert all(CRB[k]["max_abs_rec_diff_vs_stored"] == 0.0 for k in CRB) and all(v[0] > 0 for v in crb.values())
+crb_pos = [CRB[f"{m}_{d}"]["n_positive"][x] for m in MM for d in ROWD for x in ("nv", "vpn", "union")]
+rf_rb_red = [(CRB[f"RF_{d}"]["gap"]["own"] - g) / CRB[f"RF_{d}"]["gap"]["own"] for d in ROWD for g in crb[("RF", d)]]
+cl_flow = [NS[f"{m}_{d}"]["null"]["rho_gap"] for m in MM for d in CLUD]
+cl_grp = [NG[f"{m}_{d}"]["null"]["rho_gap"] for m in MM for d in CLUD]
+cl_real = [NG[f"{m}_{d}"]["real_gap"] for m in MM for d in CLUD]
+assert max(cl_flow) < 0 < min(cl_grp), (cl_flow, cl_grp)
+assert all(NS[f"{m}_{d}"]["null"]["rho_gap"] < NG[f"{m}_{d}"]["real_gap"] < NG[f"{m}_{d}"]["null"]["rho_gap"] for m in MM for d in CLUD)
+flow_cross = np.mean([NS[f"{m}_{d}"]["null"]["rho_cross"] for m in MM for d in CLUD])
+flow_within = np.mean([(NS[f"{m}_{d}"]["null"]["rho_wnv"] + NS[f"{m}_{d}"]["null"]["rho_wvpn"]) / 2 for m in MM for d in CLUD])
+assert flow_cross > flow_within
+grp_lower = [(m, d) for m in MM for d in CLUD if NG[f"{m}_{d}"]["null"]["rho_cross"] < NG[f"{m}_{d}"]["real_cross"]]
+sd_grp = max(NG[f"{m}_{d}"]["null_gap_sd"] for m in MM for d in CLUD)
+closest = min(((m, d) for m in MM for d in CLUD), key=lambda k: NG[f"{k[0]}_{k[1]}"]["null"]["rho_gap"] - NG[f"{k[0]}_{k[1]}"]["real_gap"])
+cg = NG[f"{closest[0]}_{closest[1]}"]
+nm = {"XGB": "XGBoost", "RF": "Random Forest"}; dn = {"grouped10": "about 10 flows", "grouped35": "about 35 flows", "calibrated": "calibrated clusters"}
+ex_k = ("RF", "grouped10"); exg = NG[f"{ex_k[0]}_{ex_k[1]}"]
 new_par_after("(RBO in 1 of 11 for XGBoost and 2 of 11 for Random Forest, Top-5 in 3 and 2).",
     "The grouped null separates the two proxies (Table VII). For row blocks, both versions of the null give a mean Δ close to zero "
-    f"({min(row_nulls):.3f} to {max(row_nulls):.3f}), so this grouping produces almost no gap of its own, and the real row-block gaps lie above it: "
+    f"({min(row_nulls):.3f} to {max(row_nulls):.3f}) at the two settings tested, so this grouping produces almost no gap of its own, and the real row-block gaps lie above it: "
     f"against the group-level null by {f3(exc['XGB'][0])} and {f3(exc['XGB'][1])} for XGBoost and by {f3(exc['RF'][0])} and {f3(exc['RF'][1])} for Random Forest "
     f"at the calibrated and first-versus-second-half settings, with {min(above)}–{max(above)} of the 11 real repeats above the largest null repeat. "
-    f"For clusters, the two versions point in the directions expected from their construction: the flow-level null gives {min(cl_flow):.3f} to {max(cl_flow):.3f} "
-    f"and the group-level null {f3(min(cl_grp))} to {f3(max(cl_grp))}, with a spread across repeats of up to {f3(sd_grp)}"
-    + (f", and the real cluster gaps ({f3(min(cl_real))} to {f3(max(cl_real))}) lie between them. " if between else
-       f". The real cluster gaps ({f3(min(cl_real))} to {f3(max(cl_real))}) lie inside the range of the group-level null. ")
-    + "No neutral null could be built for feature clusters, so the cluster results do not show whether an excess remains once related flows are kept together.")
+    "The row-block gaps also remain when both contexts are explained on the same records: across the three common record sets they are "
+    f"{f3(crb[('XGB', 'orderedcal')][0])}–{f3(crb[('XGB', 'orderedcal')][1])} (calibrated) and {f3(crb[('XGB', 'orderedhalf')][0])}–{f3(crb[('XGB', 'orderedhalf')][1])} (first versus second half) for XGBoost "
+    f"and {f3(crb[('RF', 'orderedcal')][0])}–{f3(crb[('RF', 'orderedcal')][1])} and {f3(crb[('RF', 'orderedhalf')][0])}–{f3(crb[('RF', 'orderedhalf')][1])} for Random Forest, "
+    f"positive in {min(crb_pos)}–{max(crb_pos)} of the 11 repeats; for Random Forest this is {100*min(rf_rb_red):.0f}–{100*max(rf_rb_red):.0f}% below the gaps on each context's own records. "
+    "For clusters, the two versions of the null point in the directions expected from their construction. "
+    f"In the flow-level version, cross-context agreement exceeds within-context agreement ({f3(flow_cross)} against {f3(flow_within)} on average), so Δ is negative ({min(cl_flow):.3f} to {max(cl_flow):.3f}). "
+    f"In the group-level version, the pseudo-contexts agree less with each other than the real contexts do in {len(grp_lower)} of the 6 cluster settings (for Random Forest with clusters of about 10 flows, cross-context ρ {f3(exg['null']['rho_cross'])} against {f3(exg['real_cross'])}), "
+    f"so Δ is positive ({f3(min(cl_grp))} to {f3(max(cl_grp))}), with a spread across repeats of up to {f3(sd_grp)}. "
+    f"The real cluster gaps ({f3(min(cl_real))} to {f3(max(cl_real))}) lie between the two versions for every model and cluster setting, in some close to the group-level null ({nm[closest[0]]} with {dn[closest[1]]}: {f3(cg['real_gap'])} against {f3(cg['null']['rho_gap'])}). "
+    "No neutral null could be built for feature clusters, so the cluster results do not show whether an excess remains once related flows are kept together.")
 
 # ---- VI-C "Taken together": what the two new checks add
 lo_pct, hi_pct = 100 * share_lo, 100 * share_hi
 rep("These are descriptive comparisons, not a test of that excess: the permutation null was run only for random halves, where it already gives +0.028 for Random Forest, no grouped design keeps the test records apart from the training sessions, and within-context pairs are explained on shared test records while cross-context pairs are not. Part of the random-split gap therefore reflects variation between groups of related flows, and part of it is retained under grouping by row order.",
-    "The grouped null sharpens the row-order end of this range: row-block grouping produces almost no gap by itself, so the positive row-block gaps are excess over the null, whereas for clusters the null itself is uncertain. "
-    f"Explaining both contexts on the same records leaves the XGBoost gap in place and removes about {lo_pct:.0f}–{hi_pct:.0f}% of the Random Forest gap under random halves, so part of the Random Forest excess may reflect the explained records. "
+    "The grouped null sharpens the row-order end of this range: at the two row-block settings tested, the grouping produces almost no gap by itself, and the real gaps stay positive when both contexts are explained on the same records, whereas for clusters the null itself is uncertain. "
+    f"Explaining both contexts on the same records leaves the XGBoost gap almost unchanged and lowers the Random Forest gap by about {lo_pct:.0f}–{hi_pct:.0f}% under random halves and {100*min(rf_rb_red):.0f}–{100*max(rf_rb_red):.0f}% under row blocks. "
     "None of this tests the excess at the level of captures: no grouped design keeps the test records apart from the training sessions, and both proxies only approximate capture boundaries. "
-    "Part of the random-split gap therefore reflects variation between groups of related flows, and part of it survives every row-order grouping.",
+    "Part of the random-split gap therefore reflects variation between groups of related flows, and part of it survives the two row-block settings tested, on each context's own records and on common ones, although under the first-versus-second-half split the XGBoost gap is small and the RBO and Top-5 gaps are negative in some repeats.",
     allow=NEW)
 
 # ---- X-A
 rep("Together they suggest that part of the random-split gap reflects variation between groups of related flows, from about 20% to nearly all of it depending on the proxy and model, and that some excess probably remains. That excess is described, not tested: the permutation null covers only random halves, the outer split is random in every design, and within-context and cross-context pairs are explained on different kinds of test records. Without capture identifiers or an independent second capture, the size of that excess cannot be quantified, and because the contexts are different sets of captures it cannot be attributed to tunnelling.",
     "Together they suggest that part of the random-split gap reflects variation between groups of related flows, from about 20% to nearly all of it depending on the proxy and model. "
-    f"Two further checks narrow this. Explaining both contexts on the same records leaves the XGBoost gap unchanged and lowers the Random Forest gap by about {lo_pct:.0f}–{hi_pct:.0f}%, so the choice of explained records is not the main source of the disagreement. "
-    "A grouped permutation null shows that row-block grouping produces almost no gap by itself, so the positive row-block gaps are excess over the null; for clusters, the two versions of the null fall on either side of the observed gap, and the cluster results leave the question open. "
+    f"Two further checks narrow this. Explaining both contexts on the same records leaves the XGBoost gap almost unchanged and lowers the Random Forest gap by about {lo_pct:.0f}–{hi_pct:.0f}% under random halves and {100*min(rf_rb_red):.0f}–{100*max(rf_rb_red):.0f}% under row blocks, so the choice of explained records is not the main source of the disagreement. "
+    "A grouped permutation null, run for two row-block and three cluster settings, shows that row-block grouping produces almost no gap by itself, so the positive row-block gaps are excess over the null; for clusters, the two versions of the null fall on either side of the observed gap, and the cluster results leave the question open. "
     "Some excess therefore remains under the grouping least tied to the features, but its size depends on how closely row blocks follow captures, and without capture identifiers or an independent second capture it cannot be pinned down. Because the contexts are different sets of captures, it cannot be attributed to tunnelling.",
     allow=NEW)
 
@@ -150,12 +167,12 @@ rep("When explanations drive a decision, such as which features to keep, that de
 # ---- XI
 rep("Only the division of training data into halves is grouped; the outer 80/20 split is random, and the permutation null was run only for random halves. Within-context pairs are explained on shared test records and cross-context pairs are not; a comparison on a common set of explained records is left for future work.",
     "Only the division of training data into halves is grouped; the outer 80/20 split is random. The grouped null has no neutral form for clusters: reassigning single flows puts flows of one capture in both pseudo-contexts, and reassigning whole clusters makes the pseudo-contexts differ in feature space. For row blocks both versions agree, but they inherit the uncertainty about how well row blocks follow captures. "
-    "Within-context pairs are explained on shared test records and cross-context pairs, in the designs themselves, are not; explaining both contexts on common records showed that this accounts for part of the Random Forest gap under random halves, so the Random Forest gaps of the grouped designs, which were not recomputed on common records, may slightly overstate the difference between the models.",
+    f"The null was run for two of the five row-block settings and three of the four cluster settings. Within-context pairs are explained on shared test records and cross-context pairs, in the designs themselves, are not. Explaining both contexts on common records lowers the Random Forest gaps by about {lo_pct:.0f}–{hi_pct:.0f}% under random halves and {100*min(rf_rb_red):.0f}–{100*max(rf_rb_red):.0f}% under the two row-block settings, so Random Forest gaps measured on each context's own records overstate the difference between the models by roughly that much; the cluster designs and the other row-block settings were not recomputed on common records.",
     allow=NEW)
 
 # ---- abstract: last sentence (kept within 250 words; checked below)
 rep("Part of the random-split gap is explained by related flows and part probably remains, although no design tests that remainder directly, and since the two contexts are different sets of captures, none of the differences can be attributed to tunnelling.",
-    "Part of the random-split gap reflects related flows; the rest survives explanation on common records and exceeds a grouped permutation null under row-block grouping, but the contexts are different capture sets, so none of it can be attributed to tunnelling.",
+    "Part of the random-split gap reflects related flows; under row-block grouping a smaller gap remains, also on common explained records and above a grouped permutation null, but the contexts are different capture sets, so none of it can be attributed to tunnelling.",
     allow=NEW)
 ab = [p for p in body.iter(q(W, "p")) if ptext(p).startswith("Abstract")][0]
 assert len(ptext(ab).split()) <= 250, len(ptext(ab).split())
@@ -169,12 +186,12 @@ rew(C[0], "This study asked whether the features a classifier relies on to separ
 rew(C[1], "How large this disagreement is depends on the reference. Against random halves of one context, cross-context Spearman agreement is lower by 0.13 for XGBoost and 0.19 for Random Forest, and a permutation null that keeps both class mixes produces little or no gap. "
     f"Explaining the random-half models on the same records changes little for XGBoost and removes about {lo_pct:.0f}–{hi_pct:.0f}% of the Random Forest gap. "
     "Keeping related flows in the same half also reduces the gap, measured on each context's own records: to 0.08–0.10 with clusters of about 10 flows, to 0.01–0.04 with clusters of about 35, and to about zero on average at the capture-calibrated setting, where the half-models are weak and opposite gaps in the two contexts cancel. "
-    "Blocks of consecutive rows in the original files leave 0.07 and 0.15 at the calibrated setting and 0.03 and 0.09 when each class is split into its first and second halves, and a grouped permutation null shows that row-block grouping produces almost no gap by itself. For feature clusters no neutral null could be built, so the cluster results leave open whether an excess remains.",
+    "Blocks of consecutive rows in the original files leave 0.07 and 0.15 at the calibrated setting and 0.03 and 0.09 when each class is split into its first and second halves. At these two settings the gaps remain when both contexts are explained on the same records, and a grouped permutation null shows that row-block grouping produces almost no gap by itself, although the RBO and Top-5 gaps are negative in some repeats of the first-versus-second-half split. For feature clusters no neutral null could be built, so the cluster results leave open whether an excess remains, and the top-weighted RBO gap and the XGBoost family-level gap shrink less under clusters than the Spearman gap does.",
     allow=NEW)
 rew(C[2], "Among single features, the clearest change is the rise of the three minimum inter-arrival times. For XGBoost it is mostly a redistribution of Shapley values within the block. For Random Forest the block's combined SHAP share rises, but permuting or removing the block costs less macro F1 under VPN than without it, so the two kinds of measure disagree on whether the model relies on it more. "
     "In practice, the useful distinction is between a trained model and a selected feature list: the model does not transfer, whereas for feature sets of 10 or 15 features a SHAP-selected list carries over at an average macro F1 loss of at most about 0.013 across selection seeds. Because the seeds produced few distinct lists, this test has limited power.",
     allow=NEW)
-rew(C[3], "On this benchmark, then, part of the random-split gap between SHAP rankings reflects variation between groups of related flows within a context, and part of it survives every row-order grouping. The two contexts are different sets of captures, so none of the remaining difference can be attributed to tunnelling, and the proxies used here cannot measure a true between-session effect. Captures that keep session identifiers, or an independent second capture of both contexts, would settle the question, and newer traffic and class-specific explanations would show whether the pattern holds beyond this benchmark.",
+rew(C[3], "On this benchmark, then, part of the random-split gap between SHAP rankings reflects variation between groups of related flows within a context, and part of it survives the row-order groupings tested, on each context's own records and on common ones. The two contexts are different sets of captures, so none of the remaining difference can be attributed to tunnelling, and the proxies used here cannot measure a true between-session effect. Captures that keep session identifiers, or an independent second capture of both contexts, would settle the question, and newer traffic and class-specific explanations would show whether the pattern holds beyond this benchmark.",
     allow=NEW)
 CP[4].getparent().remove(CP[4])
 
@@ -214,6 +231,23 @@ pp = [x for x in c.iter(q(W, "p")) if ptext(x).strip()]; assert len(pp) == 1 and
 set_par(pp[0], f"{T7N['gap']:.3f} ({f3(T7N['sd'])})")
 def t15_add(after_label, cells):
     base = t15_row(after_label); new = copy.deepcopy(base)
-    for tc, v in zip(new.iter(q(W, "tc")), cells):
-        pp = [x for x in tc.iter(q(W, "p")) if ptext(x).strip()]; set_par(pp[0], v)
+    for i_, (tc, v) in enumerate(zip(new.iter(q(W, "tc")), cells)):
+        pp = [x for x in tc.iter(q(W, "p")) if ptext(x).strip()]
+        if i_ == 0 and list(pp[0].iter(q(MN, "oMath"))):      # label cell: keep the Δρ equation, replace the text after it
+            assert v.startswith("Δρ"); rs = [r for r in pp[0] if r.tag == q(W, "r")]
+            for r in rs[:-1]:
+                for t_ in r.iter(q(W, "t")): t_.text = ""
+            t_ = rs[-1].find(q(W, "t")); t_.text = v[2:]; t_.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+        else:
+            set_par(pp[0], v)
     base.addnext(new); return new
+
+NEWROWS = [("Δρ, random halves on common records (range)", f"{f3(rg[0])}–{f3(rg[1])}", f"{f3(xg[0])}–{f3(xg[1])}", "VI-C"),
+           ("Δρ, row blocks calibrated / first vs second half, on common records (both test sets)",
+            f"{sg(CRB['RF_orderedcal']['gap']['union'])} / {sg(CRB['RF_orderedhalf']['gap']['union'])}",
+            f"{sg(CRB['XGB_orderedcal']['gap']['union'])} / {sg(CRB['XGB_orderedhalf']['gap']['union'])}", "VI-C"),
+           ("Δρ minus group-level null, row blocks calibrated / first vs second half",
+            f"{sg(exc['RF'][0])} / {sg(exc['RF'][1])}", f"{sg(exc['XGB'][0])} / {sg(exc['XGB'][1])}", "VI-C")]
+prev_label = "Δρ, row blocks first vs second half"
+for row in NEWROWS:
+    r_ = t15_add(prev_label, row); prev_label = row[0]
