@@ -38,11 +38,10 @@ def contexts_for_repeat(r):
 
 CL_SIZE = int(DESIGN[7:]) if DESIGN.startswith("grouped") and len(DESIGN) > 7 else 140
 # Calibrated design: number of clusters per class = number of capture files of that class in the
-# released PCAPs (prefix list of the Deep Packet code, Lotfollahi et al.), at least 4. BROWSING has no
-# dedicated captures, so it uses the context's median flows per capture file (see revision2/README.md).
-CAPTURE_FILES = {"novpn": {1: 20, 2: 32, 3: 4, 4: 1, 5: 19, 6: 34}, "vpn": {1: 10, 2: 6, 3: 2, 4: 1, 5: 5, 6: 7}}
-ARFF_COUNTS = {"novpn": {1: 890, 2: 1018, 3: 249, 4: 1000, 5: 482, 6: 2826, 0: 2500},
-               "vpn": {1: 1196, 2: 1932, 3: 491, 4: 928, 5: 475, 6: 2271, 0: 2500}}
+# released PCAPs, at least 4. The counts come from the capture-prefix list of munhouiani's independent
+# Deep Packet implementation on GitHub (paper ref. [56]), not from the Deep Packet paper itself; see
+# designs_meta.py. BROWSING has no dedicated captures, so it uses the context's median flows per capture file.
+from designs_meta import CAPTURE_FILES, ARFF_COUNTS
 def calibrated_k(ctx, k):
     if k == 0:
         per_file = np.median([ARFF_COUNTS[ctx][c] / CAPTURE_FILES[ctx][c] for c in (1, 2, 3, 5, 6)])

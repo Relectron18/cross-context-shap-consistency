@@ -75,7 +75,11 @@ def importance(sv, cols=FEATURES, y=None):
 
 
 def ranks(imp):
-    return imp.rank(ascending=False, method="first")
+    # Tied values get their average rank (v13). Up to v12 this used method="first", which breaks ties by
+    # feature order. SHAP importances have no ties, so SHAP results are unchanged (checked in
+    # revision2/src/p8_v13_audit.py); permutation importance clipped at 0 has many ties, and its
+    # cross-context agreement was recomputed in p8_v13_audit.py.
+    return imp.rank(ascending=False, method="average")
 
 
 def rbo_ext(list_a, list_b, p=0.9):

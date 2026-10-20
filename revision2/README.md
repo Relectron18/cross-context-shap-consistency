@@ -6,7 +6,7 @@ Every number in `SHAP_VPN_revised_v8.docx` (and the earlier `SHAP_VPN_revised_v7
 | Script | What it does | Paper |
 |---|---|---|
 | `p1_audit_primary.py` | Data audit (duplicates/label conflicts, entries below -1, class mix), near-duplicate audit with log(x+2), cluster-grouped CV, baselines, primary TreeSHAP, cross-context agreement incl. kappa_k | III, V, VI-A/B |
-| `designs.py <RF/XGB> <random/grouped10/grouped35/grouped/calibrated/ordered10/ordered35/ordered140/orderedcal/orderedhalf/null> 11` | Within-context reference designs; 80/20 partition redrawn each repeat. `calibrated` sets the clusters per class to the number of capture files in the Deep Packet prefix list (BROWSING: flows / median flows per capture). `ordered*` keep whole blocks of consecutive rows of the original ARFF files together (needs `results/arff_order_positions.json`) | IV-D, VI-C, VII |
+| `designs.py <RF/XGB> <random/grouped10/grouped35/grouped/calibrated/ordered10/ordered35/ordered140/orderedcal/orderedhalf/null> 11` | Within-context reference designs; 80/20 partition redrawn each repeat. `calibrated` sets the clusters per class to the number of capture files in the capture-prefix list of munhouiani's independent Deep-Packet implementation on GitHub (paper ref. [56]; counts in `designs_meta.py`; the Deep Packet paper itself, ref. [7], gives no such list) (BROWSING: flows / median flows per capture). `ordered*` keep whole blocks of consecutive rows of the original ARFF files together (needs `results/arff_order_positions.json`) | IV-D, VI-C, VII |
 | `summarize_refs.py` | Gaps (rho, RBO, Top-5, kappa_5, class-weighted, four family rules) per design | Tables VII, X |
 | `p2_consequence.py` | Direct model transfer; Top-5/10/15 list transfer with 5 selection seeds, bottom-10, 20 fixed random-10 lists | VIII |
 | `p5_concerns4.py` | Block-summed SHAP shares of the three minimum IATs, conditional permutation importance, list-origin x target decomposition of the Top-k transfer, class-mix SDs, RF 800-record check on half-models -> `results/p5_results.json`, `results/p5_topk_2x2.csv` | VI-D, VI-E, VIII-B, IV-D |
@@ -43,7 +43,7 @@ The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
 
 ## Team-edited versions (v9, v10)
 
-`paper/SHAP_VPN_revised_v12.docx` is the final version (v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
+`paper/SHAP_VPN_revised_v13.docx` is the current version (v12 corrected after the standalone defect review, `paper_build/fix_v13.py`; v12 = v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
 (saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
 rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
 spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
@@ -74,4 +74,31 @@ capture-file prefix list) and renumbers references by first appearance (59 refer
 ```bash
 cd revision2/src && python p7_audit_v12.py
 cd ../paper_build && python fix_v12.py ../../paper/SHAP_VPN_revised_v11.docx ../../paper/SHAP_VPN_revised_v12.docx && python response4.py
+```
+
+## v13: corrections after the standalone defect review of v12
+
+`paper/reviews/2026-10-20-v12-defect-review.md` lists 30 defects found by a separate AI session (not an outside review);
+`paper/reviews/2026-10-20-v13-audit-ledger.md` records, for each one, the evidence, whether it was confirmed, the fix
+and how it was checked.
+
+Code change: `revision/src/common.py` `ranks()` now gives tied values their average rank (`method="average"`), as the
+paper states. Up to v12 it used `method="first"`, which breaks ties by feature order. SHAP importances have no ties
+(checked for the primary fits, all 1,936 reference-design vectors and the robustness runs), so every SHAP result is
+unchanged; only the cross-context agreement of permutation importance, whose negative values are set to zero and so
+tie, changes. `p4_results.json` and `p5_results.json` keep the old values for audit; the corrected values are in
+`results/p8_v13.json`.
+
+| Script | What it does |
+|---|---|
+| `src/p8a_rf_interv.py <novpn/vpn>` | Interventional TreeSHAP for the primary Random Forest on the same 500 records and 200-record background as the robustness check, so Extra Trees and Random Forest can be compared under the same formulation (`results/rf_interv_rec_*.npz`) |
+| `src/p8b_cpi_full.py` | Re-runs the conditional permutation importance of `p5_concerns4.py` with the same seeds at full precision and checks it reproduces the stored rounded values (`results/p8b_cpi_full.json`) |
+| `src/p8_v13_audit.py` | Recomputes every number the v13 corrections use from existing results (tie counts, permutation-importance agreement with average ranks, min_flowiat shares, drop-one shares, class weighting, half sizes, locality by seed, Table VII and XI means rounded once, Extra Trees vs Random Forest, XGBoost thread and tree-method checks) -> `results/p8_v13.json` |
+| `src/check_v13_numbers.py <docx>` | Checks that the corrected numbers appear in the manuscript as derived, that retracted statements are gone, and every numeric cell of Table VII; exits 1 on v12 and on planted digit errors |
+| `paper_build/fix_v13.py` | Applies the text and table corrections to v12 (numbers read from `p8_v13.json`), normalises formatting left by the team edits, and writes v13 |
+
+```bash
+cd revision2/src && python p8a_rf_interv.py novpn && python p8a_rf_interv.py vpn && python p8b_cpi_full.py && python p8_v13_audit.py
+cd ../paper_build && python fix_v13.py ../../paper/SHAP_VPN_revised_v12.docx ../../paper/SHAP_VPN_revised_v13.docx
+cd ../src && python check_v13_numbers.py ../../paper/SHAP_VPN_revised_v13.docx
 ```
