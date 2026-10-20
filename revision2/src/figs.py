@@ -12,10 +12,10 @@ P1 = json.load(open(OUT2 / "p1_results.json"))
 if "2" in which:
     fig, ax = plt.subplots(figsize=(10.5, 6.4), dpi=170); ax.set_xlim(0, 100); ax.set_ylim(0, 100); ax.axis("off")
     boxes = [
-        (3, 80, 42, 14, "Primary train/test partitions (authors' 80/20 split)\nScenario A2, 15 s, duplicates removed\nSame 23 features and seven labels"),
+        (3, 80, 42, 14, "Primary train/test partitions (our own 80/20 split)\nScenario A2, 15 s, duplicates removed\nSame 23 features and seven labels"),
         (53, 80, 44, 14, "Fit RF and XGB separately by context\nPrimary TreeSHAP rankings on test sets\nSpearman, Kendall, Top-k, $\\kappa_k$, RBO, L1"),
-        (3, 52, 42, 21, "Within-context references (11 repeats each,\n80/20 partition redrawn every repeat)\n\u2022 random halves; permutation null\n\u2022 feature clusters (10/35/140, calibrated)\n\u2022 row blocks (10/35/140, calibrated, 1st/2nd half)"),
-        (53, 52, 44, 21, "Confound and mechanism checks\nClass weighting; class-mix swap; matched\ntraining with a same-size reference\nDrop-one retraining; permutation importance\nFamilies, alternative grouping, clusters"),
+        (3, 49, 42, 25, "Within-context references (11 repeats each,\n80/20 partition redrawn every repeat)\n\u2022 random halves; permutation null\n\u2022 feature clusters (10/35/140, calibrated)\n\u2022 row blocks (10/35/140, calibrated, 1st/2nd half)\n\u2022 null with grouped halves; same-record check"),
+        (53, 49, 44, 25, "Confound and mechanism checks\nClass weighting; class-mix swap; matched\ntraining with a same-size reference\nDrop-one retraining; permutation importance\nFamilies, alternative grouping, clusters"),
         (3, 27, 42, 18, "Consequence tests\nDirect model transfer between contexts\nOwn vs transferred Top-5/10/15 (5 selection\nseeds; bottom-10 and 20 fixed random-10)"),
         (53, 27, 44, 18, "Sensitivity checks\nSentinel encodings S1/S2\nRF / XGB / Extra Trees; two SHAP methods\nXGB seeds and depth"),
         (3, 9, 94, 8, "All results computed in one environment: Python 3.13, scikit-learn 1.9.1, XGBoost 3.4.1, SHAP 0.53.0 (Linux)"),
@@ -24,8 +24,8 @@ if "2" in which:
         ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.4,rounding_size=1.5", fc="#eef2f8", ec="#61768f", lw=1.3))
         ax.text(x + 1.5, y + h / 2, t, va="center", ha="left", fontsize=9.4, linespacing=1.35)
     kw = dict(arrowprops=dict(arrowstyle="->", color="#61768f", lw=1.3))
-    for a, b in [((52.4, 87), (45.6, 87)), ((24, 73.6), (24, 79.4)), ((75, 73.6), (75, 79.4)),
-                 ((24, 45.6), (24, 51.4)), ((75, 45.6), (75, 51.4))]:
+    for a, b in [((52.4, 87), (45.6, 87)), ((24, 74.6), (24, 79.4)), ((75, 74.6), (75, 79.4)),
+                 ((24, 45.6), (24, 48.4)), ((75, 45.6), (75, 48.4))]:
         ax.annotate("", xy=a, xytext=b, **kw)
     plt.savefig(FIG2 / "fig2_pipeline.png", bbox_inches="tight"); plt.close()
 
