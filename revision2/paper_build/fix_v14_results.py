@@ -137,7 +137,7 @@ new_par_after("(RBO in 1 of 11 for XGBoost and 2 of 11 for Random Forest, Top-5 
     f"positive in {min(crb_pos)}–{max(crb_pos)} of the 11 repeats; for Random Forest this is {100*min(rf_rb_red):.0f}–{100*max(rf_rb_red):.0f}% below the gaps on each context's own records. "
     "For clusters, the two versions of the null point in the directions expected from their construction. "
     f"In the flow-level version, cross-context agreement exceeds within-context agreement ({f3(flow_cross)} against {f3(flow_within)} on average), so Δ is negative ({min(cl_flow):.3f} to {max(cl_flow):.3f}). "
-    f"In the group-level version, the pseudo-contexts agree less with each other than the real contexts do in {len(grp_lower)} of the 6 cluster settings (for Random Forest with clusters of about 10 flows, cross-context ρ {f3(exg['null']['rho_cross'])} against {f3(exg['real_cross'])}), "
+    f"In the group-level version, the pseudo-contexts agree less with each other than the real contexts do in " + ("all six model and cluster settings " if len(grp_lower) == 6 else f"{len(grp_lower)} of the six model and cluster settings ") + f"(for Random Forest with clusters of about 10 flows, cross-context ρ {f3(exg['null']['rho_cross'])} against {f3(exg['real_cross'])}), "
     f"so Δ is positive ({f3(min(cl_grp))} to {f3(max(cl_grp))}), with a spread across repeats of up to {f3(sd_grp)}. "
     f"The real cluster gaps ({f3(min(cl_real))} to {f3(max(cl_real))}) lie between the two versions for every model and cluster setting, in some close to the group-level null ({nm[closest[0]]} with {dn[closest[1]]}: {f3(cg['real_gap'])} against {f3(cg['null']['rho_gap'])}). "
     "No neutral null could be built for feature clusters, so the cluster results do not show whether an excess remains once related flows are kept together.")
@@ -145,7 +145,7 @@ new_par_after("(RBO in 1 of 11 for XGBoost and 2 of 11 for Random Forest, Top-5 
 # ---- VI-C "Taken together": what the two new checks add
 lo_pct, hi_pct = 100 * share_lo, 100 * share_hi
 rep("These are descriptive comparisons, not a test of that excess: the permutation null was run only for random halves, where it already gives +0.028 for Random Forest, no grouped design keeps the test records apart from the training sessions, and within-context pairs are explained on shared test records while cross-context pairs are not. Part of the random-split gap therefore reflects variation between groups of related flows, and part of it is retained under grouping by row order.",
-    "The grouped null sharpens the row-order end of this range: at the two row-block settings tested, the grouping produces almost no gap by itself, and the real gaps stay positive when both contexts are explained on the same records, whereas for clusters the null itself is uncertain. "
+    "The grouped null sharpens the row-order end of this range: at the two row-block settings tested, the grouping produces almost no gap by itself, and the real gaps stay positive on average when both contexts are explained on the same records, whereas for clusters the null itself is uncertain. "
     f"Explaining both contexts on the same records leaves the XGBoost gap almost unchanged and lowers the Random Forest gap by about {lo_pct:.0f}–{hi_pct:.0f}% under random halves and {100*min(rf_rb_red):.0f}–{100*max(rf_rb_red):.0f}% under row blocks. "
     "None of this tests the excess at the level of captures: no grouped design keeps the test records apart from the training sessions, and both proxies only approximate capture boundaries. "
     "Part of the random-split gap therefore reflects variation between groups of related flows, and part of it survives the two row-block settings tested, on each context's own records and on common ones, although under the first-versus-second-half split the XGBoost gap is small and the RBO and Top-5 gaps are negative in some repeats.",
@@ -172,7 +172,7 @@ rep("Only the division of training data into halves is grouped; the outer 80/20 
 
 # ---- abstract: last sentence (kept within 250 words; checked below)
 rep("Part of the random-split gap is explained by related flows and part probably remains, although no design tests that remainder directly, and since the two contexts are different sets of captures, none of the differences can be attributed to tunnelling.",
-    "Part of the random-split gap reflects related flows; under row-block grouping a smaller gap remains, also on common explained records and above a grouped permutation null, but the contexts are different capture sets, so none of it can be attributed to tunnelling.",
+    "Part of the random-split gap reflects related flows; under row-block grouping a smaller gap remains on common explained records and above a grouped permutation null, but the contexts are different capture sets, so none of it can be attributed to tunnelling.",
     allow=NEW)
 ab = [p for p in body.iter(q(W, "p")) if ptext(p).startswith("Abstract")][0]
 assert len(ptext(ab).split()) <= 250, len(ptext(ab).split())
