@@ -17,7 +17,7 @@ rep("and a permutation null in which flows are reassigned at random between two 
 
 # ---- IV-D: grouped null and common explained records (method)
 rep("Under this null, Δ shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts.",
-    "Under this null, Δ shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts. For the grouped designs a flow-level null would not be fair: flows of one capture would end up in both pseudo-contexts, so the cross pairs would share related flows that the grouped within pairs are denied. The grouped null therefore moves whole capture-sized groups. Within each class and source file, the pooled flows are divided into the calibrated clusters (for the cluster designs) or the calibrated row blocks (for the row-block designs), and these groups are assigned at random to the two pseudo-contexts so that each receives about its original share of the class; because whole groups move, the class counts are matched only approximately. Five grouped designs are then applied within each pseudo-context: clusters of about 10 and 35 flows, calibrated clusters, calibrated row blocks and the first-versus-second-half split, each run separately on the flows of each source file so that both halves have the same mix of Non-VPN and VPN rows. This grouped null shows what each grouping procedure produces by itself when the pseudo-contexts differ in class mix and capture sampling but not in observation context.",
+    "Under this null, Δ shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts. For five grouped designs (clusters of about 10 and 35 flows, calibrated clusters, calibrated row blocks and the first-versus-second-half split) we build the null in two ways, because neither is neutral on its own. In the flow-level version, flows are reassigned one by one as above and the grouped design is then applied within each pseudo-context. Flows of one capture then sit in both pseudo-contexts, so the pseudo cross pairs share related flows that the grouped within pairs do not, which pushes Δ down. In the group-level version, whole capture-sized groups move instead: within each class and source file, the pooled flows are divided into the calibrated clusters (for the cluster designs) or the calibrated row blocks (for the row-block designs), and each group is assigned at random to one pseudo-context so that each receives about its original share of the class; because whole groups move, class counts are matched only approximately. Calibrated clusters are regions of feature space, so for the cluster designs this version also gives the two pseudo-contexts different feature distributions, which pushes Δ up; row blocks are not built from the features. In both versions the grouped design runs separately on the flows of each source file, so that both halves hold the same mix of Non-VPN and VPN rows.",
     allow=NEW)
 rep("Part of the cross-context disagreement may therefore come from the difference in explained records rather than from the models. The permutation null shares this asymmetry, since each pseudo-context is explained on its own test partition; with records that are exchangeable between pseudo-contexts, the asymmetry and the class-mix difference together give a mean gap of +0.028 for Random Forest and -0.001 for XGBoost. No grouped design controls for it, and in the real contexts the explained records also differ in distribution.",
     "Part of the cross-context disagreement could therefore come from the difference in explained records rather than from the models. To measure this, we refit the random-halves design with the same seeds and explain every half-model on the explained records of both contexts, so that within- and cross-context pairs can be compared on one common record set: the Non-VPN records, the VPN records, or both together. Each refitted half-model reproduces the stored explanation on its own records exactly. The permutation null shares the asymmetry, since each pseudo-context is explained on its own test partition, but there the records of the two pseudo-contexts are exchangeable.",
@@ -35,8 +35,9 @@ def set_par(p, text):
     t = rs[0].find(q(W, "t")); t.text = text
     t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
 T7 = table_after("TABLE VII")
-LABEL = {"grouped10": "Null, grouped ~10 per cluster", "grouped35": "Null, grouped ~35 per cluster", "calibrated": "Null, grouped calibrated",
-         "orderedcal": "Null, row blocks calibrated", "orderedhalf": "Null, row blocks first vs second half"}
+LABEL = {"grouped10": "grouped ~10 per cluster", "grouped35": "grouped ~35 per cluster", "calibrated": "grouped calibrated",
+         "orderedcal": "row blocks calibrated", "orderedhalf": "row blocks first vs second half"}
+VERS = (("nullstrat", "Null (flows), "), ("nullgroup", "Null (groups), "))
 model = None; anchors = {}
 for tr in T7.iter(q(W, "tr")):
     first = ptext(tr).strip()
@@ -46,9 +47,10 @@ for tr in T7.iter(q(W, "tr")):
 assert set(anchors) == {"XGB", "RF"}
 for m, tr0 in anchors.items():
     prev = tr0
-    for d in ND:
-        g = GN[f"{m}_{d}"]; s = g["null"]
-        vals = [[LABEL[d]], [f"{f3(s['f1_nv'])} / {f3(s['f1_vpn'])}"], [f3(s["rho_wnv"])], [f3(s["rho_wvpn"])], [f3(s["rho_cross"])],
+    for ver, lab in VERS:
+      for d in ND:
+        g = GN[ver][f"{m}_{d}"]; s = g["null"]
+        vals = [[lab + LABEL[d]], [f"{f3(s['f1_nv'])} / {f3(s['f1_vpn'])}"], [f3(s["rho_wnv"])], [f3(s["rho_wvpn"])], [f3(s["rho_cross"])],
                 [f"{sg(s['rho_gap'])} ({f3(g['null_gap_sd'])})", f"{g['null_gap_min']:.3f} to {g['null_gap_max']:.3f}"],
                 [sg(s["rbo_gap"])], [sg(s["top5_gap"], 2)], [sg(s["rho_w_gap"])]]
         new = copy.deepcopy(tr0)
@@ -59,7 +61,7 @@ for m, tr0 in anchors.items():
             for p, text in zip(ps, v): set_par(p, text)
         prev.addnext(new); prev = new
 rep("The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts.",
-    "The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts; the rows marked Null with a grouped design split those pseudo-contexts into halves with that design.")
+    "The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts. Rows marked Null (flows) apply a grouped design to those pseudo-contexts; rows marked Null (groups) build the pseudo-contexts from whole calibrated clusters or row blocks first (Section IV-D).")
 
 # ---- Fig. 2: pipeline figure regenerated by src/figs.py (lists the grouped null and the same-record check)
 FIG2_BYTES = (RES.parent / "figures" / "fig2_pipeline.png").read_bytes()
