@@ -40,6 +40,7 @@ IS_NULL = DESIGN == "null" or DESIGN.startswith(("null_", "nullstrat_", "nullgro
 BASE = DESIGN.split("_", 1)[1] if DESIGN.startswith(("null_", "nullstrat_", "nullgroup_")) else DESIGN
 STRAT = DESIGN.startswith(("nullstrat_", "nullgroup_"))
 GROUPNULL = DESIGN.startswith("nullgroup_")
+EXPLAIN_OTHER = os.environ.get("EXPLAIN_OTHER") == "1"   # also store rec_other: explanation on the other context's explained records
 try: store = pickle.load(open(path, "rb"))
 except FileNotFoundError: store = {}
 P = {c: pool(c) for c in CTX}
@@ -122,12 +123,16 @@ def grouped_halves(Xtr, ytr, seed, ctx=None, pos=None, origin=None):
       for o in ((None,) if origin is None else (0, 1)):
         ids = np.flatnonzero(ytr == k) if o is None else np.flatnonzero((ytr == k) & (origin == o))
         cx = ctx if o is None else CTX[o]
+        def cal(cx, k):
+            if o is None: return calibrated_k(cx, k)
+            # null strata hold only part of the origin's flows: keep groups capture-sized by scaling the count
+            return max(2, int(round(calibrated_k(cx, k) * len(ids) / (0.8 * int((P[cx][1] == k).sum())))))
         if ORDERED:
-            kc = (calibrated_k(cx, k) if BLOCK is None else 2 if BLOCK == "half"
+            kc = (cal(cx, k) if BLOCK is None else 2 if BLOCK == "half"
                   else max(4, int(round(len(ids) / BLOCK))))
             groups = np.array_split(ids[np.argsort(pos[ids])], kc)   # contiguous runs of ARFF rows
         else:
-            kc = calibrated_k(cx, k) if BASE == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
+            kc = cal(cx, k) if BASE == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
             if o is not None: kc = max(1, min(kc, len(ids)))
             if len(ids) == 0: continue
             lab = KMeans(n_clusters=kc, n_init=3, random_state=int(seed) + k + (0 if o is None else 50 * o)).fit_predict(Z[ids])
@@ -177,6 +182,10 @@ for r in range(R):
             sv = shap_values(m, Xte.iloc[ex_ids])
             store[(c, r, h)] = dict(rec=np.abs(sv).mean(axis=0).astype(np.float32), y=yte[ex_ids], n=len(ids),
                                     seed=seed, f1=f1_score(yte, pred, average="macro"))
+            if EXPLAIN_OTHER:
+                oi = 1 - ci; oc = CTX[oi]; Xte_o, yte_o = parts[oc][2], parts[oc][3]
+                ex_o = strat_sub(np.arange(len(yte_o)), yte_o, N_RF_EXPLAIN, 61000 + 100 * r + oi) if MODEL == "RF" else np.arange(len(yte_o))
+                store[(c, r, h)]["rec_other"] = np.abs(shap_values(m, Xte_o.iloc[ex_o])).mean(axis=0).astype(np.float32)
             print(MODEL, DESIGN, c, r, h, len(ids), f"f1={store[(c, r, h)]['f1']:.4f}", f"{tic() - t:.0f}s", flush=True)
     pickle.dump(store, open(path, "wb"))
 print("done")

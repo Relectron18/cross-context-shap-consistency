@@ -47,4 +47,41 @@ for m in ("XGB", "RF"):
         rbo_gap={s: float(df[f"rbo_gap_{s}"].mean()) for s in ("own", "nv", "vpn", "union")},
         n_repeats_positive_union=int((df.rho_gap_union > 0).sum()),
         primary=c["primary"], reproduction=dict(max_abs_rec_diff=c["max_abs_rec_diff_vs_stored"], own_gap_diff=c["own_gap_matches_stored"]))
+# ---- row-block designs on common explained records (designs.py with EXPLAIN_OTHER=1 -> ref_<MODEL>_<design>_common.pkl)
+imp_ = lambda rec: pd.Series(np.asarray(rec, float).mean(0), index=FEATURES)
+for m in ("XGB", "RF"):
+    for d in ("orderedcal", "orderedhalf"):
+        st = pickle.load(open(OUT2 / f"ref_{m}_{d}_common.pkl", "rb")); ref = pickle.load(open(OUT2 / f"ref_{m}_{d}.pkl", "rb"))
+        maxdiff = max(float(np.abs(st[k]["rec"] - ref[k]["rec"]).max()) for k in ref)
+        rows = []
+        for r in sorted({k[1] for k in st}):
+            I = {}
+            for c in CTX:
+                for h in (0, 1):
+                    e = st[(c, r, h)]; own_, oth = e["rec"], e["rec_other"]
+                    nv, vp = (own_, oth) if c == "novpn" else (oth, own_)
+                    I[(c, h, "own")], I[(c, h, "nv")], I[(c, h, "vpn")] = imp_(own_), imp_(nv), imp_(vp)
+                    I[(c, h, "union")] = imp_(np.vstack([nv, vp]))
+            row = dict(r=r)
+            for sset in ("own", "nv", "vpn", "union"):
+                w = [compare(I[(c, 0, sset)], I[(c, 1, sset)])["rho"] for c in CTX]
+                x = np.mean([compare(I[("novpn", a_, sset)], I[("vpn", b_, sset)])["rho"] for a_ in (0, 1) for b_ in (0, 1)])
+                row[f"gap_{sset}"] = float(np.mean(w) - x)
+            rows.append(row)
+        df = pd.DataFrame(rows); df.to_csv(OUT2 / f"p11_common_{m}_{d}.csv", index=False)
+        real = pd.read_csv(OUT2 / f"ref_summary_{m}_{d}.csv")
+        OUT["common_records_rowblocks"] = OUT.get("common_records_rowblocks", {})
+        OUT["common_records_rowblocks"][f"{m}_{d}"] = dict(
+            max_abs_rec_diff_vs_stored=maxdiff, own_gap_diff_vs_stored=float((df.gap_own - real.rho_gap).abs().max()),
+            gap={s_: float(df[f"gap_{s_}"].mean()) for s_ in ("own", "nv", "vpn", "union")},
+            gap_min={s_: float(df[f"gap_{s_}"].min()) for s_ in ("own", "nv", "vpn", "union")},
+            n_positive={s_: int((df[f"gap_{s_}"] > 0).sum()) for s_ in ("nv", "vpn", "union")})
+# ---- evidence for the direction of each null's bias, and half sizes of the null designs
+for ver in ("nullgroup", "nullstrat"):
+    for k_, g in OUT["grouped_null"][ver].items():
+        m, d = k_.split("_", 1)
+        real = pd.read_csv(OUT2 / f"ref_summary_{m}_{d}.csv")
+        g["real_cross"] = float(real.rho_cross.mean()); g["real_within_mean"] = float(((real.rho_wnv + real.rho_wvpn) / 2).mean())
+        ns = [v["n"] for v in pickle.load(open(OUT2 / f"ref_{m}_{ver}_{d}.pkl", "rb")).values()]
+        g["half_size_min"], g["half_size_max"] = int(min(ns)), int(max(ns))
 jdump(OUT, "p11_v14.json"); print(json.dumps(OUT, indent=1, default=float))
