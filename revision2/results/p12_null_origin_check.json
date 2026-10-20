@@ -1,0 +1,102 @@
+{
+ "null_grouped10": {
+  "novpn": {
+   "max": 0.10904255319148937,
+   "mean": 0.06879230002165027
+  },
+  "vpn": {
+   "max": 0.2894736842105264,
+   "mean": 0.11790612611746229
+  }
+ },
+ "null_grouped35": {
+  "novpn": {
+   "max": 0.13563829787234039,
+   "mean": 0.05726270490150305
+  },
+  "vpn": {
+   "max": 0.12554112554112562,
+   "mean": 0.079926509591461
+  }
+ },
+ "null_calibrated": {
+  "novpn": {
+   "max": 0.21666666666666673,
+   "mean": 0.0681944942907751
+  },
+  "vpn": {
+   "max": 0.2645074224021592,
+   "mean": 0.11142562918401902
+  }
+ },
+ "null_orderedcal": {
+  "novpn": {
+   "max": 0.2210526315789474,
+   "mean": 0.1257477189901421
+  },
+  "vpn": {
+   "max": 0.8195488721804511,
+   "mean": 0.44907504136591225
+  }
+ },
+ "null_orderedhalf": {
+  "novpn": {
+   "max": 0.975,
+   "mean": 0.8472338585588678
+  },
+  "vpn": {
+   "max": 0.986,
+   "mean": 0.8380172530671308
+  }
+ },
+ "nullstrat_grouped10": {
+  "novpn": {
+   "max": 0.0,
+   "mean": 0.0
+  },
+  "vpn": {
+   "max": 0.0,
+   "mean": 0.0
+  }
+ },
+ "nullstrat_grouped35": {
+  "novpn": {
+   "max": 0.0,
+   "mean": 0.0
+  },
+  "vpn": {
+   "max": 0.0,
+   "mean": 0.0
+  }
+ },
+ "nullstrat_calibrated": {
+  "novpn": {
+   "max": 0.0,
+   "mean": 0.0
+  },
+  "vpn": {
+   "max": 0.0,
+   "mean": 0.0
+  }
+ },
+ "nullstrat_orderedcal": {
+  "novpn": {
+   "max": 0.0,
+   "mean": 0.0
+  },
+  "vpn": {
+   "max": 0.0,
+   "mean": 0.0
+  }
+ },
+ "nullstrat_orderedhalf": {
+  "novpn": {
+   "max": 0.0,
+   "mean": 0.0
+  },
+  "vpn": {
+   "max": 0.0,
+   "mean": 0.0
+  }
+ }
+}

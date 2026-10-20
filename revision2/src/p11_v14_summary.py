@@ -1,7 +1,8 @@
 """v14: summarise the two new analyses into results/p11_v14.json (the only source of the v14 numbers).
 
-1. Permutation null with grouped halves (designs.py null_<design>): per-repeat summaries are written to
-   results/ref_summary_<MODEL>_null_<design>.csv (new files; existing summaries are not touched) and compared
+1. Permutation null with grouped halves (designs.py nullstrat_<design>: grouping within each class and origin, so
+   both halves have the same Non-VPN/VPN origin mix; p12_null_origin_check.py). Per-repeat summaries are written to
+   results/ref_summary_<MODEL>_nullstrat_<design>.csv (new files; existing summaries are not touched) and compared
    with the real-context design of the same name (ref_summary_<MODEL>_<design>.csv).
 2. Common explained records (p9_common_records.py): gaps when every ranking is taken on the same records.
 """
@@ -12,7 +13,9 @@ OUT = {"grouped_null": {}, "common_records": {}}
 KEYS = ("rho_wnv", "rho_wvpn", "rho_cross", "rho_gap", "rbo_gap", "top5_gap", "rho_w_gap", "f1_nv", "f1_vpn")
 for m in ("XGB", "RF"):
     for d in NULLS:
-        df = summarise(m, f"null_{d}"); df.to_csv(OUT2 / f"ref_summary_{m}_null_{d}.csv", index=False)
+        df = summarise(m, f"nullstrat_{d}"); df.to_csv(OUT2 / f"ref_summary_{m}_nullstrat_{d}.csv", index=False)
+        old = summarise(m, f"null_{d}")      # first version, superseded: halves differ in origin mix (p12)
+        OUT.setdefault("superseded_unstratified_null_gap", {})[f"{m}_{d}"] = float(old.rho_gap.mean())
         real = pd.read_csv(OUT2 / f"ref_summary_{m}_{d}.csv")
         OUT["grouped_null"][f"{m}_{d}"] = dict(
             repeats=len(df), null={k: float(df[k].mean()) for k in KEYS},

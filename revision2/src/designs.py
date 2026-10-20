@@ -16,6 +16,11 @@ design = null_<grouped design> (v14), e.g. null_grouped35, null_calibrated, null
                    the same pseudo-contexts as `null` (same seeds), with halves formed by that grouped design.
                    For row blocks, flows keep their position in their original ARFF file and are ordered by
                    (source file, position), so a block holds consecutive rows of one file.
+                   SUPERSEDED: these halves can differ in how many flows come from the Non-VPN and the VPN file
+                   (first-versus-second-half: almost completely), so a within pair is partly a cross-context pair.
+design = nullstrat_<grouped design> (v14): same pseudo-contexts, but the grouping is applied separately to the
+                   flows of each origin (Non-VPN file, VPN file) within each class, so both halves have the same
+                   origin mix. Cluster counts and calibrated counts follow the origin context.
 Every half-model has its own seed. XGB explains the full test partition of the repeat; RF explains a
 class-stratified sample of 800 test records (RF TreeSHAP cost).
 """
@@ -25,19 +30,21 @@ MODEL, DESIGN, R = sys.argv[1], sys.argv[2], int(sys.argv[3])
 N_H = 3477
 N_RF_EXPLAIN = 800
 path = Path(os.environ["REF_OUT"]) if os.environ.get("REF_OUT") else OUT2 / f"ref_{MODEL}_{DESIGN}.pkl"   # REF_OUT: reproduction checks
-IS_NULL = DESIGN == "null" or DESIGN.startswith("null_")
-BASE = DESIGN[5:] if DESIGN.startswith("null_") else DESIGN
+IS_NULL = DESIGN == "null" or DESIGN.startswith(("null_", "nullstrat_"))
+BASE = DESIGN.split("_", 1)[1] if DESIGN.startswith(("null_", "nullstrat_")) else DESIGN
+STRAT = DESIGN.startswith("nullstrat_")
 try: store = pickle.load(open(path, "rb"))
 except FileNotFoundError: store = {}
 P = {c: pool(c) for c in CTX}
 
 POSR = {}   # ARFF row position of every flow of the (pseudo-)contexts of the current repeat (row-block designs)
+ORIGINR = {}  # origin of every flow of the pseudo-contexts (0 = Non-VPN file, 1 = VPN file); nullstrat designs
 def contexts_for_repeat(r):
     if not IS_NULL:
         if ORDERED: POSR.update(POS)
         return P
     rng = np.random.default_rng(31000 + r)
-    out = {c: ([], []) for c in CTX}; pos_k = {}
+    out = {c: ([], []) for c in CTX}; pos_k = {}; org_k = {}
     for k in range(7):
         Xs = pd.concat([P[c][0][P[c][1] == k] for c in CTX], ignore_index=True)
         if ORDERED: src_pos = np.concatenate([ci * 10**7 + POS[c][P[c][1] == k] for ci, c in enumerate(CTX)])
@@ -46,7 +53,9 @@ def contexts_for_repeat(r):
         for c, ids in (("novpn", perm[:n_nv]), ("vpn", perm[n_nv:])):
             out[c][0].append(Xs.iloc[ids]); out[c][1].append(np.full(len(ids), k))
             if ORDERED: pos_k.setdefault(c, []).append(src_pos[ids])
+            org_k.setdefault(c, []).append((ids >= int((P["novpn"][1] == k).sum())).astype(int))
     if ORDERED: POSR.update({c: np.concatenate(v) for c, v in pos_k.items()})
+    ORIGINR.update({c: np.concatenate(v) for c, v in org_k.items()})
     return {c: (pd.concat(out[c][0], ignore_index=True), np.concatenate(out[c][1])) for c in CTX}
 
 CL_SIZE = int(BASE[7:]) if BASE.startswith("grouped") and len(BASE) > 7 else 140
@@ -66,19 +75,23 @@ if ORDERED:
     POS = {c: np.asarray(v) for c, v in json.load(open(OUT2 / "arff_order_positions.json")).items()}
     BLOCK = None if BASE == "orderedcal" else "half" if BASE == "orderedhalf" else int(BASE[7:])
 
-def grouped_halves(Xtr, ytr, seed, ctx=None, pos=None):
+def grouped_halves(Xtr, ytr, seed, ctx=None, pos=None, origin=None):
+    """origin (nullstrat designs only): 0/1 per training flow; the grouping then runs within each class and origin,
+    with cluster and calibrated counts of the origin context. With origin=None this is the original procedure."""
     if not ORDERED: Z = StandardScaler().fit_transform(logx2(Xtr))
     rng = np.random.default_rng(seed)
     A, B = [], []
     for k in range(7):
-        ids = np.flatnonzero(ytr == k)
+      for o in ((None,) if origin is None else (0, 1)):
+        ids = np.flatnonzero(ytr == k) if o is None else np.flatnonzero((ytr == k) & (origin == o))
+        cx = ctx if o is None else CTX[o]
         if ORDERED:
-            kc = (calibrated_k(ctx, k) if BLOCK is None else 2 if BLOCK == "half"
+            kc = (calibrated_k(cx, k) if BLOCK is None else 2 if BLOCK == "half"
                   else max(4, int(round(len(ids) / BLOCK))))
             groups = np.array_split(ids[np.argsort(pos[ids])], kc)   # contiguous runs of ARFF rows
         else:
-            kc = calibrated_k(ctx, k) if BASE == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
-            lab = KMeans(n_clusters=kc, n_init=3, random_state=int(seed) + k).fit_predict(Z[ids])
+            kc = calibrated_k(cx, k) if BASE == "calibrated" else max(4, int(round(len(ids) / CL_SIZE)))
+            lab = KMeans(n_clusters=kc, n_init=3, random_state=int(seed) + k + (0 if o is None else 50 * o)).fit_predict(Z[ids])
             groups = [ids[lab == g] for g in range(kc)]
         order = rng.permutation(len(groups))
         groups = sorted([groups[i] for i in order], key=len, reverse=True)
@@ -101,7 +114,7 @@ for r in range(R):
         parts[c] = (Xtr, ytr, Xte, yte)
         if BASE.startswith("grouped") or BASE == "calibrated" or ORDERED:
             halves[c] = grouped_halves(Xtr, ytr, 41000 + 100 * r + ci, ctx=c,
-                                       pos=POSR[c][itr] if ORDERED else None)
+                                       pos=POSR[c][itr] if ORDERED else None, origin=ORIGINR[c][itr] if STRAT else None)
         else:
             rng = np.random.default_rng(5000 + 100 * r + ci)
             a, b = [], []
