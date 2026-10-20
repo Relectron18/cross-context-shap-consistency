@@ -136,6 +136,7 @@ print("equations added", mathfix.fix([body]))
 xml = etree.tostring(doc, xml_declaration=True, encoding="UTF-8", standalone=True)
 zo = zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED)
 for item in zin.infolist():
-    zo.writestr(item, xml if item.filename == "word/document.xml" else zin.read(item.filename))
+    data = xml if item.filename == "word/document.xml" else globals().get("REPLACE_MEDIA", {}).get(item.filename) or zin.read(item.filename)
+    zo.writestr(item, data)
 zo.close()
 print("->", OUT)
