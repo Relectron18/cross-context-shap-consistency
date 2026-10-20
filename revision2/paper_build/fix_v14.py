@@ -53,6 +53,7 @@ rep("Shapley values deal badly with correlated features: credit is apportioned a
 # ---- Abstract
 rep("Compared to models trained on random halves of one context,", "Compared with models trained on random halves of one context,")
 rep("A model trained in one context achieves at best 0.43–0.61 macro F1 in the other,", "A model trained in one context reaches only 0.43–0.61 macro F1 in the other,")
+rep("Each model keeps only three of its five leading features when the observation context changes.", "Each model keeps only three of its five leading features across contexts.")
 
 # ---- II-A to II-E
 rew("As encryption became widespread, traffic classification gradually moved",
