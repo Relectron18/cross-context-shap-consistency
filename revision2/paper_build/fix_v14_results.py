@@ -16,8 +16,18 @@ rep("and a permutation null in which flows are reassigned at random between two 
     "and a permutation null in which flows are reassigned at random between two pseudo-contexts, run with random and with grouped halves. It also checks whether the gap survives when the models of both contexts are explained on the same records.")
 
 # ---- IV-D: grouped null and common explained records (method)
+P8 = json.load(open(RES / "p8_v13.json"))["half_sizes"]
+real_hs = [x for m in ("RF", "XGB") for d in ND for x in P8[f"{m}_{d}"]]
+null_hs = [GN["nullgroup"][f"{m}_{d}"][k] for m in ("RF", "XGB") for d in ND for k in ("half_size_min", "half_size_max")]
 rep("shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts.",
-    "shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts. For five grouped designs (clusters of about 10 and 35 flows, calibrated clusters, calibrated row blocks and the first-versus-second-half split) we build the null in two ways, because neither is neutral on its own. In the flow-level version, flows are reassigned one by one as above and the grouped design is then applied within each pseudo-context. Flows of one capture then sit in both pseudo-contexts, so the pseudo cross pairs share related flows that the grouped within pairs do not, which pushes Δ down. In the group-level version, whole capture-sized groups move instead: within each class and source file, the pooled flows are divided into the calibrated clusters (for the cluster designs) or the calibrated row blocks (for the row-block designs), and each group is assigned at random to one pseudo-context so that each receives about its original share of the class; because whole groups move, class counts are matched only approximately. Calibrated clusters are regions of feature space, so for the cluster designs this version also gives the two pseudo-contexts different feature distributions, which pushes Δ up; row blocks are not built from the features. In both versions the grouped design runs separately on the flows of each source file, so that both halves hold the same mix of Non-VPN and VPN rows.",
+    "shows what the half-split procedure and the class-mix difference produce when nothing else separates the two contexts. "
+    "For five grouped designs (clusters of about 10 and 35 flows, calibrated clusters, calibrated row blocks and the first-versus-second-half split) we build the null in two ways, because neither is neutral on its own. "
+    "In the flow-level version, flows are reassigned one by one as above and the grouped design is then applied within each pseudo-context. Flows of one capture then sit in both pseudo-contexts, so the pseudo cross pairs share more related flows than the grouped within pairs do, which pushes Δ down. "
+    "In the group-level version, whole capture-sized groups move instead: within each class and source file, the pooled flows are divided into the calibrated clusters (for the cluster designs) or the calibrated row blocks (for the row-block designs), and the groups are taken in random order, each going to the pseudo-context that is further below its original share of the class. "
+    f"Because whole groups move, class counts are matched only approximately, and the halves hold {min(null_hs):,}–{max(null_hs):,} training flows, against {min(real_hs):,}–{max(real_hs):,} in the real grouped designs. "
+    "Calibrated clusters are regions of feature space, so for the cluster designs this version also gives the two pseudo-contexts different feature distributions, which pushes Δ up; row blocks are not built from the features, although row position is correlated with some of them. "
+    "In both versions the grouped design runs separately on the flows of each source file, so that both halves hold the same mix of Non-VPN and VPN rows, and in the calibrated designs the number of groups is scaled to the share of the file's flows that a pseudo-context holds, so that groups stay about capture-sized. "
+    "An earlier version without the per-file split was discarded because its two halves could hold very different shares of Non-VPN and VPN rows.",
     allow=NEW)
 rep("Part of the cross-context disagreement may therefore come from the difference in explained records rather than from the models. The permutation null shares this asymmetry, since each pseudo-context is explained on its own test partition; with records that are exchangeable between pseudo-contexts, the asymmetry and the class-mix difference together give a mean gap of +0.028 for Random Forest and -0.001 for XGBoost. No grouped design controls for it, and in the real contexts the explained records also differ in distribution.",
     "Part of the cross-context disagreement could therefore come from the difference in explained records rather than from the models. To measure this, we refit the random-halves design with the same seeds and explain every half-model on the explained records of both contexts, so that within- and cross-context pairs can be compared on one common record set: the Non-VPN records, the VPN records, or both together. Each refitted half-model reproduces the stored explanation on its own records exactly. The permutation null shares the asymmetry, since each pseudo-context is explained on its own test partition, but there the records of the two pseudo-contexts are exchangeable.",
@@ -61,7 +71,7 @@ for m, tr0 in anchors.items():
             for p, text in zip(ps, v): set_par(p, text)
         prev.addnext(new); prev = new
 rep("The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts.",
-    "The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts. Rows marked Null (flows) apply a grouped design to those pseudo-contexts; rows marked Null (groups) build the pseudo-contexts from whole calibrated clusters or row blocks first (Section IV-D).")
+    "The null design pools the flows of each class across contexts and reassigns them at random, without replacement, to pseudo-contexts with the original class counts. Rows marked Null (flows) apply a grouped design to those pseudo-contexts; rows marked Null (groups) build the pseudo-contexts from whole calibrated clusters or row blocks first, so their class counts match the original ones only approximately (Section IV-D).")
 
 # ---- Fig. 2: pipeline figure regenerated by src/figs.py (lists the grouped null and the same-record check)
 FIG2_BYTES = (RES.parent / "figures" / "fig2_pipeline.png").read_bytes()
@@ -79,8 +89,8 @@ own = {m: CR[m]["gap"]["own"] for m in ("RF", "XGB")}
 share_lo, share_hi = (own["RF"] - rg[1]) / own["RF"], (own["RF"] - rg[0]) / own["RF"]
 rep("of -0.001 for XGBoost (range -0.019 to 0.009) and +0.028 for Random Forest (range -0.010 to 0.052).",
     "of -0.001 for XGBoost (range -0.019 to 0.009) and +0.028 for Random Forest (range -0.010 to 0.052)."
-    f" Nor does the gap come from explaining the two contexts on different records. When every half-model is explained on the same records, Δ is {f3(xg[0])}–{f3(xg[1])} for XGBoost and {f3(rg[0])}–{f3(rg[1])} for Random Forest across the three common record sets (the Non-VPN records, the VPN records and both together), against {f3(own['XGB'])} and {f3(own['RF'])} when each model is explained on its own context's records, and it is positive in all 11 repeats for both models."
-    f" For XGBoost the explained records make no material difference. For Random Forest they account for about {100*share_lo:.0f}–{100*share_hi:.0f}% of the gap, and the RBO gap falls from {f3(CR['RF']['rbo_gap']['own'])} to {f3(rb[0])}–{f3(rb[1])}."
+    f" Nor does the gap come mainly from explaining the two contexts on different records. When every half-model is explained on the same records, Δ is {f3(xg[0])}–{f3(xg[1])} for XGBoost and {f3(rg[0])}–{f3(rg[1])} for Random Forest across the three common record sets (the Non-VPN records, the VPN records and both together), against {f3(own['XGB'])} and {f3(own['RF'])} when each model is explained on its own context's records, and it is positive in all 11 repeats for both models."
+    f" For XGBoost the explained records make little difference to ρ, although the RBO gap falls from {f3(CR['XGB']['rbo_gap']['own'])} to {f3(rng_('XGB', 'rbo_gap')[0])}–{f3(rng_('XGB', 'rbo_gap')[1])}. For Random Forest they account for about {100*share_lo:.0f}–{100*share_hi:.0f}% of the gap, and the RBO gap falls from {f3(CR['RF']['rbo_gap']['own'])} to {f3(rb[0])}–{f3(rb[1])}."
     f" The primary models agree: on common records their cross-context ρ is {f3(prim['RF'][0])}–{f3(prim['RF'][2])} for Random Forest and {f3(prim['XGB'][0])}–{f3(prim['XGB'][2])} for XGBoost, against 0.830 and 0.786 on their own test partitions.",
     allow=NEW)
 
@@ -134,7 +144,7 @@ rep("Together they suggest that part of the random-split gap reflects variation 
 
 # ---- X-E: one practical consequence of the common-records check
 rep("When explanations drive a decision, such as which features to keep, that decision should be tested on held-out data from the target context.",
-    f"Rankings from two contexts should be computed on the same records, or the effect of the records measured, because here the explained records alone accounted for about {lo_pct:.0f}–{hi_pct:.0f}% of the Random Forest gap. When explanations drive a decision, such as which features to keep, that decision should be tested on held-out data from the target context.",
+    f"When rankings from two contexts are compared, it is worth checking how much of the difference comes from explaining the models on different records: under random halves this accounted for about {lo_pct:.0f}–{hi_pct:.0f}% of the Random Forest gap here and for almost none of the XGBoost gap. Explaining a model on another context's records evaluates it away from its own data, so this is a diagnostic, not a better ranking. When explanations drive a decision, such as which features to keep, that decision should be tested on held-out data from the target context.",
     allow=NEW)
 
 # ---- XI
@@ -157,8 +167,8 @@ CP = [find_c(c) for c in C]
 rew(C[0], "This study asked whether the features a classifier relies on to separate seven application categories stay the same when traffic is observed with and without a VPN, and how any difference compares with the variation inside one context. On the ISCX VPN-nonVPN benchmark with its 23 time-related flow features, both models lose accuracy under VPN (macro F1 falls from 0.9340 to 0.8836 for XGBoost and from 0.9171 to 0.8533 for Random Forest), and a model trained in one context reaches only 0.43–0.61 macro F1 in the other. The SHAP rankings of the two contexts are correlated but not interchangeable: Spearman's ρ is 0.83 for Random Forest and 0.79 for XGBoost, RBO is 0.58 and 0.75, and each model keeps three of its five leading features.",
     allow=NEW)
 rew(C[1], "How large this disagreement is depends on the reference. Against random halves of one context, cross-context Spearman agreement is lower by 0.13 for XGBoost and 0.19 for Random Forest, and a permutation null that keeps both class mixes produces little or no gap. "
-    f"Explaining every model on the same records changes little for XGBoost and removes about {lo_pct:.0f}–{hi_pct:.0f}% of the Random Forest gap. "
-    "Keeping related flows in the same half reduces the gap further: to 0.08–0.10 with clusters of about 10 flows, to 0.01–0.04 with clusters of about 35, and to about zero on average at the capture-calibrated setting, where the half-models are weak and opposite gaps in the two contexts cancel. "
+    f"Explaining the random-half models on the same records changes little for XGBoost and removes about {lo_pct:.0f}–{hi_pct:.0f}% of the Random Forest gap. "
+    "Keeping related flows in the same half also reduces the gap, measured on each context's own records: to 0.08–0.10 with clusters of about 10 flows, to 0.01–0.04 with clusters of about 35, and to about zero on average at the capture-calibrated setting, where the half-models are weak and opposite gaps in the two contexts cancel. "
     "Blocks of consecutive rows in the original files leave 0.07 and 0.15 at the calibrated setting and 0.03 and 0.09 when each class is split into its first and second halves, and a grouped permutation null shows that row-block grouping produces almost no gap by itself. For feature clusters no neutral null could be built, so the cluster results leave open whether an excess remains.",
     allow=NEW)
 rew(C[2], "Among single features, the clearest change is the rise of the three minimum inter-arrival times. For XGBoost it is mostly a redistribution of Shapley values within the block. For Random Forest the block's combined SHAP share rises, but permuting or removing the block costs less macro F1 under VPN than without it, so the two kinds of measure disagree on whether the model relies on it more. "
@@ -191,3 +201,19 @@ def split_at(marker):
     if ts: ts[-1].text = ts[-1].text.rstrip()
 split_at("The grouped null sharpens the row-order end of this range")
 split_at("For five grouped designs (clusters of about 10 and 35 flows")
+
+
+# ---- Table XV: XGBoost permutation-null value rounded once (v13 fixed the same double rounding in Table VII and VI-C)
+T15 = table_after("TABLE XV")
+def t15_row(label):
+    hit = [tr for tr in T15.iter(q(W, "tr")) if ptext(list(tr.iter(q(W, "tc")))[0]).strip().startswith(label)]
+    assert len(hit) == 1, label; return hit[0]
+T7N = json.load(open(RES / "p8_v13.json"))["table7"]["XGB_null"]
+c = list(t15_row("Δρ, permutation null").iter(q(W, "tc")))[2]
+pp = [x for x in c.iter(q(W, "p")) if ptext(x).strip()]; assert len(pp) == 1 and ptext(pp[0]).strip() == "-0.002 (0.009)", ptext(pp[0])
+set_par(pp[0], f"{T7N['gap']:.3f} ({f3(T7N['sd'])})")
+def t15_add(after_label, cells):
+    base = t15_row(after_label); new = copy.deepcopy(base)
+    for tc, v in zip(new.iter(q(W, "tc")), cells):
+        pp = [x for x in tc.iter(q(W, "p")) if ptext(x).strip()]; set_par(pp[0], v)
+    base.addnext(new); return new
