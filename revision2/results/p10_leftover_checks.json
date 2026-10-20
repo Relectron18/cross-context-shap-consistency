@@ -1,0 +1,28 @@
+{
+ "RF_novpn_S1_ties": 0,
+ "RF_novpn_S1_f1_diff_vs_stored": 0.0,
+ "RF_novpn_S2_ties": 0,
+ "RF_novpn_S2_f1_diff_vs_stored": 0.0,
+ "RF_novpn_S1vsS2_rho": [
+  0.9140316205533597,
+  0.9140316205533597
+ ],
+ "RF_vpn_S1_ties": 0,
+ "RF_vpn_S1_f1_diff_vs_stored": 0.0,
+ "RF_vpn_S2_ties": 0,
+ "RF_vpn_S2_f1_diff_vs_stored": 0.0,
+ "RF_vpn_S1vsS2_rho": [
+  0.8873517786561266,
+  0.8873517786561266
+ ],
+ "RF_cross_S1_rho": [
+  0.8280632411067194,
+  0.8280632411067194
+ ],
+ "RF_cross_S2_rho": [
+  0.8280632411067194,
+  0.8280632411067194
+ ],
+ "XGB_novpn_auto_vs_hist_max_abs_prob_diff": 0.0,
+ "XGB_vpn_auto_vs_hist_max_abs_prob_diff": 0.0
+}
