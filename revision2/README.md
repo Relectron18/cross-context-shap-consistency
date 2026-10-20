@@ -43,7 +43,7 @@ The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
 
 ## Team-edited versions (v9, v10)
 
-`paper/SHAP_VPN_revised_v13.docx` is the current version (v12 corrected after the standalone defect review, `paper_build/fix_v13.py`; v12 = v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
+`paper/SHAP_VPN_revised_v14.docx` is the current version (v13 with an editorial pass and two new analyses, `paper_build/fix_v14.py`; v13 = v12 corrected after the standalone defect review, `paper_build/fix_v13.py`; v12 = v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
 (saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
 rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
 spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
@@ -101,4 +101,33 @@ tie, changes. `p4_results.json` and `p5_results.json` keep the old values for au
 cd revision2/src && python p8a_rf_interv.py novpn && python p8a_rf_interv.py vpn && python p8b_cpi_full.py && python p8_v13_audit.py
 cd ../paper_build && python fix_v13.py ../../paper/SHAP_VPN_revised_v12.docx ../../paper/SHAP_VPN_revised_v13.docx
 cd ../src && python check_v13_numbers.py ../../paper/SHAP_VPN_revised_v13.docx
+```
+
+## v14: editorial pass and two new analyses
+
+Change log: `paper/reviews/2026-10-20-v14-change-log.md`.
+
+| Script | What it does |
+|---|---|
+| `src/designs.py <RF/XGB> nullgroup_<design> 11` | Grouped permutation null, group-level: pseudo-contexts built from whole capture-sized groups (calibrated clusters or calibrated row blocks per class and source file), then the grouped design within each class and source file. Used in the paper. |
+| `src/designs.py <RF/XGB> nullstrat_<design> 11` | Grouped permutation null, flow-level: flows reassigned one by one, grouped design within each class and source file. Used in the paper as the second version. |
+| `src/designs.py <RF/XGB> null_<design> 11` | First version (superseded, kept for the record): the halves of a pseudo-context can differ in source-file mix. |
+| `src/p12_null_origin_check.py` | Per-class difference in Non-VPN/VPN source mix between the two halves of each null version (`results/p12_null_origin_check.json`). |
+| `src/p9_common_records.py <RF/XGB>` | Refits the random-halves design with its seeds and explains every half-model on both contexts' records; reproduces the stored design exactly (`results/p9_common_*.{csv,json}`). |
+| `src/p10_leftover_checks.py` | RF sentinel fits: no tied importances, stored values reproduced; XGBoost `auto` = `hist` on both contexts. |
+| `src/p11_v14_summary.py` | Summaries of both analyses -> `results/p11_v14.json` (the only source of v14's new numbers). |
+| `src/check_v14_numbers.py <docx>` | Runs the v13 checks, checks the new numbers and the 20 new Table VII rows, and that retired statements are gone; fails on v13 and on planted errors. |
+| `paper_build/fix_v14.py` (+ `fix_v14_results.py`) | Editorial pass with a guard that stops the build if a stylistic edit changes any number or citation; new-results text; Fig. 2 replaced by the version from `src/figs.py 2`. |
+
+Grouped designs with `designs.py` are unchanged: the existing designs reproduce the stored repeat 0 exactly after the
+changes (`REF_OUT=<path> python designs.py XGB <design> 1`, then compare with `results/ref_XGB_<design>.pkl`).
+
+```bash
+cd revision2/src
+for d in grouped10 grouped35 calibrated orderedcal orderedhalf; do for v in nullgroup nullstrat; do
+  python designs.py XGB ${v}_$d 11; python designs.py RF ${v}_$d 11; done; done
+python p9_common_records.py XGB && python p9_common_records.py RF && python p10_leftover_checks.py && python p11_v14_summary.py
+python figs.py 2
+cd ../paper_build && python fix_v14.py ../../paper/SHAP_VPN_revised_v13.docx ../../paper/SHAP_VPN_revised_v14.docx
+cd ../src && python check_v14_numbers.py ../../paper/SHAP_VPN_revised_v14.docx
 ```
