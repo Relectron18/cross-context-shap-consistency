@@ -1,0 +1,36 @@
+digraph G {
+  graph [rankdir=TB, fontname="Inter", fontsize=11, nodesep=0.35, ranksep=0.45, bgcolor="white", pad=0.3, newrank=true, compound=true];
+  node  [shape=box, style="rounded,filled", fontname="Inter", fontsize=10.5, color="#5b6b80", fillcolor="#eef2f8", penwidth=1.2, margin="0.14,0.08"];
+  edge  [color="#5b6b80", penwidth=1.1, arrowsize=0.7];
+
+  data [label=<<b>ISCX VPN-nonVPN, Scenario A2 (15 s ARFF)</b><br/>Non-VPN 8,965 flows · VPN 9,793 flows · 23 time-related features · 7 application classes>, fillcolor="#dfe7f3"];
+  prep [label=<<b>Preprocessing and audit</b><br/>exact-duplicate removal → 8,694 / 9,380 flows<br/>stratified 80/20 split per context · leakage and near-duplicate audit>];
+  data -> prep;
+
+  subgraph cluster_nv { label=<<b>Non-VPN context</b>>; style="rounded,dashed"; labelloc=t; labeljust=l; color="#245a8d"; fontcolor="#245a8d";
+    nvm [label=<Random Forest · XGBoost>, fillcolor="#e3edf8"];
+    nvs [label=<TreeSHAP (path-dependent)<br/>global importance ranking>, fillcolor="#e3edf8"];
+    nvm -> nvs; }
+  subgraph cluster_vp { label=<<b>VPN context</b>>; style="rounded,dashed"; labelloc=b; color="#c4661f"; fontcolor="#c4661f";
+    vpm [label=<Random Forest · XGBoost>, fillcolor="#fbeadb"];
+    vps [label=<TreeSHAP (path-dependent)<br/>global importance ranking>, fillcolor="#fbeadb"];
+    vpm -> vps; }
+  prep -> nvm; prep -> vpm;
+
+  agree [label=<<b>Cross-context agreement</b><br/>Spearman ρ · Kendall τ<sub>b</sub> · Top-k overlap (κ<sub>k</sub>) · RBO · L1 share distance>, fillcolor="#e9f3ea", color="#4f7d55"];
+  nvs -> agree; vps -> agree;
+
+  refs [label=<<b>Within-context references</b> (11 repeats, 80/20 redrawn)<br/>random halves · feature clusters (~10/35/140, calibrated)<br/>row blocks (~10/35/140, calibrated, 1st vs 2nd half)<br/>permutation null (random and grouped halves) · same-record check>, fillcolor="#f4eefa", color="#7a5a9b"];
+  prep -> refs [style=dashed];
+  gap [label=<<b>Gap Δ = mean within-context ρ − cross-context ρ</b><br/>compared across reference designs>, fillcolor="#fff6dc", color="#a8862a"];
+  agree -> gap; refs -> gap;
+
+  checks [label=<<b>Mechanism and confound checks</b><br/>class weighting · class-mix swap · class-matched training<br/>min-IAT block share · drop-one retraining<br/>marginal / conditional permutation importance · feature families>];
+  conseq [label=<<b>Consequence tests</b><br/>direct model transfer across contexts<br/>SHAP-selected Top-k list transfer (2 × 2 list × target)>];
+  robust [label=<<b>Sensitivity checks</b><br/>sentinel encodings S1/S2 · Extra Trees<br/>interventional TreeSHAP · XGBoost seeds and depth>];
+  gap -> checks; gap -> conseq; gap -> robust;
+
+  out [label=<<b>Conclusion</b><br/>how much of the cross-context difference exceeds within-context variation<br/>(not attributable to tunnelling: contexts are different captures)>, fillcolor="#dfe7f3"];
+  checks -> out; conseq -> out; robust -> out;
+  {rank=same; checks; conseq; robust;}
+}
