@@ -43,7 +43,7 @@ The v7 manuscript was built by the version of `paper_build/` at commit 1f56a71.
 
 ## Team-edited versions (v9, v10)
 
-`paper/SHAP_VPN_revised_v14.docx` is the current version (v13 with an editorial pass and two new analyses, `paper_build/fix_v14.py`; v13 = v12 corrected after the standalone defect review, `paper_build/fix_v13.py`; v12 = v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
+`paper/SHAP_VPN_revised_v20.docx` is the final version (see "v15–v20" at the end). `paper/SHAP_VPN_revised_v14.docx` was the last version with new analyses (v13 with an editorial pass and two new analyses, `paper_build/fix_v14.py`; v13 = v12 corrected after the standalone defect review, `paper_build/fix_v13.py`; v12 = v11 revised after the in-project review, `paper_build/fix_v12.py`; v11 = v10 with the team's own conclusion, `paper_build/fix_v11.py`). The team rephrased 38 passages of v8 by hand
 (saved as `paper/SHAP_VPN_v8_team_edited.docx`); `paper_build/fix_v9.py` takes that file and corrects what the
 rephrasing broke (factual slips, LaTeX left as text, plain-text Greek letters, citation brackets, split paragraphs,
 spacing and typos) while keeping the team's wording elsewhere. No number in the text or tables differs from v8.
@@ -132,4 +132,24 @@ python p9_common_records.py XGB && python p9_common_records.py RF && python p10_
 python figs.py 2
 cd ../paper_build && python fix_v14.py ../../paper/SHAP_VPN_revised_v13.docx ../../paper/SHAP_VPN_revised_v14.docx
 cd ../src && python check_v14_numbers.py ../../paper/SHAP_VPN_revised_v14.docx
+```
+
+## v15–v20: final edits (no new analyses)
+
+No result changed after v14; these versions only edit the text. `src/check_v14_numbers.py` passes on v20.
+
+| Version | Built by | What changed |
+|---|---|---|
+| v15 | `paper_build/fix_v15.py` on the team's edit of v14 (`paper/SHAP_VPN_v14_team_edited.docx`) | Repairs a broken sentence in II-C, a conversational paragraph in X-E, and a missing space in reference [55] |
+| v16 | `paper_build/fix_v16.py` | Removes revision-history wording from the grouped-null description |
+| v17 | Team upload (`paper/SHAP_VPN_revised_v17.docx`) | Author list changed by the team (three authors) |
+| v18 | `paper_build/fix_v18_refs.py` | DOIs added to 28 references after checking each against Crossref/doi.org (48 of 59 now carry a DOI; the other 11 are NeurIPS, PMLR, USENIX and JMLR papers, a dataset page and a GitHub repository, none of which have DOIs); layout of [55]/[56] fixed |
+| v19 | Team upload (`paper/SHAP_VPN_revised_v19.docx`) | First-person pronouns removed and the sentences reworded |
+| v20 | `paper_build/fix_v20.py` | Repairs typos and two garbled sentences from the v19 rewording, restores one dropped sentence, removes en-IN language tags, replaces blank spacer lines before Table XIV with a page break. **Final.** |
+
+```bash
+python revision2/paper_build/fix_v18_refs.py         # v17 -> v18, run from the repository root
+cd revision2/paper_build
+python fix_v20.py ../../paper/SHAP_VPN_revised_v19.docx ../../paper/SHAP_VPN_revised_v20.docx
+cd ../src && python check_v14_numbers.py ../../paper/SHAP_VPN_revised_v20.docx
 ```

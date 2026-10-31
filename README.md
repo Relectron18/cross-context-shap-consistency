@@ -1,13 +1,20 @@
 # Cross-Context Consistency of SHAP Feature Importance (VPN vs Non-VPN)
 
 Code, data splits and results for the paper *"Cross-Context Consistency of SHAP-Based Feature Importance for
-Application Classification Across VPN and Non-VPN Traffic"* (P. Gomase, G. Khekare, P. Kothari, B. J. S. Reddy,
-N. K. SD — VIT Vellore).
+Application Classification Across VPN and Non-VPN Traffic"* (P. Gomase, G. Khekare, P. Kothari — VIT Vellore).
 
 The study trains Random Forest and XGBoost models separately on Non-VPN and VPN flows of the ISCX VPN-nonVPN
 benchmark (seven application classes, 23 time-related features), explains them with TreeSHAP, and asks whether the
 feature rankings agree across the two contexts more or less than models trained on different data from the same
 context.
+
+## Final manuscript
+
+**`paper/SHAP_VPN_revised_v20.docx` is the final version of the paper.** Every number in it is checked against the
+result files by `revision2/src/check_v14_numbers.py` (passes on v20). The architecture diagram is in
+`revision2/figures/architecture.{png,svg}` (Graphviz source `architecture.dot`). Earlier versions (v6–v19), the
+reviewer concerns and the responses are kept in `paper/` for the record; `revision2/README.md` describes how each
+version was built.
 
 ## Data
 
@@ -38,7 +45,7 @@ context.
 | `models/` | Saved XGBoost and Logistic Regression models (Random Forests are not stored; they refit exactly with `random_state=42`) |
 | `revision/` | **Analyses added in response to reviewer concerns** — disjoint half-split reference, class-matched training and class weighting, RBO/L1 measures, correlation clusters, random/bottom-10 controls, log/rank near-duplicate audit, cluster-grouped CV, seed and hyperparameter checks, revised figures. See `revision/README.md`. |
 | `revision2/` | **Second revision (Concerns 2)** — every result recomputed in one environment; cluster-grouped half-splits, permutation null, partition redraws, direct model transfer, Top-5/10/15 transfer over five seeds, class-mix swap, drop-one and permutation importance, ARFF class counts; scripts that build the revised paper. See `revision2/README.md`. |
-| `paper/` | Manuscript v6, reviewer concerns (Concerns2), revised manuscript v7 and the response to the reviewer |
+| `paper/` | **Final manuscript `SHAP_VPN_revised_v20.docx`**; earlier versions v6–v19 (including the team-edited uploads), reviewer concerns (Concerns2, Concerns4), responses to the reviewer, and `reviews/` (in-project readings by separate AI sessions, not outside reviews) |
 
 ## Running
 
