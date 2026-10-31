@@ -61,3 +61,13 @@ Scripts are run from the repository root. Main results were produced with Python
 XGBoost 3.4.1 and SHAP 0.52.0 (macOS); revision analyses with scikit-learn 1.9.1 and SHAP 0.53.0 (Linux).
 XGBoost refits can differ across platforms by up to about 0.005 macro F1; the saved XGBoost models reproduce the
 paper's numbers exactly.
+
+## Licence
+
+The code in this repository is released under the MIT licence (see `LICENSE`). The licence does not cover:
+
+* **Data.** The partitions in `data/` and the derived result files come from the ISCX VPN-nonVPN dataset
+  (ISCXVPN2016) of the Canadian Institute for Cybersecurity, University of New Brunswick, and remain subject to
+  its terms of use. Please cite the dataset authors (Draper-Gil et al., ICISSP 2016) if you reuse them.
+* **Manuscript.** The documents in `paper/` are the authors' manuscript and are not released under the MIT
+  licence; copyright may pass to the publisher on publication.
